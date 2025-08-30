@@ -14,18 +14,19 @@
         "Price"
       ],
       "titleColumns": [
-        "Item Name"
+        "Item Name",
+        "Price"
       ],
       "items": [
-        {
-          "Item Name": "Caesar Salad",
-          "Description": "Crisp romaine lettuce with parmesan and croutons",
-          "Price": "12"
-        },
         {
           "Item Name": "Truffle Arancini",
           "Description": "Creamy risotto balls with black truffle",
           "Price": "16"
+        },
+        {
+          "Item Name": "Caesar Salad",
+          "Description": "Crisp romaine lettuce with parmesan and croutons",
+          "Price": "12"
         }
       ]
     },
@@ -40,7 +41,8 @@
         "Price"
       ],
       "titleColumns": [
-        "Dessert Name"
+        "Dessert Name",
+        "Price"
       ],
       "items": []
     },
@@ -112,9 +114,27 @@
           "Price": "300"
         }
       ]
+    },
+    {
+      "id": 6,
+      "name": "Specials",
+      "type": "custom",
+      "columns": [
+        "Price",
+        "Wine"
+      ],
+      "titleColumns": [
+        "Price"
+      ],
+      "items": [
+        {
+          "Price": "20",
+          "Wine": "Good Stuff"
+        }
+      ]
     }
   ],
-  "publishedAt": "2025-08-29T18:06:29.879Z",
-  "updatedAt": "2025-08-29T18:06:29.879Z",
+  "publishedAt": "2025-08-30T01:31:44.810Z",
+  "updatedAt": "2025-08-30T01:31:44.811Z",
   "version": "1.0"
 }

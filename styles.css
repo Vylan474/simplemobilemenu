@@ -438,6 +438,7 @@ body {
     font-size: 12px;
     margin-bottom: 4px;
     display: flex !important;
+    color: var(--primary-text-color, #2c3e50);
     justify-content: space-between !important;
     align-items: baseline;
     width: 100% !important;
@@ -448,10 +449,11 @@ body {
     font-weight: 700; /* Bold for side preview too */
     font-size: 1.1em; /* Slightly larger */
     flex: 1 !important;
+    color: var(--primary-text-color, #2c3e50);
 }
 
 .side-preview-panel .preview-title-price {
-    color: #27ae60; /* Default color, can be overridden by palette */
+    color: var(--accent-color, #27ae60);
     font-weight: 700;
     text-align: right !important;
     flex-shrink: 0 !important;
@@ -462,7 +464,7 @@ body {
 
 .side-preview-panel .preview-data-cell.preview-price-cell {
     text-align: right !important;
-    color: #27ae60;
+    color: var(--accent-color, #27ae60);
     font-weight: 600;
     justify-self: end !important;
     margin-left: auto;
@@ -1252,6 +1254,11 @@ body {
     opacity: 0.8;
 }
 
+.menu-item.dragging {
+    opacity: 0.75;
+    transform: rotate(1deg);
+}
+
 /* Menu item action buttons in sidebar */
 .menu-actions {
     display: flex;
@@ -1446,7 +1453,7 @@ body {
 }
 
 .preview-section h2 {
-    color: #2c3e50;
+    color: var(--header-color, #2c3e50);
     font-size: 28px;
     font-weight: 700;
     text-align: center;
@@ -1501,7 +1508,7 @@ body {
 
 .preview-item-description {
     font-size: 14px;
-    color: #5a6c7d;
+    color: var(--secondary-text-color, #5a6c7d);
     font-style: italic;
     margin-bottom: 8px;
     line-height: 1.5;
@@ -1533,7 +1540,7 @@ body {
 
 .preview-item-price {
     font-weight: 700;
-    color: #27ae60;
+    color: var(--accent-color, #27ae60);
     font-size: 16px;
     letter-spacing: 0.5px;
     text-align: right !important;
@@ -1550,6 +1557,7 @@ body {
     display: flex !important;
     justify-content: space-between !important;
     align-items: baseline;
+    color: var(--primary-text-color, #2c3e50);
     font-size: 18px;
     font-weight: 600;
     color: #2c3e50;
@@ -1563,10 +1571,11 @@ body {
     flex: 1 !important;
     font-weight: 700; /* Bold */
     font-size: 1.1em; /* Slightly larger than container */
+    color: var(--primary-text-color, #2c3e50);
 }
 
 .preview-title-price {
-    color: #27ae60; /* Default color, can be overridden by palette */
+    color: var(--accent-color, #27ae60);
     font-weight: 700;
     text-align: right !important;
     flex-shrink: 0 !important; /* Prevent shrinking */
@@ -1586,7 +1595,7 @@ body {
 
 .preview-data-cell {
     font-size: 14px;
-    color: #2c3e50;
+    color: var(--primary-text-color, #2c3e50);
     text-align: center;
     padding: 8px 12px; /* Match column header padding */
     border: 1px solid transparent; /* Match column header border width */
@@ -1595,7 +1604,7 @@ body {
 
 .preview-data-cell.preview-price-cell {
     text-align: right !important; /* Ensure price cells are always right-aligned */
-    color: #27ae60;
+    color: var(--accent-color, #27ae60);
     font-weight: 600;
     justify-self: end !important; /* For grid layouts */
     margin-left: auto; /* For flex layouts */
@@ -2555,7 +2564,7 @@ body .preview-navigation {
 }
 
 .preview-price-header {
-    color: #27ae60;
+    color: var(--accent-color, #27ae60);
     font-weight: 700;
     text-align: right; /* Ensure price headers are right-aligned */
 }

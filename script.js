@@ -1033,6 +1033,35 @@ class MenuEditor {
             });
             this.sortableInstances.push(columnSortable);
         });
+        
+        // Make menu items sortable within each section
+        document.querySelectorAll('.menu-items').forEach(menuItems => {
+            const sectionElement = menuItems.closest('.menu-section');
+            const sectionId = parseInt(sectionElement.dataset.sectionId);
+            
+            const itemSortable = new Sortable(menuItems, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                onStart: (evt) => {
+                    evt.item.classList.add('dragging');
+                },
+                onEnd: (evt) => {
+                    evt.item.classList.remove('dragging');
+                    const section = this.sections.find(s => s.id === sectionId);
+                    const oldIndex = evt.oldIndex;
+                    const newIndex = evt.newIndex;
+                    
+                    if (oldIndex !== newIndex && section) {
+                        const movedItem = section.items.splice(oldIndex, 1)[0];
+                        section.items.splice(newIndex, 0, movedItem);
+                        this.saveToStorage();
+                        this.markAsChanged();
+                    }
+                }
+            });
+            this.sortableInstances.push(itemSortable);
+        });
     }
     
     showPreview() {
@@ -1087,11 +1116,21 @@ class MenuEditor {
         // Generate navigation
         this.generatePreviewNavigation();
         
+        // Debug: Check if modal navigation elements exist
+        console.log('Modal nav elements:', {
+            modalNavContainer: !!document.getElementById('modal-nav-dock-container'),
+            modalNavTab: !!document.getElementById('modal-nav-tab')
+        });
+        
         // Initialize scroll-triggered animations
         this.initializeScrollAnimations();
         
-        // Apply background after content is rendered
-        this.applyBackground();
+        // Apply background, font, and colors after content is rendered
+        setTimeout(() => {
+            this.applyBackground();
+            this.applyFontFamily();
+            this.applyColorPalette();
+        }, 100);
     }
     
     initializeScrollAnimations() {
@@ -1374,17 +1413,6 @@ class MenuEditor {
         }, 600);
     }
     
-    generatePreviewNavigation() {
-        const navContainer = document.getElementById('preview-navigation');
-        
-        if (!navContainer || this.sections.length === 0) {
-            if (navContainer) navContainer.innerHTML = '';
-            return;
-        }
-        
-        // Generate the collapsible dock navigation
-        this.generateCollapsibleDock(navContainer);
-    }
     
     generateCollapsibleDock(container) {
         // Generate dock items in the container
@@ -1460,15 +1488,22 @@ class MenuEditor {
         const previewContent = document.getElementById(contentId);
         const previewSections = document.querySelectorAll(`#${contentId} .preview-section`);
         
-        if (previewSections[sectionIndex] && previewContent) {
+        // Find the actual scrollable container
+        const scrollContainer = context === 'modal' ? 
+            previewContent.closest('.smartphone-content') : 
+            previewContent.closest('.smartphone-content');
+        
+        if (previewSections[sectionIndex] && scrollContainer) {
             // Update active state
             this.updateNavigationActiveState(sectionIndex, context);
             
             // Calculate position to scroll section to top with proper offset
             const sectionTop = previewSections[sectionIndex].offsetTop;
             
+            console.log('Scrolling to section', sectionIndex, 'at position', sectionTop, 'in context', context);
+            
             // Smooth scroll to bring section to top of visible area
-            previewContent.scrollTo({
+            scrollContainer.scrollTo({
                 top: sectionTop - 15, // Account for content padding
                 behavior: 'smooth'
             });
