@@ -1,0 +1,383 @@
+// Landing Page Functionality
+class LandingPage {
+    constructor() {
+        console.log('LandingPage constructor called');
+        this.initializeEvents();
+        this.initializeScrollEffects();
+    }
+    
+    initializeEvents() {
+        // Sign in/up modal handling
+        this.setupModalEvents();
+        
+        // Navigation handling
+        this.setupNavigationEvents();
+        
+        // CTA button handling
+        this.setupCTAEvents();
+        
+        // Demo video handling
+        this.setupDemoEvents();
+    }
+    
+    setupModalEvents() {
+        const signInBtn = document.getElementById('sign-in-btn');
+        const signInModal = document.getElementById('sign-in-modal');
+        const signUpModal = document.getElementById('sign-up-modal');
+        const switchToSignup = document.getElementById('switch-to-signup');
+        const switchToSignin = document.getElementById('switch-to-signin');
+        
+        // Open sign in modal
+        if (signInBtn) {
+            console.log('Sign in button found, adding event listener');
+            signInBtn.addEventListener('click', () => {
+                console.log('Sign in button clicked');
+                this.openModal('sign-in-modal');
+            });
+        } else {
+            console.log('Sign in button not found');
+        }
+        
+        // Open sign up modal for all get started buttons
+        const getStartedBtn = document.getElementById('get-started-btn');
+        if (getStartedBtn) {
+            console.log('Get started button found, adding event listener');
+            getStartedBtn.addEventListener('click', () => {
+                console.log('Get started button clicked');
+                this.openModal('sign-up-modal');
+            });
+        } else {
+            console.log('Get started button not found');
+        }
+        
+        // Also handle dynamically with event delegation for buttons containing these texts
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' && (
+                e.target.textContent.includes('Start Free Trial') || 
+                e.target.textContent.includes('Start Your Free Trial') ||
+                e.target.textContent.includes('Get Started'))) {
+                this.openModal('sign-up-modal');
+            }
+        });
+        
+        // Switch between modals
+        if (switchToSignup) {
+            switchToSignup.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.closeModal('sign-in-modal');
+                this.openModal('sign-up-modal');
+            });
+        }
+        
+        if (switchToSignin) {
+            switchToSignin.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.closeModal('sign-up-modal');
+                this.openModal('sign-in-modal');
+            });
+        }
+        
+        // Close modal events
+        document.querySelectorAll('.close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', (e) => {
+                const modal = e.target.closest('.modal');
+                this.closeModal(modal.id);
+            });
+        });
+        
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                this.closeModal(e.target.id);
+            }
+        });
+        
+        // Form submissions
+        this.setupFormSubmissions();
+        
+        // Google sign-in buttons
+        this.setupGoogleAuth();
+    }
+    
+    setupFormSubmissions() {
+        const signInForm = document.getElementById('sign-in-form');
+        const signUpForm = document.getElementById('sign-up-form');
+        
+        if (signInForm) {
+            signInForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleSignIn(new FormData(signInForm));
+            });
+        }
+        
+        if (signUpForm) {
+            signUpForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleSignUp(new FormData(signUpForm));
+            });
+        }
+    }
+    
+    setupNavigationEvents() {
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Mobile menu toggle (placeholder for future implementation)
+        const mobileToggle = document.querySelector('.mobile-menu-toggle');
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', () => {
+                // TODO: Implement mobile menu
+                console.log('Mobile menu toggle clicked');
+            });
+        }
+    }
+    
+    setupCTAEvents() {
+        // Watch demo buttons - find by text content
+        document.querySelectorAll('.btn').forEach(btn => {
+            if (btn.textContent.includes('Watch Demo')) {
+                btn.addEventListener('click', () => {
+                    document.getElementById('demo').scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        });
+    }
+    
+    setupDemoEvents() {
+        const videoPlaceholder = document.querySelector('.video-placeholder');
+        if (videoPlaceholder) {
+            videoPlaceholder.addEventListener('click', () => {
+                // TODO: Implement video modal or redirect to demo
+                console.log('Demo video clicked');
+                // For now, redirect to the editor
+                window.location.href = 'index.html';
+            });
+        }
+    }
+    
+    openModal(modalId) {
+        console.log('Opening modal:', modalId);
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            console.log('Modal element found, displaying');
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Focus first input
+            const firstInput = modal.querySelector('input');
+            if (firstInput) {
+                setTimeout(() => firstInput.focus(), 100);
+            }
+        } else {
+            console.log('Modal element not found:', modalId);
+        }
+    }
+    
+    closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    }
+    
+    async handleSignIn(formData) {
+        const email = formData.get('email');
+        const password = formData.get('password');
+        
+        console.log('Sign in attempt with email:', email);
+        
+        this.showLoadingState('sign-in-form');
+        
+        try {
+            if (!window.authManager) {
+                throw new Error('Authentication system not initialized');
+            }
+            
+            await window.authManager.signInWithEmail(email, password);
+            console.log('Sign in successful, redirecting...');
+            // Redirect will happen automatically via auth state change
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error('Sign in error:', error);
+            this.showError('sign-in-form', error.message);
+        }
+    }
+    
+    async handleSignUp(formData) {
+        console.log('handleSignUp called');
+        
+        const userData = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            restaurant: formData.get('restaurant'),
+            password: formData.get('password')
+        };
+        
+        console.log('User data:', userData);
+        
+        this.showLoadingState('sign-up-form');
+        
+        try {
+            if (!window.authManager) {
+                throw new Error('Authentication system not initialized');
+            }
+            
+            const user = await window.authManager.signUpWithEmail(userData);
+            console.log('User created:', user);
+            
+            // Create a demo menu for new users
+            window.authManager.createDemoMenu();
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error('Sign up error:', error);
+            this.showError('sign-up-form', error.message);
+        }
+    }
+    
+    async handleGoogleSignIn() {
+        try {
+            await window.authManager.signInWithGoogle();
+            // Create demo menu for new Google users
+            setTimeout(() => {
+                if (window.authManager.getUserMenus().length === 0) {
+                    window.authManager.createDemoMenu();
+                }
+            }, 1000);
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error('Google sign-in error:', error);
+            alert('Google sign-in failed. Please try again.');
+        }
+    }
+    
+    showLoadingState(formId) {
+        const form = document.getElementById(formId);
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        if (submitBtn) {
+            const originalText = submitBtn.textContent;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please wait...';
+            submitBtn.disabled = true;
+            
+            // Reset after timeout (in case of error)
+            setTimeout(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 5000);
+        }
+    }
+    
+    setupGoogleAuth() {
+        const googleSignInBtn = document.getElementById('google-signin-btn');
+        const googleSignUpBtn = document.getElementById('google-signup-btn');
+        
+        if (googleSignInBtn) {
+            googleSignInBtn.addEventListener('click', () => {
+                this.handleGoogleSignIn();
+            });
+        }
+        
+        if (googleSignUpBtn) {
+            googleSignUpBtn.addEventListener('click', () => {
+                this.handleGoogleSignIn();
+            });
+        }
+    }
+    
+    showError(formId, message) {
+        const form = document.getElementById(formId);
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        // Reset loading state
+        if (submitBtn) {
+            submitBtn.textContent = submitBtn.dataset.originalText || 'Sign In';
+            submitBtn.disabled = false;
+        }
+        
+        // Show error message
+        let errorDiv = form.querySelector('.error-message');
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.style.cssText = 'color: #e74c3c; background: #fdf2f2; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 14px; text-align: center;';
+            form.appendChild(errorDiv);
+        }
+        
+        errorDiv.textContent = message;
+        
+        // Hide error after 5 seconds
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.parentNode.removeChild(errorDiv);
+            }
+        }, 5000);
+    }
+    
+    initializeScrollEffects() {
+        // Add scroll-based animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe feature cards and pricing cards
+        document.querySelectorAll('.feature-card, .pricing-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+        
+        // Navbar background on scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.backdropFilter = 'blur(15px)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.backdropFilter = 'blur(10px)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize auth manager first
+    if (!window.authManager) {
+        window.authManager = new AuthManager();
+    }
+    
+    new LandingPage();
+});
+
+// Utility function to check if text contains substring (for event delegation)
+Node.prototype.contains = Node.prototype.contains || function(node) {
+    return !!(this.compareDocumentPosition(node) & 16);
+};

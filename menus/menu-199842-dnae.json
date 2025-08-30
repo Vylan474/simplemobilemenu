@@ -1,0 +1,68 @@
+{
+  "id": "10513c3b77d49dc6d28eade0d16f8275",
+  "slug": "menu-199842-dnae",
+  "title": "Our Menu",
+  "subtitle": "Crafted with care and passion",
+  "sections": [
+    {
+      "id": 1,
+      "name": "Test",
+      "type": "food",
+      "columns": [
+        "Item Name",
+        "Description",
+        "Price"
+      ],
+      "titleColumns": [
+        "Item Name",
+        "Price"
+      ],
+      "items": [
+        {
+          "Item Name": "New Menu Item",
+          "Description": "It tastes GOOD",
+          "Price": "2000"
+        },
+        {
+          "Item Name": "Test",
+          "Description": "fdhh",
+          "Price": "20"
+        },
+        {
+          "Item Name": "Tiny",
+          "Description": "tset",
+          "Price": "10"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Wine by The Bottle",
+      "type": "wine",
+      "columns": [
+        "Vintage",
+        "Region",
+        "Wine Name",
+        "Producer",
+        "Price"
+      ],
+      "titleColumns": [
+        "Vintage",
+        "Wine Name",
+        "Price"
+      ],
+      "items": [
+        {
+          "Wine Name": "Something",
+          "Producer": "Meiomi",
+          "Vintage": "2025",
+          "Region": "Napa",
+          "Price": "300"
+        }
+      ]
+    }
+  ],
+  "publishedAt": "2025-08-28T04:26:44.819Z",
+  "updatedAt": "2025-08-28T04:26:44.819Z",
+  "version": "1.0"
+}

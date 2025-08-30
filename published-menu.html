@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Published menu specific styles */
+        .published-menu-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 100px;
+            min-height: 100vh;
+        }
+        
+        .published-menu-container .preview-menu-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .published-menu-container .preview-menu-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .published-menu-container .preview-section {
+            scroll-margin-top: 20px;
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+        
+        .loading-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #e74c3c;
+        }
+        
+        .error-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            display: block;
+            color: #bdc3c7;
+        }
+        
+        @media (max-width: 768px) {
+            .published-menu-container {
+                padding: 15px;
+                padding-bottom: 100px;
+            }
+            
+            .published-menu-container .preview-menu-container {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="published-menu-container">
+        <div class="loading-state" id="loading">
+            <i class="fas fa-utensils"></i>
+            <h2>Loading Menu...</h2>
+            <p>Please wait while we prepare your menu</p>
+        </div>
+        
+        <div id="menu-content" style="display: none;">
+            <div class="preview-menu-header">
+                <div class="preview-menu-title" id="menu-title">Our Menu</div>
+                <div class="preview-menu-subtitle" id="menu-subtitle">Crafted with care and passion</div>
+            </div>
+            <div class="preview-menu-container" id="menu-sections">
+                <!-- Menu sections will be loaded here -->
+            </div>
+        </div>
+        
+        <div class="error-state" id="error" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2>Menu Not Available</h2>
+            <p>Sorry, this menu could not be loaded. Please try again later.</p>
+        </div>
+    </div>
+    
+    <!-- Navigation (same as preview) -->
+    <div class="preview-navigation" id="navigation" style="display: none;">
+        <div class="nav-tab" id="nav-tab">
+            <i class="fas fa-compass"></i> Navigate
+        </div>
+        <div class="nav-dock-container" id="nav-dock-container">
+            <!-- Navigation will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        // Published Menu Display Class
+        class PublishedMenuDisplay {
+            constructor() {
+                this.menuData = null;
+                this.navExpanded = false;
+                this.scrollObserver = null;
+                this.slug = '{{MENU_SLUG}}'; // Will be replaced by server
+                
+                this.loadMenu();
+            }
+            
+            async loadMenu() {
+                try {
+                    const response = await fetch(`/api/menu/${this.slug}`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`Menu not found: ${response.status}`);
+                    }
+                    
+                    this.menuData = await response.json();
+                    this.renderMenu();
+                    
+                } catch (error) {
+                    console.error('Error loading menu:', error);
+                    this.showError();
+                }
+            }
+            
+            showError() {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+            }
+            
+            renderMenu() {
+                // Hide loading, show content
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('menu-content').style.display = 'block';
+                
+                // Update page title
+                document.title = this.menuData.title;
+                
+                // Update header
+                document.getElementById('menu-title').textContent = this.menuData.title;
+                document.getElementById('menu-subtitle').textContent = this.menuData.subtitle;
+                
+                // Generate sections HTML using the same logic as preview
+                const sectionsHTML = this.menuData.sections.map(section => {
+                    const titleColumns = section.titleColumns || [section.columns[0]];
+                    const descriptionColumn = section.columns.find(col => 
+                        col.toLowerCase().includes('description')
+                    );
+                    
+                    const visibleColumns = section.columns.filter(col => 
+                        !titleColumns.includes(col) && col !== descriptionColumn
+                    );
+                    
+                    return `
+                        <div class="preview-section">
+                            <h2>${section.name}</h2>
+                            ${visibleColumns.length > 0 ? `
+                                <div class="preview-column-headers" style="grid-template-columns: repeat(${visibleColumns.length}, 1fr);">
+                                    ${visibleColumns.map(column => `
+                                        <span class="preview-column-header ${column.toLowerCase().includes('price') ? 'preview-price-header' : ''}">${column}</span>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                            <div class="preview-items">
+                                ${section.items.map(item => this.generatePreviewItem(item, section)).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('menu-sections').innerHTML = sectionsHTML;
+                
+                // Show navigation if there are sections
+                if (this.menuData.sections.length > 0) {
+                    this.generateNavigation();
+                    document.getElementById('navigation').style.display = 'block';
+                }
+                
+                // Initialize scroll animations
+                this.initializeScrollAnimations();
+            }
+            
+            generatePreviewItem(item, section) {
+                const titleColumns = section.titleColumns || [section.columns[0]];
+                const descriptionColumn = section.columns.find(col => 
+                    col.toLowerCase().includes('description')
+                );
+                
+                const titleParts = [];
+                const priceInTitle = [];
+                
+                titleColumns.forEach(col => {
+                    const value = item[col] || '';
+                    if (value.trim()) {
+                        if (col.toLowerCase().includes('price')) {
+                            priceInTitle.push(value);
+                        } else {
+                            titleParts.push(value);
+                        }
+                    }
+                });
+                
+                const titleText = titleParts.join(' ');
+                const titlePrice = priceInTitle.join(' ');
+                const description = descriptionColumn ? (item[descriptionColumn] || '') : '';
+                
+                const visibleColumns = section.columns.filter(col => 
+                    !titleColumns.includes(col) && col !== descriptionColumn
+                );
+                
+                const dataRow = visibleColumns.map(col => {
+                    const value = item[col] || '';
+                    const isPrice = col.toLowerCase().includes('price');
+                    return `<span class="preview-data-cell ${isPrice ? 'preview-price-cell' : ''}">${value}</span>`;
+                }).join('');
+                
+                return `
+                    <div class="preview-item">
+                        ${(titleText || titlePrice) ? `
+                            <div class="preview-item-title">
+                                <span class="preview-title-text">${titleText}</span>
+                                ${titlePrice ? `<span class="preview-title-price">${titlePrice}</span>` : ''}
+                            </div>
+                        ` : ''}
+                        ${description ? `<div class="preview-item-description">${description}</div>` : ''}
+                        ${visibleColumns.length > 0 ? `
+                            <div class="preview-item-data" style="grid-template-columns: repeat(${visibleColumns.length}, 1fr);">
+                                ${dataRow}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            generateNavigation() {
+                const dockContainer = document.getElementById('nav-dock-container');
+                const navTab = document.getElementById('nav-tab');
+                
+                const dockHTML = `
+                    <div class="nav-dock">
+                        ${this.menuData.sections.map((section, index) => `
+                            <div class="nav-dock-item" data-section-index="${index}">
+                                ${section.name}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                dockContainer.innerHTML = dockHTML;
+                
+                // Attach event listeners
+                navTab.addEventListener('click', () => this.toggleNavigation());
+                
+                const dockItems = dockContainer.querySelectorAll('.nav-dock-item');
+                dockItems.forEach((item, index) => {
+                    item.addEventListener('click', () => {
+                        this.scrollToSectionAndClose(index);
+                    });
+                });
+            }
+            
+            toggleNavigation() {
+                const dockContainer = document.getElementById('nav-dock-container');
+                this.navExpanded = !this.navExpanded;
+                dockContainer.classList.toggle('expanded', this.navExpanded);
+            }
+            
+            scrollToSectionAndClose(sectionIndex) {
+                this.toggleNavigation();
+                
+                setTimeout(() => {
+                    this.scrollToSection(sectionIndex);
+                }, 200);
+            }
+            
+            scrollToSection(sectionIndex) {
+                const previewSections = document.querySelectorAll('.preview-section');
+                
+                if (previewSections[sectionIndex]) {
+                    this.updateNavigationActiveState(sectionIndex);
+                    
+                    previewSections[sectionIndex].scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+            
+            updateNavigationActiveState(activeIndex) {
+                const navItems = document.querySelectorAll('.nav-dock-item');
+                navItems.forEach(item => item.classList.remove('active'));
+                
+                if (navItems[activeIndex]) {
+                    navItems[activeIndex].classList.add('active');
+                }
+            }
+            
+            initializeScrollAnimations() {
+                const sections = document.querySelectorAll('.preview-section');
+                
+                if (sections.length === 0) return;
+                
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px 0px 0px 0px',
+                    threshold: [0, 0.1, 0.25, 0.5, 0.75, 1]
+                };
+                
+                this.scrollObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const section = entry.target;
+                        const rect = section.getBoundingClientRect();
+                        const isAboveViewport = rect.bottom < 0;
+                        const isBelowViewport = rect.top > window.innerHeight;
+                        const isInViewport = !isAboveViewport && !isBelowViewport;
+                        
+                        if (isInViewport && entry.isIntersecting) {
+                            section.classList.remove('section-hidden', 'section-exiting', 'section-exiting-down');
+                            section.classList.add('section-visible');
+                        } else if (isAboveViewport) {
+                            if (section.classList.contains('section-visible')) {
+                                section.classList.remove('section-visible', 'section-hidden', 'section-exiting-down');
+                                section.classList.add('section-exiting');
+                                setTimeout(() => {
+                                    if (section.classList.contains('section-exiting')) {
+                                        section.classList.remove('section-exiting');
+                                        section.classList.add('section-hidden');
+                                    }
+                                }, 600);
+                            }
+                        } else if (isBelowViewport) {
+                            if (section.classList.contains('section-visible')) {
+                                section.classList.remove('section-visible', 'section-hidden', 'section-exiting');
+                                section.classList.add('section-exiting-down');
+                                setTimeout(() => {
+                                    if (section.classList.contains('section-exiting-down')) {
+                                        section.classList.remove('section-exiting-down');
+                                        section.classList.add('section-hidden');
+                                    }
+                                }, 600);
+                            }
+                        }
+                    });
+                }, observerOptions);
+                
+                sections.forEach(section => {
+                    section.classList.add('section-hidden');
+                    this.scrollObserver.observe(section);
+                });
+            }
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new PublishedMenuDisplay();
+        });
+    </script>
+</body>
+</html>

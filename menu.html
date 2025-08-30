@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Display</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="published-menu-container">
+        <div class="preview-menu-header">
+            <img id="published-menu-logo" class="menu-logo" style="display: none;" alt="Menu Logo">
+            <div class="preview-menu-title" id="published-menu-title">Our Menu</div>
+            <div class="preview-menu-subtitle" id="published-menu-subtitle">Crafted with care and passion</div>
+        </div>
+        <div class="preview-menu-container" id="published-menu-content">
+            <!-- Menu sections will be dynamically loaded here -->
+        </div>
+    </div>
+    
+    <div class="preview-navigation">
+        <div class="nav-tab" id="published-nav-tab">
+            <i class="fas fa-compass"></i> Navigate
+        </div>
+        <div class="nav-dock-container" id="published-nav-dock-container">
+            <!-- Dock navigation will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        // Published Menu Display Class
+        class PublishedMenu {
+            constructor() {
+                this.menuData = null;
+                this.navExpanded = false;
+                this.scrollObserver = null;
+                
+                this.loadMenuFromPath();
+            }
+            
+            loadMenuFromPath() {
+                // Extract path from URL hash (e.g., menu.html#my-restaurant-name)
+                const menuPath = window.location.hash.substring(1);
+                
+                console.log('Full URL:', window.location.href);
+                console.log('Hash:', window.location.hash);
+                console.log('Extracted menu path:', menuPath);
+                
+                if (!menuPath) {
+                    console.log('No menu path found in URL hash');
+                    this.showNotFound();
+                    return;
+                }
+                
+                // Load menu data from localStorage (in production, this would be an API call)
+                console.log('Looking for menu with path:', menuPath);
+                console.log('Searching for key:', `published-menu-${menuPath}`);
+                console.log('Available localStorage keys:', Object.keys(localStorage));
+                console.log('Published menu keys:', Object.keys(localStorage).filter(k => k.includes('published-menu')));
+                const savedMenu = localStorage.getItem(`published-menu-${menuPath}`);
+                
+                if (savedMenu) {
+                    try {
+                        this.menuData = JSON.parse(savedMenu);
+                        console.log('Loaded published menu data:', this.menuData);
+                        
+                        if (!this.menuData.sections || !Array.isArray(this.menuData.sections)) {
+                            console.error('Invalid menu data - no sections array');
+                            this.showNotFound();
+                            return;
+                        }
+                        
+                        this.renderPublishedMenu();
+                    } catch (error) {
+                        console.error('Error parsing menu data:', error);
+                        this.showNotFound();
+                    }
+                } else {
+                    console.log('No saved menu found for path:', menuPath);
+                    
+                    // Debug: Try to find any published menu for testing
+                    const publishedKeys = Object.keys(localStorage).filter(k => k.includes('published-menu'));
+                    if (publishedKeys.length > 0) {
+                        console.log('Found other published menus:', publishedKeys);
+                        console.log('First published menu data:', localStorage.getItem(publishedKeys[0]));
+                    }
+                    
+                    this.showNotFound();
+                }
+            }
+            
+            showNotFound() {
+                document.querySelector('.published-menu-container').innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; color: #7f8c8d;">
+                        <i class="fas fa-utensils" style="font-size: 64px; margin-bottom: 20px; display: block; color: #bdc3c7;"></i>
+                        <h2 style="margin-bottom: 15px; color: #2c3e50;">Menu Not Found</h2>
+                        <p>The menu you're looking for doesn't exist or has been moved.</p>
+                    </div>
+                `;
+            }
+            
+            renderPublishedMenu() {
+                // Update title and subtitle
+                document.getElementById('published-menu-title').textContent = this.menuData.title;
+                document.getElementById('published-menu-subtitle').textContent = this.menuData.subtitle;
+                document.title = this.menuData.title;
+                
+                // Update logo
+                const logoImg = document.getElementById('published-menu-logo');
+                console.log('Logo data:', this.menuData.menuLogo ? 'Found' : 'Not found', this.menuData.logoSize);
+                if (this.menuData.menuLogo) {
+                    logoImg.src = this.menuData.menuLogo;
+                    logoImg.className = `menu-logo ${this.menuData.logoSize || 'medium'}`;
+                    logoImg.style.display = 'block';
+                    console.log('Logo displayed successfully');
+                } else {
+                    logoImg.style.display = 'none';
+                    console.log('No logo to display');
+                }
+                
+                // Update background
+                this.applyBackground();
+                
+                // Apply font family
+                this.applyFontFamily();
+                
+                // Generate sections HTML
+                console.log('Generating sections:', this.menuData.sections.length, 'sections found');
+                console.log('First section:', this.menuData.sections[0]);
+                const sectionsHTML = this.menuData.sections.map((section, index) => {
+                    console.log(`Processing section ${index}:`, section.name, 'with', section.items?.length || 0, 'items');
+                    const titleColumns = section.titleColumns || [section.columns[0]];
+                    const descriptionColumn = section.columns.find(col => 
+                        col.toLowerCase().includes('description')
+                    );
+                    
+                    // Filter out title and description columns from headers
+                    const visibleColumns = section.columns.filter(col => 
+                        !titleColumns.includes(col) && col !== descriptionColumn
+                    );
+                    
+                    return `
+                        <div class="preview-section">
+                            <h2>${section.name}</h2>
+                            ${visibleColumns.length > 0 ? `
+                                <div class="preview-column-headers" style="grid-template-columns: ${visibleColumns.map(col => col.toLowerCase().includes('price') ? 'auto' : '1fr').join(' ')};">
+                                    ${visibleColumns.map(column => `
+                                        <span class="preview-column-header ${column.toLowerCase().includes('price') ? 'preview-price-header' : ''}">${column}</span>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                            <div class="preview-items">
+                                ${section.items?.map(item => {
+                                    console.log('Generating item:', item);
+                                    return this.generatePreviewItem(item, section);
+                                }).join('') || '<p>No items in this section</p>'}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                console.log('Generated sections HTML:', sectionsHTML);
+                document.getElementById('published-menu-content').innerHTML = sectionsHTML;
+                
+                // Ensure price alignment is correct first
+                this.ensurePriceAlignment();
+                
+                // Apply color palette after alignment is set
+                this.applyColorPalette();
+                
+                // Generate navigation
+                this.generateNavigation();
+                
+                // Initialize scroll animations
+                this.initializeScrollAnimations();
+            }
+            
+            generateNavigation() {
+                const dockContainer = document.getElementById('published-nav-dock-container');
+                const navTab = document.getElementById('published-nav-tab');
+                
+                if (this.menuData.sections.length === 0) {
+                    navTab.style.display = 'none';
+                    return;
+                }
+                
+                const dockHTML = `
+                    <div class="nav-dock">
+                        ${this.menuData.sections.map((section, index) => `
+                            <div class="nav-dock-item" data-section-index="${index}">
+                                ${section.name}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                dockContainer.innerHTML = dockHTML;
+                
+                // Attach event listeners
+                navTab.addEventListener('click', () => this.toggleNavigation());
+                
+                const dockItems = dockContainer.querySelectorAll('.nav-dock-item');
+                dockItems.forEach((item, index) => {
+                    item.addEventListener('click', () => {
+                        this.scrollToSectionAndClose(index);
+                    });
+                });
+            }
+            
+            toggleNavigation() {
+                const dockContainer = document.getElementById('published-nav-dock-container');
+                this.navExpanded = !this.navExpanded;
+                dockContainer.classList.toggle('expanded', this.navExpanded);
+            }
+            
+            scrollToSectionAndClose(sectionIndex) {
+                this.toggleNavigation();
+                
+                setTimeout(() => {
+                    this.scrollToSection(sectionIndex);
+                }, 200);
+            }
+            
+            scrollToSection(sectionIndex) {
+                const previewSections = document.querySelectorAll('.preview-section');
+                
+                if (previewSections[sectionIndex]) {
+                    this.updateNavigationActiveState(sectionIndex);
+                    
+                    previewSections[sectionIndex].scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+            
+            updateNavigationActiveState(activeIndex) {
+                const navItems = document.querySelectorAll('.nav-dock-item');
+                navItems.forEach(item => item.classList.remove('active'));
+                
+                if (navItems[activeIndex]) {
+                    navItems[activeIndex].classList.add('active');
+                }
+            }
+            
+            initializeScrollAnimations() {
+                const sections = document.querySelectorAll('.preview-section');
+                
+                if (sections.length === 0) return;
+                
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px 0px 0px 0px',
+                    threshold: [0, 0.1, 0.25, 0.5, 0.75, 1]
+                };
+                
+                this.scrollObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const section = entry.target;
+                        const rect = section.getBoundingClientRect();
+                        const isAboveViewport = rect.bottom < 0;
+                        const isBelowViewport = rect.top > window.innerHeight;
+                        const isInViewport = !isAboveViewport && !isBelowViewport;
+                        
+                        if (isInViewport && entry.isIntersecting) {
+                            section.classList.remove('section-hidden', 'section-exiting', 'section-exiting-down');
+                            section.classList.add('section-visible');
+                        } else if (isAboveViewport) {
+                            if (section.classList.contains('section-visible')) {
+                                section.classList.remove('section-visible', 'section-hidden', 'section-exiting-down');
+                                section.classList.add('section-exiting');
+                                setTimeout(() => {
+                                    if (section.classList.contains('section-exiting')) {
+                                        section.classList.remove('section-exiting');
+                                        section.classList.add('section-hidden');
+                                    }
+                                }, 600);
+                            } else {
+                                section.classList.remove('section-visible', 'section-exiting', 'section-exiting-down');
+                                section.classList.add('section-hidden');
+                            }
+                        } else if (isBelowViewport) {
+                            if (section.classList.contains('section-visible')) {
+                                section.classList.remove('section-visible', 'section-hidden', 'section-exiting');
+                                section.classList.add('section-exiting-down');
+                                setTimeout(() => {
+                                    if (section.classList.contains('section-exiting-down')) {
+                                        section.classList.remove('section-exiting-down');
+                                        section.classList.add('section-hidden');
+                                    }
+                                }, 600);
+                            } else {
+                                section.classList.remove('section-visible', 'section-exiting', 'section-exiting-down');
+                                section.classList.add('section-hidden');
+                            }
+                        }
+                    });
+                }, observerOptions);
+                
+                sections.forEach(section => {
+                    section.classList.add('section-hidden');
+                    this.scrollObserver.observe(section);
+                });
+            }
+            
+            generatePreviewItem(item, section) {
+                const titleColumns = section.titleColumns || [section.columns[0]];
+                const descriptionColumn = section.columns.find(col => 
+                    col.toLowerCase().includes('description')
+                );
+                
+                // Generate title from selected title columns in the user's specified order
+                const titleParts = [];
+                const priceInTitle = [];
+                
+                // Use titleColumns order directly to preserve user's arrangement
+                titleColumns.forEach(col => {
+                    const value = item[col] || '';
+                    if (value.trim()) {
+                        if (col.toLowerCase().includes('price')) {
+                            priceInTitle.push(value);
+                        } else {
+                            titleParts.push(value);
+                        }
+                    }
+                });
+                
+                // Combine title parts
+                const titleText = titleParts.join(' ');
+                const titlePrice = priceInTitle.join(' ');
+                
+                const description = descriptionColumn ? (item[descriptionColumn] || '') : '';
+                
+                // Filter visible columns (exclude title and description columns)
+                const visibleColumns = section.columns.filter(col => 
+                    !titleColumns.includes(col) && col !== descriptionColumn
+                );
+                
+                // Generate data row for visible columns only
+                const dataRow = visibleColumns.map(col => {
+                    const value = item[col] || '';
+                    const isPrice = col.toLowerCase().includes('price');
+                    
+                    return `<span class="preview-data-cell ${isPrice ? 'preview-price-cell' : ''}">${value}</span>`;
+                }).join('');
+                
+                return `
+                    <div class="preview-item">
+                        ${(titleText || titlePrice) ? `
+                            <div class="preview-item-title">
+                                <span class="preview-title-text">${titleText}</span>
+                                ${titlePrice ? `<span class="preview-title-price">${titlePrice}</span>` : ''}
+                            </div>
+                        ` : ''}
+                        ${description ? `<div class="preview-item-description">${description}</div>` : ''}
+                        ${visibleColumns.length > 0 ? `
+                            <div class="preview-item-data" style="grid-template-columns: ${visibleColumns.map(col => col.toLowerCase().includes('price') ? 'auto' : '1fr').join(' ')};">
+                                ${dataRow}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            applyBackground() {
+                const container = document.querySelector('.published-menu-container');
+                
+                if (this.menuData.backgroundType === 'image' && this.menuData.backgroundValue) {
+                    container.style.backgroundImage = `url('${this.menuData.backgroundValue}')`;
+                    container.style.backgroundSize = 'cover';
+                    container.style.backgroundPosition = 'center';
+                    container.style.backgroundRepeat = 'no-repeat';
+                    container.style.backgroundAttachment = 'fixed';
+                } else if (this.menuData.backgroundType === 'color' && this.menuData.backgroundValue) {
+                    container.style.backgroundColor = this.menuData.backgroundValue;
+                } else {
+                    // Reset to default
+                    container.style.background = '';
+                    container.style.backgroundImage = '';
+                    container.style.backgroundColor = '';
+                }
+            }
+            
+            applyFontFamily() {
+                if (!this.menuData.fontFamily) return;
+                
+                const fontStacks = {
+                    'Inter': "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    'Playfair Display': "'Playfair Display', Georgia, 'Times New Roman', serif",
+                    'Georgia': "Georgia, 'Times New Roman', Times, serif",
+                    'Lato': "'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    'Montserrat': "'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+                };
+                
+                const fontStack = fontStacks[this.menuData.fontFamily] || fontStacks['Inter'];
+                const container = document.querySelector('.published-menu-container');
+                
+                if (container) {
+                    container.style.fontFamily = fontStack;
+                }
+            }
+            
+            applyColorPalette() {
+                if (!this.menuData.colorPalette) return;
+                
+                const colorPalettes = {
+                    classic: {
+                        primaryText: '#2c3e50',
+                        secondaryText: '#7f8c8d',
+                        headers: '#34495e',
+                        accent: '#27ae60',
+                        background: '#ecf0f1',
+                        muted: '#bdc3c7'
+                    },
+                    ocean: {
+                        primaryText: '#1e3a5f',
+                        secondaryText: '#5a6c7d',
+                        headers: '#2c5282',
+                        accent: '#3182ce',
+                        background: '#ebf8ff',
+                        muted: '#a0aec0'
+                    },
+                    forest: {
+                        primaryText: '#1a202c',
+                        secondaryText: '#4a5568',
+                        headers: '#2d3748',
+                        accent: '#38a169',
+                        background: '#f0fff4',
+                        muted: '#9ca3af'
+                    },
+                    sunset: {
+                        primaryText: '#742a2a',
+                        secondaryText: '#a0616a',
+                        headers: '#9c2a2a',
+                        accent: '#e53e3e',
+                        background: '#fffaf0',
+                        muted: '#cbd5e0'
+                    },
+                    monochrome: {
+                        primaryText: '#1a1a1a',
+                        secondaryText: '#4a4a4a',
+                        headers: '#2d2d2d',
+                        accent: '#000000',
+                        background: '#f7f7f7',
+                        muted: '#9a9a9a'
+                    },
+                    wine: {
+                        primaryText: '#4c1d95',
+                        secondaryText: '#6b46c1',
+                        headers: '#581c87',
+                        accent: '#7c3aed',
+                        background: '#faf5ff',
+                        muted: '#a78bfa'
+                    },
+                    cream: {
+                        primaryText: '#f8f6f0',
+                        secondaryText: '#e8e2d4',
+                        headers: '#d4c5a9',
+                        accent: '#c9a96e',
+                        background: '#2d2a24',
+                        muted: '#b8ab94'
+                    },
+                    pearl: {
+                        primaryText: '#f7f7f7',
+                        secondaryText: '#e0e0e0',
+                        headers: '#c4c4c4',
+                        accent: '#a8a8a8',
+                        background: '#1a1a1a',
+                        muted: '#d3d3d3'
+                    },
+                    mint: {
+                        primaryText: '#f0fdf4',
+                        secondaryText: '#bbf7d0',
+                        headers: '#86efac',
+                        accent: '#4ade80',
+                        background: '#1a2e05',
+                        muted: '#a7f3d0'
+                    },
+                    blush: {
+                        primaryText: '#fef7f7',
+                        secondaryText: '#fecaca',
+                        headers: '#f87171',
+                        accent: '#dc2626',
+                        background: '#2d1b1b',
+                        muted: '#fbb6b6'
+                    }
+                };
+                
+                const palette = colorPalettes[this.menuData.colorPalette];
+                if (!palette) return;
+                
+                const container = document.querySelector('.published-menu-container');
+                if (!container) return;
+                
+                // Apply specific element colors
+                const primaryTextElements = container.querySelectorAll('.preview-item-title .preview-title-text, .preview-menu-title');
+                primaryTextElements.forEach(el => el.style.color = palette.primaryText);
+                
+                const secondaryTextElements = container.querySelectorAll('.preview-item-description, .preview-menu-subtitle');
+                secondaryTextElements.forEach(el => el.style.color = palette.secondaryText);
+                
+                const headerElements = container.querySelectorAll('.preview-section h2, .preview-column-header');
+                headerElements.forEach(el => el.style.color = palette.headers);
+                
+                const accentElements = container.querySelectorAll('.preview-price-cell, .preview-title-price');
+                accentElements.forEach(el => {
+                    el.style.color = palette.accent;
+                    // Ensure price alignment is maintained after color application
+                    if (el.classList.contains('preview-price-cell')) {
+                        el.style.textAlign = 'right';
+                        el.style.justifySelf = 'end';
+                        el.style.gridColumn = '-1';
+                        el.style.marginLeft = 'auto';
+                    }
+                    if (el.classList.contains('preview-title-price')) {
+                        el.style.textAlign = 'right';
+                        el.style.marginLeft = 'auto';
+                        el.style.flexShrink = '0';
+                        el.style.whiteSpace = 'nowrap';
+                    }
+                });
+            }
+            
+            ensurePriceAlignment() {
+                const container = document.querySelector('.published-menu-container');
+                if (!container) return;
+                
+                // Force alignment for all price cells
+                const priceCells = container.querySelectorAll('.preview-price-cell, [class*="price"]');
+                priceCells.forEach(el => {
+                    el.style.textAlign = 'right';
+                    el.style.justifySelf = 'end';
+                    el.style.gridColumn = '-1';
+                    el.style.marginLeft = 'auto';
+                });
+                
+                // Force alignment for price column headers
+                const priceHeaders = container.querySelectorAll('.preview-price-header, .preview-column-header[class*="price"]');
+                priceHeaders.forEach(el => {
+                    el.style.textAlign = 'right';
+                    el.style.justifySelf = 'end';
+                    el.style.gridColumn = '-1';
+                });
+                
+                // Force alignment for title prices
+                const titlePrices = container.querySelectorAll('.preview-title-price');
+                titlePrices.forEach(el => {
+                    el.style.textAlign = 'right';
+                    el.style.flexShrink = '0';
+                    el.style.whiteSpace = 'nowrap';
+                    el.style.minWidth = 'fit-content';
+                });
+                
+                // Force flexbox layout for title containers
+                const titleContainers = container.querySelectorAll('.preview-item-title');
+                titleContainers.forEach(el => {
+                    el.style.display = 'flex';
+                    el.style.justifyContent = 'space-between';
+                    el.style.width = '100%';
+                    el.style.alignItems = 'baseline';
+                    el.style.gap = '15px';
+                });
+                
+                // Force flex properties for title text
+                const titleTexts = container.querySelectorAll('.preview-title-text');
+                titleTexts.forEach(el => {
+                    el.style.flex = '1';
+                });
+            }
+        }
+        
+        // Initialize published menu when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new PublishedMenu();
+        });
+    </script>
+</body>
+</html>

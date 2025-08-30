@@ -1,0 +1,52 @@
+{
+  "id": "2dd9fbf8b5e5531e77005f768cd0ae11",
+  "slug": "menu-122928-0vi2",
+  "title": "Our Menu",
+  "subtitle": "Crafted with care and passion",
+  "sections": [
+    {
+      "id": 1,
+      "name": "Appetizers",
+      "type": "food",
+      "columns": [
+        "Item Name",
+        "Description",
+        "Price"
+      ],
+      "titleColumns": [
+        "Item Name"
+      ],
+      "items": [
+        {
+          "Item Name": "Caesar Salad",
+          "Description": "Crisp romaine lettuce with parmesan and croutons",
+          "Price": "12"
+        },
+        {
+          "Item Name": "Truffle Arancini",
+          "Description": "Creamy risotto balls with black truffle",
+          "Price": "16"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Cocktails",
+      "type": "cocktails",
+      "columns": [
+        "Cocktail Name",
+        "Description",
+        "Base Spirit",
+        "Price"
+      ],
+      "titleColumns": [
+        "Cocktail Name",
+        "Price"
+      ],
+      "items": []
+    }
+  ],
+  "publishedAt": "2025-08-29T10:58:45.875Z",
+  "updatedAt": "2025-08-29T10:58:45.875Z",
+  "version": "1.0"
+}

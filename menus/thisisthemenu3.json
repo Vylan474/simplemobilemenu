@@ -1,0 +1,94 @@
+{
+  "id": "f05124ae14072ea36ed2963475d3b7b3",
+  "slug": "thisisthemenu3",
+  "title": "Our Menu",
+  "subtitle": "Crafted with care and passion",
+  "sections": [
+    {
+      "id": 1,
+      "name": "Appetizers",
+      "type": "food",
+      "columns": [
+        "Item Name",
+        "Description",
+        "Price"
+      ],
+      "titleColumns": [
+        "Item Name"
+      ],
+      "items": [
+        {
+          "Item Name": "Caesar Salad",
+          "Description": "Crisp romaine lettuce with parmesan and croutons",
+          "Price": "12"
+        },
+        {
+          "Item Name": "Truffle Arancini",
+          "Description": "Creamy risotto balls with black truffle",
+          "Price": "16"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Desserts",
+      "type": "desserts",
+      "columns": [
+        "Dessert Name",
+        "Description",
+        "Allergens",
+        "Price"
+      ],
+      "titleColumns": [
+        "Dessert Name"
+      ],
+      "items": []
+    },
+    {
+      "id": 2,
+      "name": "Cocktails",
+      "type": "cocktails",
+      "columns": [
+        "Cocktail Name",
+        "Description",
+        "Base Spirit",
+        "Price"
+      ],
+      "titleColumns": [
+        "Cocktail Name",
+        "Price"
+      ],
+      "items": []
+    },
+    {
+      "id": 3,
+      "name": "Wine",
+      "type": "wine",
+      "columns": [
+        "Price",
+        "Wine Name",
+        "Producer",
+        "Vintage",
+        "Region"
+      ],
+      "titleColumns": [
+        "Price",
+        "Wine Name",
+        "Producer",
+        "Vintage"
+      ],
+      "items": [
+        {
+          "Wine Name": "Oube",
+          "Producer": "sfas",
+          "Vintage": "",
+          "Region": "",
+          "Price": "299"
+        }
+      ]
+    }
+  ],
+  "publishedAt": "2025-08-29T11:48:45.454Z",
+  "updatedAt": "2025-08-29T11:48:45.455Z",
+  "version": "1.0"
+}

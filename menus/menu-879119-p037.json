@@ -1,0 +1,37 @@
+{
+  "id": "cd1ce1e47039fcf711623001e59993b9",
+  "slug": "menu-879119-p037",
+  "title": "Our Menu",
+  "subtitle": "Crafted with care and passion",
+  "sections": [
+    {
+      "id": 1,
+      "name": "Beer",
+      "type": "beer",
+      "columns": [
+        "Beer Name",
+        "Brewery",
+        "Style",
+        "ABV",
+        "Price"
+      ],
+      "titleColumns": [
+        "Beer Name",
+        "Brewery",
+        "Price"
+      ],
+      "items": [
+        {
+          "Beer Name": "Two Hearted",
+          "Brewery": "Bell's",
+          "Style": "IPA ",
+          "ABV": "8$",
+          "Price": "20"
+        }
+      ]
+    }
+  ],
+  "publishedAt": "2025-08-19T03:41:22.409Z",
+  "updatedAt": "2025-08-19T03:41:22.409Z",
+  "version": "1.0"
+}

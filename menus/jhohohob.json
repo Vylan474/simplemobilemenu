@@ -1,0 +1,109 @@
+{
+  "id": "65bf485d64405c87cccca9c1f4cbe498",
+  "slug": "jhohohob",
+  "title": "J. HoHoHo B.",
+  "subtitle": "Crafted with care and passion",
+  "sections": [
+    {
+      "id": 1,
+      "name": "Beer",
+      "type": "beer",
+      "columns": [
+        "Beer Name",
+        "Brewery",
+        "Style",
+        "ABV",
+        "Price"
+      ],
+      "titleColumns": [
+        "Beer Name",
+        "Brewery",
+        "Price"
+      ],
+      "items": [
+        {
+          "Beer Name": "Two Hearted",
+          "Brewery": "Bell's",
+          "Style": "IPA ",
+          "ABV": "8$",
+          "Price": "20"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Wine",
+      "type": "wine",
+      "columns": [
+        "Vintage",
+        "Wine Name",
+        "Producer",
+        "Region",
+        "Price"
+      ],
+      "titleColumns": [
+        "Vintage",
+        "Wine Name",
+        "Price"
+      ],
+      "items": [
+        {
+          "Wine Name": "Good Wine",
+          "Producer": "Good Wine CO",
+          "Vintage": "2004",
+          "Region": "Napa",
+          "Price": "25",
+          "Varietal": "Cab"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Cocktails",
+      "type": "cocktails",
+      "columns": [
+        "Cocktail Name",
+        "Description",
+        "Base Spirit",
+        "Price"
+      ],
+      "titleColumns": [
+        "Cocktail Name"
+      ],
+      "items": []
+    },
+    {
+      "id": 4,
+      "name": "Coffee/Tea",
+      "type": "coffee",
+      "columns": [
+        "Item Name",
+        "Type",
+        "Size Options",
+        "Price"
+      ],
+      "titleColumns": [
+        "Item Name"
+      ],
+      "items": []
+    },
+    {
+      "id": 5,
+      "name": "Desserts",
+      "type": "desserts",
+      "columns": [
+        "Dessert Name",
+        "Description",
+        "Allergens",
+        "Price"
+      ],
+      "titleColumns": [
+        "Dessert Name"
+      ],
+      "items": []
+    }
+  ],
+  "publishedAt": "2025-08-26T00:33:26.324Z",
+  "updatedAt": "2025-08-26T00:33:26.324Z",
+  "version": "1.0"
+}

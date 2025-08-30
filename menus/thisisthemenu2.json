@@ -1,0 +1,120 @@
+{
+  "id": "3f3b47dc630405883d785b957c125b4c",
+  "slug": "thisisthemenu2",
+  "title": "Our Menu",
+  "subtitle": "Crafted with care and passion",
+  "sections": [
+    {
+      "id": 1,
+      "name": "Appetizers",
+      "type": "food",
+      "columns": [
+        "Item Name",
+        "Description",
+        "Price"
+      ],
+      "titleColumns": [
+        "Item Name"
+      ],
+      "items": [
+        {
+          "Item Name": "Caesar Salad",
+          "Description": "Crisp romaine lettuce with parmesan and croutons",
+          "Price": "12"
+        },
+        {
+          "Item Name": "Truffle Arancini",
+          "Description": "Creamy risotto balls with black truffle",
+          "Price": "16"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Desserts",
+      "type": "desserts",
+      "columns": [
+        "Dessert Name",
+        "Description",
+        "Allergens",
+        "Price"
+      ],
+      "titleColumns": [
+        "Dessert Name"
+      ],
+      "items": []
+    },
+    {
+      "id": 2,
+      "name": "Cocktails",
+      "type": "cocktails",
+      "columns": [
+        "Cocktail Name",
+        "Description",
+        "Base Spirit",
+        "Price"
+      ],
+      "titleColumns": [
+        "Cocktail Name",
+        "Price"
+      ],
+      "items": []
+    },
+    {
+      "id": 3,
+      "name": "Wine",
+      "type": "wine",
+      "columns": [
+        "Price",
+        "Wine Name",
+        "Producer",
+        "Vintage",
+        "Region"
+      ],
+      "titleColumns": [
+        "Price",
+        "Wine Name",
+        "Producer",
+        "Vintage"
+      ],
+      "items": [
+        {
+          "Wine Name": "Oube",
+          "Producer": "sfas",
+          "Vintage": "",
+          "Region": "",
+          "Price": "299"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Wine",
+      "type": "wine",
+      "columns": [
+        "Wine Name",
+        "Producer",
+        "Vintage",
+        "Region",
+        "Price"
+      ],
+      "titleColumns": [
+        "Producer",
+        "Vintage",
+        "Price"
+      ],
+      "items": [
+        {
+          "Wine Name": "Great Wine Name",
+          "Producer": "dfdsf",
+          "Vintage": "2005",
+          "Region": "Napa",
+          "Price": "300"
+        }
+      ]
+    }
+  ],
+  "publishedAt": "2025-08-29T18:06:29.879Z",
+  "updatedAt": "2025-08-29T18:06:29.879Z",
+  "version": "1.0"
+}

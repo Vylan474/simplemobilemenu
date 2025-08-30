@@ -1,0 +1,45 @@
+{
+  "id": "929ce90b8eedb826cf221a5cb9df13ca",
+  "slug": "menu-713102-ylkx",
+  "title": "Our Menu",
+  "subtitle": "Crafted with care and passion",
+  "sections": [
+    {
+      "id": 2,
+      "name": "Wine",
+      "type": "wine",
+      "columns": [
+        "Wine Name",
+        "Producer",
+        "Vintage",
+        "Region",
+        "Price"
+      ],
+      "titleColumns": [
+        "Wine Name",
+        "Producer",
+        "Vintage"
+      ],
+      "items": []
+    },
+    {
+      "id": 1,
+      "name": "Test 2",
+      "type": "food",
+      "columns": [
+        "Item Name",
+        "Description",
+        "Price"
+      ],
+      "titleColumns": [
+        "Item Name",
+        "Description",
+        "Price"
+      ],
+      "items": []
+    }
+  ],
+  "publishedAt": "2025-08-26T00:57:05.413Z",
+  "updatedAt": "2025-08-26T00:57:05.413Z",
+  "version": "1.0"
+}
