@@ -73,7 +73,8 @@ app.get('/api/check-slug/:slug', async (req, res) => {
 // Create/Update menu
 app.post('/api/menu', async (req, res) => {
     try {
-        const { slug, title, subtitle, sections, menuId } = req.body;
+        console.log('Received menu data:', req.body);
+        const { slug, title, subtitle, sections, menuId, backgroundType, backgroundValue, fontFamily, colorPalette, navigationTheme, menuLogo, logoSize } = req.body;
         
         if (!slug || !title || !sections) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -98,10 +99,19 @@ app.post('/api/menu', async (req, res) => {
             title,
             subtitle,
             sections,
+            backgroundType: backgroundType || 'none',
+            backgroundValue: backgroundValue || null,
+            fontFamily: fontFamily || 'Inter',
+            colorPalette: colorPalette || 'classic',
+            navigationTheme: navigationTheme || 'modern',
+            menuLogo: menuLogo || null,
+            logoSize: logoSize || 'medium',
             publishedAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             version: '1.0'
         };
+        
+        console.log('Saving menu data to file:', menuData);
         
         // Save menu data
         await fs.writeFile(

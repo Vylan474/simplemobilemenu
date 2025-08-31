@@ -41,6 +41,10 @@ class MenuEditor {
         this.colorPalette = 'classic'; // default color palette
         this.colorDropdownOpen = false;
         
+        // Navigation theme properties
+        this.navigationTheme = 'modern'; // default navigation theme
+        this.navigationDropdownOpen = false;
+        
         this.sectionTemplates = {
             food: {
                 name: 'Food Items',
@@ -175,6 +179,22 @@ class MenuEditor {
                 accent: '#dc2626',           // Red for prices/accents
                 background: '#2d1b1b',       // Dark red-brown for backgrounds
                 muted: '#fbb6b6'            // Light coral for muted elements
+            }
+        };
+        
+        // Navigation theme definitions
+        this.navigationThemes = {
+            modern: {
+                name: 'Modern',
+                description: 'Clean and contemporary'
+            },
+            glass: {
+                name: 'Liquid Glass',
+                description: 'Translucent glass effect'
+            },
+            minimal: {
+                name: 'Minimal',
+                description: 'Simple and understated'
             }
         };
         
@@ -355,6 +375,7 @@ class MenuEditor {
             backgroundValue: this.backgroundValue,
             fontFamily: this.fontFamily,
             colorPalette: this.colorPalette,
+            navigationTheme: this.navigationTheme,
             status: this.publishedSlug ? 'published' : 'draft'
         };
         
@@ -811,6 +832,61 @@ class MenuEditor {
         }
     }
     
+    openAddColumnModal(sectionId) {
+        this.currentAddColumnSectionId = sectionId;
+        const modal = document.getElementById('add-column-modal');
+        modal.style.display = 'block';
+        
+        // Reset form
+        document.getElementById('custom-column-name').value = '';
+        document.querySelectorAll('.preset-column-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+    }
+    
+    closeAddColumnModal() {
+        const modal = document.getElementById('add-column-modal');
+        modal.style.display = 'none';
+        this.currentAddColumnSectionId = null;
+    }
+    
+    addPresetColumn(columnName) {
+        if (!this.currentAddColumnSectionId) return;
+        
+        const section = this.sections.find(s => s.id === this.currentAddColumnSectionId);
+        if (!section) return;
+        
+        // Check if column already exists
+        if (section.columns.includes(columnName)) {
+            alert('A column with this name already exists.');
+            return;
+        }
+        
+        // Add column to section
+        section.columns.push(columnName);
+        
+        // Add empty values for existing items
+        section.items.forEach(item => {
+            item[columnName] = '';
+        });
+        
+        this.renderMenu();
+        this.updateSidePreview();
+        this.markAsChanged();
+        this.closeAddColumnModal();
+    }
+    
+    addCustomColumn() {
+        const customColumnName = document.getElementById('custom-column-name').value.trim();
+        
+        if (!customColumnName) {
+            alert('Please enter a column name.');
+            return;
+        }
+        
+        this.addPresetColumn(customColumnName);
+    }
+    
     deleteColumn(sectionId, columnName) {
         const section = this.sections.find(s => s.id === sectionId);
         
@@ -916,7 +992,7 @@ class MenuEditor {
                             </div>
                         `).join('')}
                         <div class="add-column-header">
-                            <button class="add-column-btn" onclick="menuEditor.addColumn(${section.id})" title="Add Column">
+                            <button class="add-column-btn" onclick="menuEditor.openAddColumnModal(${section.id})" title="Add Column">
                                 <i class="fas fa-plus"></i> Add Column
                             </button>
                         </div>
@@ -946,6 +1022,9 @@ class MenuEditor {
                     >
                 `).join('')}
                 <div class="item-controls">
+                    <button class="btn btn-secondary btn-small" onclick="menuEditor.duplicateMenuItem(${section.id}, ${index})" title="Duplicate Item">
+                        <i class="fas fa-copy"></i>
+                    </button>
                     <button class="btn btn-danger btn-small" onclick="menuEditor.deleteMenuItem(${section.id}, ${index})" title="Delete Item">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -1381,6 +1460,9 @@ class MenuEditor {
             modalNavContainer.innerHTML = dockHTML;
             this.attachNavigationListeners(modalNavContainer, modalNavTab, 'modal');
         }
+        
+        // Apply navigation theme after generating
+        this.applyNavigationTheme();
     }
     
     attachNavigationListeners(dockContainer, navTab, context) {
@@ -1814,27 +1896,34 @@ class MenuEditor {
         }
         
         try {
+            const publishData = {
+                slug: slug,
+                title: title,
+                subtitle: subtitle,
+                sections: this.sections,
+                menuLogo: this.menuLogo,
+                logoSize: this.logoSize,
+                backgroundType: this.backgroundType,
+                backgroundValue: this.backgroundValue,
+                fontFamily: this.fontFamily,
+                colorPalette: this.colorPalette,
+                navigationTheme: this.navigationTheme,
+                menuId: this.publishedMenuId // Pass existing menuId for updates
+            };
+            
+            console.log('Publishing with data:', publishData);
+            
             const response = await fetch('/api/menu', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    slug: slug,
-                    title: title,
-                    subtitle: subtitle,
-                    sections: this.sections,
-                    menuLogo: this.menuLogo,
-                    logoSize: this.logoSize,
-                    backgroundType: this.backgroundType,
-                    backgroundValue: this.backgroundValue,
-                    fontFamily: this.fontFamily,
-                    colorPalette: this.colorPalette,
-                    menuId: this.publishedMenuId // Pass existing menuId for updates
-                })
+                body: JSON.stringify(publishData)
             });
             
+            console.log('Server response status:', response.status);
             const data = await response.json();
+            console.log('Server response data:', data);
             
             if (response.ok) {
                 // Save published menu information for future updates
@@ -1870,6 +1959,7 @@ class MenuEditor {
                     backgroundValue: this.backgroundValue,
                     fontFamily: this.fontFamily,
                     colorPalette: this.colorPalette,
+                    navigationTheme: this.navigationTheme,
                     publishedAt: new Date().toISOString()
                 };
                 localStorage.setItem(`published-menu-${slug}`, JSON.stringify(publishedMenuData));
@@ -1879,13 +1969,16 @@ class MenuEditor {
                 const testLoad = localStorage.getItem(`published-menu-${slug}`);
                 console.log('Verification - can load saved data:', testLoad ? 'YES' : 'NO');
                 
-                // Show success message with actual URL
+                // Show custom success modal
                 const isUpdate = this.publishedMenuId && this.publishedMenuId === data.menuId;
-                const action = isUpdate ? 'updated' : 'published';
-                alert(`Menu ${action} successfully!\n\nYour menu is available at:\n${window.location.origin}/menu.html#${slug}`);
+                const action = isUpdate ? 'Updated' : 'Published';
+                const menuUrl = `${window.location.origin}/menu/${slug}`;
                 
-                // Open the published menu in a new tab
-                window.open(`menu.html#${slug}`, '_blank');
+                this.showSuccessModal(
+                    `Menu ${action}!`,
+                    `Your menu has been ${action.toLowerCase()} successfully and is now live!`,
+                    menuUrl
+                );
                 
                 this.closePublishModal();
             } else {
@@ -2089,6 +2182,7 @@ class MenuEditor {
             this.backgroundValue = menu.backgroundValue || null;
             this.fontFamily = menu.fontFamily || 'Inter';
             this.colorPalette = menu.colorPalette || 'classic';
+            this.navigationTheme = menu.navigationTheme || 'modern';
             
             this.renderMenu();
             this.updateSidePreview();
@@ -2125,6 +2219,7 @@ class MenuEditor {
             backgroundValue: this.backgroundValue,
             fontFamily: this.fontFamily,
             colorPalette: this.colorPalette,
+            navigationTheme: this.navigationTheme,
             status: this.publishedSlug ? 'published' : 'draft'
         };
         
@@ -2400,8 +2495,8 @@ class MenuEditor {
             return;
         }
         
-        // Open published menu in new tab using the menu.html file with hash
-        window.open(`menu.html#${this.publishedSlug}`, '_blank');
+        // Open the actual published menu in new tab
+        window.open(`/menu/${this.publishedSlug}`, '_blank');
     }
     
     updatePublishButtonVisibility() {
@@ -2708,6 +2803,15 @@ class MenuEditor {
             if (colorDropdown) colorDropdown.style.display = 'none';
             if (colorButton) colorButton.classList.remove('active');
         }
+        
+        // Close navigation dropdown
+        if (except !== 'navigation' && this.navigationDropdownOpen) {
+            this.navigationDropdownOpen = false;
+            const navigationDropdown = document.getElementById('navigation-dropdown');
+            const navigationButton = document.getElementById('navigation-options');
+            if (navigationDropdown) navigationDropdown.style.display = 'none';
+            if (navigationButton) navigationButton.classList.remove('active');
+        }
     }
     
     toggleBackgroundDropdown() {
@@ -2958,6 +3062,9 @@ class MenuEditor {
             this.applyColorsToContainer(container, palette);
         });
         
+        // Apply colors to navigation
+        this.applyColorsToNavigation();
+        
         console.log('Applied color palette:', this.colorPalette, palette);
     }
     
@@ -2997,6 +3104,166 @@ class MenuEditor {
             if (option.dataset.palette === this.colorPalette) {
                 option.classList.add('selected');
             }
+        });
+    }
+    
+    // === NAVIGATION THEME FUNCTIONALITY ===
+    
+    toggleNavigationDropdown() {
+        this.closeOtherDropdowns('navigation');
+        
+        const dropdown = document.getElementById('navigation-dropdown');
+        this.navigationDropdownOpen = !this.navigationDropdownOpen;
+        dropdown.style.display = this.navigationDropdownOpen ? 'block' : 'none';
+        
+        const button = document.getElementById('navigation-options');
+        button.classList.toggle('active', this.navigationDropdownOpen);
+    }
+    
+    selectNavigationTheme(theme) {
+        this.navigationTheme = theme;
+        this.applyNavigationTheme();
+        this.updateNavigationSelection();
+        this.markAsChanged();
+        
+        // Force save immediately
+        this.saveCurrentMenu();
+        
+        if (this.sidePreviewVisible) {
+            this.updateSidePreview();
+        }
+        
+        // Close dropdown
+        this.navigationDropdownOpen = false;
+        document.getElementById('navigation-dropdown').style.display = 'none';
+        document.getElementById('navigation-options').classList.remove('active');
+    }
+    
+    applyNavigationTheme() {
+        // Apply theme to all navigation elements
+        const navigationElements = document.querySelectorAll('.preview-navigation');
+        
+        navigationElements.forEach(nav => {
+            // Remove existing theme classes
+            nav.classList.remove('theme-modern', 'theme-glass', 'theme-minimal');
+            // Add new theme class
+            nav.classList.add(`theme-${this.navigationTheme}`);
+        });
+        
+        // Apply color palette to navigation elements
+        this.applyColorsToNavigation();
+        
+        // Update theme on next preview generation
+        this.navigationThemeClass = `theme-${this.navigationTheme}`;
+    }
+    
+    applyColorsToNavigation() {
+        // Get current color palette
+        const palette = this.colorPalettes[this.colorPalette];
+        if (!palette) return;
+        
+        // Apply colors to all navigation containers
+        const navigationElements = document.querySelectorAll('.preview-navigation, #preview-navigation, #modal-preview-navigation');
+        
+        navigationElements.forEach(nav => {
+            // Set CSS custom properties for navigation theming
+            nav.style.setProperty('--nav-primary-color', palette.primaryText);
+            nav.style.setProperty('--nav-secondary-color', palette.secondaryText);
+            nav.style.setProperty('--nav-accent-color', palette.accent);
+            nav.style.setProperty('--nav-background-color', palette.background);
+            nav.style.setProperty('--nav-header-color', palette.headers);
+        });
+    }
+    
+    updateNavigationSelection() {
+        // Update selected state in dropdown
+        const options = document.querySelectorAll('.theme-option');
+        options.forEach(option => {
+            option.classList.remove('active');
+            
+            if (option.dataset.theme === this.navigationTheme) {
+                option.classList.add('active');
+            }
+        });
+    }
+    
+    // === MENU ITEM FUNCTIONALITY ===
+    
+    updateMenuItem(sectionId, itemIndex, column, value) {
+        const section = this.sections.find(s => s.id === sectionId);
+        if (!section || !section.items[itemIndex]) return;
+        
+        section.items[itemIndex][column] = value;
+        this.markAsChanged();
+        this.saveCurrentMenu();
+    }
+    
+    deleteMenuItem(sectionId, itemIndex) {
+        const section = this.sections.find(s => s.id === sectionId);
+        if (!section || !section.items[itemIndex]) return;
+        
+        section.items.splice(itemIndex, 1);
+        this.renderMenu();
+        this.markAsChanged();
+        this.saveCurrentMenu();
+    }
+    
+    duplicateMenuItem(sectionId, itemIndex) {
+        const section = this.sections.find(s => s.id === sectionId);
+        if (!section || !section.items[itemIndex]) return;
+        
+        // Create a deep copy of the item
+        const originalItem = section.items[itemIndex];
+        const duplicatedItem = { ...originalItem };
+        
+        // Insert the duplicated item right after the original
+        section.items.splice(itemIndex + 1, 0, duplicatedItem);
+        
+        this.renderMenu();
+        this.markAsChanged();
+        this.saveCurrentMenu();
+    }
+    
+    // === SUCCESS MODAL FUNCTIONALITY ===
+    
+    showSuccessModal(title, message, url = null) {
+        const modal = document.getElementById('success-modal');
+        const titleElement = document.getElementById('success-title');
+        const messageElement = document.getElementById('success-message');
+        const urlSection = document.getElementById('success-url-section');
+        const urlDisplay = document.getElementById('success-url-display');
+        const viewLiveBtn = document.getElementById('view-live-menu-from-success');
+        
+        titleElement.textContent = title;
+        messageElement.textContent = message;
+        
+        if (url) {
+            urlDisplay.textContent = url;
+            urlSection.style.display = 'block';
+            viewLiveBtn.style.display = 'inline-flex';
+            viewLiveBtn.onclick = () => window.open(url, '_blank');
+        } else {
+            urlSection.style.display = 'none';
+            viewLiveBtn.style.display = 'none';
+        }
+        
+        modal.style.display = 'block';
+    }
+    
+    closeSuccessModal() {
+        const modal = document.getElementById('success-modal');
+        modal.style.display = 'none';
+    }
+    
+    copySuccessUrl() {
+        const urlText = document.getElementById('success-url-display').textContent;
+        navigator.clipboard.writeText(urlText).then(() => {
+            const button = document.getElementById('copy-success-url');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+            }, 2000);
         });
     }
     
@@ -3213,12 +3480,14 @@ MenuEditor.prototype.loadMenu = function(menu) {
     this.backgroundValue = settings.backgroundValue || null;
     this.fontFamily = settings.fontFamily || 'Inter';
     this.colorPalette = settings.colorPalette || 'classic';
+    this.navigationTheme = settings.navigationTheme || 'modern';
     this.logoUrl = settings.logoUrl || null;
     
     // Apply loaded settings
     this.applyBackground();
     this.applyFontFamily();
     this.applyColorPalette();
+    this.applyNavigationTheme();
     
     if (this.logoUrl) {
         this.displayLogo(this.logoUrl);
@@ -3666,11 +3935,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Navigation functionality event listeners
+    const navigationBtn = document.getElementById('navigation-options');
+    if (navigationBtn) {
+        navigationBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuEditor.toggleNavigationDropdown();
+        });
+    }
+
+    // Navigation theme option selection
+    document.querySelectorAll('.theme-option').forEach(option => {
+        option.addEventListener('click', () => {
+            const theme = option.dataset.theme;
+            menuEditor.selectNavigationTheme(theme);
+        });
+    });
+
     // Close dropdowns when clicking outside
     document.addEventListener('click', (e) => {
         const backgroundControls = document.querySelector('.background-controls');
         const fontControls = document.querySelector('.font-controls');
         const colorControls = document.querySelector('.color-controls');
+        const navigationControls = document.querySelector('.navigation-controls');
         
         // Close background dropdown
         if (backgroundControls && !backgroundControls.contains(e.target)) {
@@ -3699,6 +3986,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 menuEditor.colorDropdownOpen = false;
                 dropdown.style.display = 'none';
                 document.getElementById('color-options').classList.remove('active');
+            }
+        }
+        
+        // Close navigation dropdown
+        if (navigationControls && !navigationControls.contains(e.target)) {
+            const dropdown = document.getElementById('navigation-dropdown');
+            if (dropdown && dropdown.style.display !== 'none') {
+                menuEditor.navigationDropdownOpen = false;
+                dropdown.style.display = 'none';
+                document.getElementById('navigation-options').classList.remove('active');
             }
         }
     });
@@ -3753,6 +4050,94 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Add Column Modal event listeners
+    const addColumnModal = document.getElementById('add-column-modal');
+    if (addColumnModal) {
+        // Close button
+        const closeBtn = addColumnModal.querySelector('.close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                menuEditor.closeAddColumnModal();
+            });
+        }
+        
+        // Cancel button
+        const cancelBtn = document.getElementById('cancel-add-column');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                menuEditor.closeAddColumnModal();
+            });
+        }
+        
+        // Close when clicking outside modal
+        addColumnModal.addEventListener('click', (e) => {
+            if (e.target === addColumnModal) {
+                menuEditor.closeAddColumnModal();
+            }
+        });
+    }
+    
+    // Preset column options
+    document.querySelectorAll('.preset-column-option').forEach(option => {
+        option.addEventListener('click', () => {
+            const columnName = option.dataset.column;
+            menuEditor.addPresetColumn(columnName);
+        });
+    });
+    
+    // Custom column button
+    const addCustomColumnBtn = document.getElementById('add-custom-column-btn');
+    if (addCustomColumnBtn) {
+        addCustomColumnBtn.addEventListener('click', () => {
+            menuEditor.addCustomColumn();
+        });
+    }
+    
+    // Custom column input enter key
+    const customColumnInput = document.getElementById('custom-column-name');
+    if (customColumnInput) {
+        customColumnInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                menuEditor.addCustomColumn();
+            }
+        });
+    }
+    
+    // Success Modal event listeners
+    const successModal = document.getElementById('success-modal');
+    if (successModal) {
+        // Close button
+        const closeBtn = successModal.querySelector('.close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                menuEditor.closeSuccessModal();
+            });
+        }
+        
+        // "Got it" button
+        const gotItBtn = document.getElementById('close-success-modal');
+        if (gotItBtn) {
+            gotItBtn.addEventListener('click', () => {
+                menuEditor.closeSuccessModal();
+            });
+        }
+        
+        // Copy URL button
+        const copyBtn = document.getElementById('copy-success-url');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                menuEditor.copySuccessUrl();
+            });
+        }
+        
+        // Close when clicking outside modal
+        successModal.addEventListener('click', (e) => {
+            if (e.target === successModal) {
+                menuEditor.closeSuccessModal();
+            }
+        });
+    }
+
     // Dark mode toggle event listener
     const darkModeCheckbox = document.getElementById('dark-mode-checkbox');
     if (darkModeCheckbox) {

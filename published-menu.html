@@ -6,6 +6,7 @@
     <title>Menu</title>
     <link rel="stylesheet" href="/styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* Published menu specific styles */
         .published-menu-container {
@@ -175,7 +176,7 @@
                         <div class="preview-section">
                             <h2>${section.name}</h2>
                             ${visibleColumns.length > 0 ? `
-                                <div class="preview-column-headers" style="grid-template-columns: repeat(${visibleColumns.length}, 1fr);">
+                                <div class="preview-column-headers" style="grid-template-columns: ${visibleColumns.map(col => col.toLowerCase().includes('price') ? 'auto' : '1fr').join(' ')};">
                                     ${visibleColumns.map(column => `
                                         <span class="preview-column-header ${column.toLowerCase().includes('price') ? 'preview-price-header' : ''}">${column}</span>
                                     `).join('')}
@@ -194,7 +195,17 @@
                 if (this.menuData.sections.length > 0) {
                     this.generateNavigation();
                     document.getElementById('navigation').style.display = 'block';
+                    // Apply navigation theme after it's visible
+                    setTimeout(() => {
+                        this.applyNavigationTheme();
+                    }, 100);
                 }
+                
+                // Apply all styling from menu data
+                this.applyBackground();
+                this.applyFontFamily();
+                this.applyColorPalette();
+                this.applyLogo();
                 
                 // Initialize scroll animations
                 this.initializeScrollAnimations();
@@ -367,6 +378,258 @@
                     section.classList.add('section-hidden');
                     this.scrollObserver.observe(section);
                 });
+            }
+            
+            applyNavigationTheme() {
+                // Get navigation theme from menu data
+                const navigationTheme = this.menuData.navigationTheme || 'modern';
+                console.log('Applying navigation theme:', navigationTheme);
+                
+                // Apply theme class to navigation element
+                const navigation = document.getElementById('navigation');
+                if (navigation) {
+                    console.log('Found navigation element, applying theme class:', `theme-${navigationTheme}`);
+                    // Remove existing theme classes
+                    navigation.classList.remove('theme-modern', 'theme-glass', 'theme-minimal');
+                    // Add new theme class
+                    navigation.classList.add(`theme-${navigationTheme}`);
+                    console.log('Navigation classes after update:', navigation.className);
+                } else {
+                    console.log('Navigation element not found!');
+                }
+                
+                // Apply color palette to navigation
+                this.applyColorsToNavigation();
+            }
+            
+            applyColorsToNavigation() {
+                // Get current color palette
+                const palette = this.getColorPalette(this.menuData.colorPalette || 'classic');
+                if (!palette) return;
+                
+                // Apply colors to navigation elements
+                const navigation = document.getElementById('navigation');
+                if (navigation) {
+                    // Set CSS custom properties for navigation theming
+                    navigation.style.setProperty('--nav-primary-color', palette.primaryText);
+                    navigation.style.setProperty('--nav-secondary-color', palette.secondaryText);
+                    navigation.style.setProperty('--nav-accent-color', palette.accent);
+                    navigation.style.setProperty('--nav-background-color', palette.background);
+                    navigation.style.setProperty('--nav-header-color', palette.headers);
+                }
+            }
+            
+            getColorPalette(paletteName) {
+                const colorPalettes = {
+                    classic: {
+                        primaryText: '#2c3e50',
+                        secondaryText: '#7f8c8d',
+                        headers: '#34495e',
+                        accent: '#27ae60',
+                        background: '#ecf0f1',
+                        muted: '#bdc3c7'
+                    },
+                    ocean: {
+                        primaryText: '#1e3a5f',
+                        secondaryText: '#5a6c7d',
+                        headers: '#2c5282',
+                        accent: '#3182ce',
+                        background: '#ebf8ff',
+                        muted: '#a0aec0'
+                    },
+                    forest: {
+                        primaryText: '#1a202c',
+                        secondaryText: '#4a5568',
+                        headers: '#2d3748',
+                        accent: '#38a169',
+                        background: '#f0fff4',
+                        muted: '#9ca3af'
+                    },
+                    sunset: {
+                        primaryText: '#742a2a',
+                        secondaryText: '#a0616a',
+                        headers: '#9c2a2a',
+                        accent: '#e53e3e',
+                        background: '#fffaf0',
+                        muted: '#cbd5e0'
+                    },
+                    monochrome: {
+                        primaryText: '#1a1a1a',
+                        secondaryText: '#4a4a4a',
+                        headers: '#2d2d2d',
+                        accent: '#000000',
+                        background: '#f7f7f7',
+                        muted: '#9a9a9a'
+                    },
+                    wine: {
+                        primaryText: '#4c1d95',
+                        secondaryText: '#6b46c1',
+                        headers: '#581c87',
+                        accent: '#7c3aed',
+                        background: '#faf5ff',
+                        muted: '#a78bfa'
+                    },
+                    cream: {
+                        primaryText: '#f8f6f0',
+                        secondaryText: '#e8e2d4',
+                        headers: '#d4c5a9',
+                        accent: '#c9a96e',
+                        background: '#2d2a24',
+                        muted: '#b8ab94'
+                    },
+                    pearl: {
+                        primaryText: '#f7f7f7',
+                        secondaryText: '#e0e0e0',
+                        headers: '#c4c4c4',
+                        accent: '#a8a8a8',
+                        background: '#1a1a1a',
+                        muted: '#d3d3d3'
+                    },
+                    mint: {
+                        primaryText: '#f0fdf4',
+                        secondaryText: '#bbf7d0',
+                        headers: '#86efac',
+                        accent: '#4ade80',
+                        background: '#1a2e05',
+                        muted: '#a7f3d0'
+                    },
+                    blush: {
+                        primaryText: '#fef7f7',
+                        secondaryText: '#fecaca',
+                        headers: '#f87171',
+                        accent: '#dc2626',
+                        background: '#2d1b1b',
+                        muted: '#fbb6b6'
+                    }
+                };
+                
+                return colorPalettes[paletteName] || colorPalettes.classic;
+            }
+            
+            applyBackground() {
+                const backgroundType = this.menuData.backgroundType || 'none';
+                const backgroundValue = this.menuData.backgroundValue;
+                
+                if (backgroundType === 'image' && backgroundValue) {
+                    // Ensure the path starts with / to be relative to the server root
+                    const imagePath = backgroundValue.startsWith('/') ? backgroundValue : `/${backgroundValue}`;
+                    document.body.style.backgroundImage = `url("${imagePath}")`;
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                    document.body.style.backgroundRepeat = 'no-repeat';
+                    document.body.style.backgroundAttachment = 'fixed';
+                } else if (backgroundType === 'color' && backgroundValue) {
+                    document.body.style.backgroundColor = backgroundValue;
+                    document.body.style.backgroundImage = '';
+                } else {
+                    // Reset to default
+                    document.body.style.background = '';
+                    document.body.style.backgroundImage = '';
+                    document.body.style.backgroundColor = '';
+                }
+            }
+            
+            applyFontFamily() {
+                if (!this.menuData.fontFamily) return;
+                
+                const fontFamily = this.menuData.fontFamily || 'Inter';
+                const fontStack = this.getFontFamilyCSS(fontFamily);
+                const container = document.querySelector('.published-menu-container');
+                
+                if (container) {
+                    container.style.fontFamily = fontStack;
+                }
+            }
+            
+            getFontFamilyCSS(fontFamily) {
+                const fontFamilies = {
+                    'Inter': "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                    'Playfair Display': "'Playfair Display', Georgia, 'Times New Roman', serif",
+                    'Georgia': "Georgia, 'Times New Roman', serif",
+                    'Lato': "'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                    'Montserrat': "'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+                };
+                return fontFamilies[fontFamily] || fontFamilies['Inter'];
+            }
+            
+            applyColorPalette() {
+                if (!this.menuData.colorPalette) return;
+                
+                const palette = this.getColorPalette(this.menuData.colorPalette);
+                if (!palette) return;
+                
+                const container = document.querySelector('.published-menu-container');
+                if (!container) return;
+                
+                // Apply specific element colors
+                const primaryTextElements = container.querySelectorAll('.preview-item-title .preview-title-text, .preview-menu-title');
+                primaryTextElements.forEach(el => el.style.color = palette.primaryText);
+                
+                const secondaryTextElements = container.querySelectorAll('.preview-item-description, .preview-menu-subtitle');
+                secondaryTextElements.forEach(el => el.style.color = palette.secondaryText);
+                
+                const headerElements = container.querySelectorAll('.preview-section h2, .preview-column-header');
+                headerElements.forEach(el => el.style.color = palette.headers);
+                
+                const accentElements = container.querySelectorAll('.preview-price-cell, .preview-title-price');
+                accentElements.forEach(el => {
+                    el.style.color = palette.accent;
+                    // Ensure price alignment is maintained after color application
+                    if (el.classList.contains('preview-price-cell')) {
+                        el.style.textAlign = 'right';
+                        el.style.justifySelf = 'end';
+                        el.style.gridColumn = '-1';
+                    }
+                    if (el.classList.contains('preview-title-price')) {
+                        // Ensure title prices are right-aligned
+                        el.style.textAlign = 'right';
+                        el.style.marginLeft = 'auto';
+                        el.style.flexShrink = '0';
+                        el.style.whiteSpace = 'nowrap';
+                    }
+                });
+                
+                // Ensure proper flexbox layout for title containers
+                const titleContainers = container.querySelectorAll('.preview-item-title');
+                titleContainers.forEach(titleContainer => {
+                    titleContainer.style.display = 'flex';
+                    titleContainer.style.justifyContent = 'space-between';
+                    titleContainer.style.alignItems = 'baseline';
+                    titleContainer.style.width = '100%';
+                    titleContainer.style.gap = '15px';
+                });
+                
+                // Apply color palette CSS custom properties to the document root for other elements
+                document.documentElement.style.setProperty('--primary-text', palette.primaryText);
+                document.documentElement.style.setProperty('--secondary-text', palette.secondaryText);
+                document.documentElement.style.setProperty('--headers', palette.headers);
+                document.documentElement.style.setProperty('--accent', palette.accent);
+                document.documentElement.style.setProperty('--background', palette.background);
+            }
+            
+            applyLogo() {
+                const logoData = this.menuData.menuLogo;
+                const logoSize = this.menuData.logoSize || 'medium';
+                
+                if (logoData) {
+                    // Create or update logo element
+                    let logoElement = document.querySelector('.preview-menu-logo');
+                    if (!logoElement) {
+                        logoElement = document.createElement('div');
+                        logoElement.className = 'preview-menu-logo';
+                        const header = document.querySelector('.preview-menu-header');
+                        header.insertBefore(logoElement, header.firstChild);
+                    }
+                    
+                    logoElement.innerHTML = `<img src="${logoData}" alt="Restaurant Logo" class="logo-${logoSize}">`;
+                    logoElement.style.display = 'block';
+                } else {
+                    // Remove logo if it exists
+                    const logoElement = document.querySelector('.preview-menu-logo');
+                    if (logoElement) {
+                        logoElement.style.display = 'none';
+                    }
+                }
             }
         }
         
