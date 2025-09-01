@@ -359,9 +359,8 @@ class MenuEditor {
     }
     
     showAuthModal() {
-        // This would show the authentication modal
-        // For now, redirect to login page or show inline login
-        console.log('User not authenticated - show login modal');
+        document.getElementById('auth-modal').style.display = 'block';
+        showLoginForm();
     }
     
     async createNewMenu() {
@@ -4364,6 +4363,83 @@ MenuEditor.prototype.deleteMenu = function(menuId) {
         this.loadUserMenus();
     }
 };
+
+// === AUTHENTICATION FUNCTIONS ===
+
+function showLoginForm() {
+    document.getElementById('login-form').style.display = 'block';
+    document.getElementById('register-form').style.display = 'none';
+    document.getElementById('auth-modal-title').textContent = 'Sign In';
+}
+
+function showRegisterForm() {
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('register-form').style.display = 'block';
+    document.getElementById('auth-modal-title').textContent = 'Create Account';
+}
+
+async function handleLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const errorDiv = document.getElementById('login-error');
+    
+    if (!email || !password) {
+        errorDiv.textContent = 'Please enter both email and password';
+        return;
+    }
+    
+    try {
+        const result = await window.authManager.signIn(email, password);
+        if (result.success) {
+            document.getElementById('auth-modal').style.display = 'none';
+            // Reload the page or reinitialize the app
+            location.reload();
+        } else {
+            errorDiv.textContent = result.error || 'Login failed';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'Login failed. Please try again.';
+    }
+}
+
+async function handleRegister() {
+    const name = document.getElementById('register-name').value.trim();
+    const email = document.getElementById('register-email').value.trim();
+    const restaurant = document.getElementById('register-restaurant').value.trim();
+    const password = document.getElementById('register-password').value;
+    const errorDiv = document.getElementById('register-error');
+    
+    if (!name || !email || !password) {
+        errorDiv.textContent = 'Please fill in all required fields';
+        return;
+    }
+    
+    if (password.length < 8) {
+        errorDiv.textContent = 'Password must be at least 8 characters long';
+        return;
+    }
+    
+    try {
+        const userData = { name, email, password, restaurant: restaurant || null };
+        const result = await window.authManager.register(userData);
+        if (result.success) {
+            // Auto-login after registration
+            const loginResult = await window.authManager.signIn(email, password);
+            if (loginResult.success) {
+                document.getElementById('auth-modal').style.display = 'none';
+                location.reload();
+            } else {
+                showLoginForm();
+                document.getElementById('login-email').value = email;
+                document.getElementById('login-error').textContent = 'Account created! Please sign in.';
+            }
+        } else {
+            errorDiv.textContent = result.error || 'Registration failed';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'Registration failed. Please try again.';
+    }
+}
 
 // === EVENT LISTENERS ===
 

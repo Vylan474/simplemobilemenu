@@ -8,6 +8,16 @@
     <meta http-equiv="Expires" content="0">
     <title>Restaurant Menu Editor</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-form { margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        .error-message { color: #e74c3c; margin: 10px 0; font-size: 14px; }
+        .auth-switch { text-align: center; margin-top: 15px; }
+        .auth-switch a { color: #3498db; text-decoration: none; }
+        .auth-switch a:hover { text-decoration: underline; }
+    </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     
@@ -746,6 +756,63 @@
                     
                     <div class="modal-actions">
                         <button id="cancel-discard" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="auth-modal-title">Sign In</h2>
+                <span class="close" onclick="document.getElementById('auth-modal').style.display='none'">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="auth-form-container">
+                    <!-- Login Form -->
+                    <div id="login-form" class="auth-form">
+                        <div class="form-group">
+                            <label for="login-email">Email:</label>
+                            <input type="email" id="login-email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password:</label>
+                            <input type="password" id="login-password" placeholder="Enter your password" required>
+                        </div>
+                        <div id="login-error" class="error-message"></div>
+                        <button id="login-btn" class="btn btn-primary" onclick="handleLogin()">Sign In</button>
+                        <p class="auth-switch">
+                            Don't have an account? 
+                            <a href="#" onclick="showRegisterForm()">Create one</a>
+                        </p>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="register-form" class="auth-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="register-name">Name:</label>
+                            <input type="text" id="register-name" placeholder="Your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email:</label>
+                            <input type="email" id="register-email" placeholder="Your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-restaurant">Restaurant Name (Optional):</label>
+                            <input type="text" id="register-restaurant" placeholder="Your restaurant name">
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Password:</label>
+                            <input type="password" id="register-password" placeholder="At least 8 characters" required>
+                        </div>
+                        <div id="register-error" class="error-message"></div>
+                        <button id="register-btn" class="btn btn-primary" onclick="handleRegister()">Create Account</button>
+                        <p class="auth-switch">
+                            Already have an account? 
+                            <a href="#" onclick="showLoginForm()">Sign in</a>
+                        </p>
                     </div>
                 </div>
             </div>
