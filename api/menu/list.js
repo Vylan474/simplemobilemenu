@@ -13,7 +13,7 @@ async function verifySession(sessionId) {
   return result.rows[0]?.user_id || null;
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

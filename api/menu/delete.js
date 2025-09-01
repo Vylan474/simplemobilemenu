@@ -20,7 +20,7 @@ async function verifyMenuOwnership(menuId, userId) {
   return result.rows.length > 0;
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'DELETE') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

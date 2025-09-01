@@ -1,8 +1,9 @@
 {
-  "routes": [
+  "version": 2,
+  "rewrites": [
     {
-      "src": "/menu/([a-z0-9-]+)",
-      "dest": "/api/menu/$1"
+      "source": "/(.*)",
+      "destination": "/api"
     }
   ]
 }
