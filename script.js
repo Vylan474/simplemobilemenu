@@ -462,42 +462,8 @@ class MenuEditor {
     }
     
     saveToStorage() {
-        if (!this.currentUser || !this.currentMenuId) return;
-        
-        const menu = {
-            id: this.currentMenuId,
-            name: document.getElementById('current-menu-name').textContent,
-            sections: this.sections,
-            sectionCounter: this.sectionCounter,
-            updatedAt: new Date().toISOString(),
-            publishedMenuId: this.publishedMenuId,
-            publishedSlug: this.publishedSlug,
-            publishedTitle: this.publishedTitle,
-            publishedSubtitle: this.publishedSubtitle,
-            menuLogo: this.menuLogo,
-            logoSize: this.logoSize,
-            backgroundType: this.backgroundType,
-            backgroundValue: this.backgroundValue,
-            fontFamily: this.fontFamily,
-            colorPalette: this.colorPalette,
-            navigationTheme: this.navigationTheme,
-            status: this.publishedSlug ? 'published' : 'draft'
-        };
-        
-        this.saveUserMenu(menu);
-        
-        // Clear unsaved changes flag
-        this.hasUnsavedChanges = false;
-        
-        // Update displays
-        this.updateCurrentMenuDisplay();
-        this.updatePublishButtonVisibility();
-        this.loadUserMenus();
-        
-        // Show saved indicator
-        setTimeout(() => {
-            this.updateChangeIndicator('saved');
-        }, 500);
+        // Use the main save method which handles authentication and proper API calls
+        this.saveCurrentMenu();
     }
     
     async loadUserMenus() {
@@ -2032,10 +1998,7 @@ class MenuEditor {
         return column ? item[column] : null;
     }
     
-    saveToStorage() {
-        // Manual save current menu
-        this.saveCurrentMenu();
-    }
+    // saveToStorage method consolidated - using main method above at line ~464
     
     loadFromStorage() {
         // Legacy method - now handled by user system
@@ -2583,7 +2546,17 @@ class MenuEditor {
     }
     
     async saveCurrentMenu() {
-        if (!this.currentMenuId || !window.authManager || !window.authManager.isAuthenticated()) return;
+        console.log('🔄 saveCurrentMenu called');
+        console.log('🔍 currentMenuId:', this.currentMenuId);
+        console.log('🔍 authManager exists:', !!window.authManager);
+        console.log('🔍 isAuthenticated:', window.authManager?.isAuthenticated());
+        
+        if (!this.currentMenuId || !window.authManager || !window.authManager.isAuthenticated()) {
+            console.log('❌ Save blocked - missing requirements');
+            return;
+        }
+        
+        console.log('✅ Proceeding with save...');
         
         // Show saving indicator
         this.updateChangeIndicator('saving');
@@ -3880,10 +3853,16 @@ class MenuEditor {
     // === MENU ITEM FUNCTIONALITY ===
     
     updateMenuItem(sectionId, itemIndex, column, value) {
+        console.log('🔄 updateMenuItem:', {sectionId, itemIndex, column, value});
         const section = this.sections.find(s => s.id === sectionId);
-        if (!section || !section.items[itemIndex]) return;
+        if (!section || !section.items[itemIndex]) {
+            console.log('❌ Section or item not found');
+            return;
+        }
         
         section.items[itemIndex][column] = value;
+        console.log('✅ Updated item:', section.items[itemIndex]);
+        console.log('📊 All sections:', this.sections);
         
         // Update preview immediately
         this.updateSidePreview();
