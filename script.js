@@ -232,8 +232,8 @@ class MenuEditor {
             const user = window.authManager.getCurrentUser();
             this.handleAuthChange(user);
         } else {
-            // Redirect to landing if no auth manager
-            window.location.href = 'landing.html';
+            // Show auth modal if no auth manager
+            this.showAuthModal();
         }
     }
     
@@ -249,8 +249,8 @@ class MenuEditor {
             this.updateUserInterface(user);
             this.loadUserData();
         } else {
-            // No user signed in, redirect to landing
-            window.location.href = 'landing.html';
+            // No user signed in, show auth modal
+            this.showAuthModal();
         }
     }
     
@@ -3810,8 +3810,8 @@ MenuEditor.prototype.handleAuthChange = function(user) {
         this.updateUserInterface(user);
         this.loadUserData();
     } else {
-        // User is signed out - redirect to landing page
-        window.location.href = 'landing.html';
+        // User is signed out - show auth modal
+        this.showAuthModal();
     }
 };
 
