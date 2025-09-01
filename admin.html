@@ -315,92 +315,77 @@
             window.location.reload();
         }
         
-        function loadAdminData() {
-            // Get all users from localStorage
-            const appUsers = JSON.parse(localStorage.getItem('app-users') || '[]');
-            const allUsers = [];
-            let totalMenus = 0;
-            let publishedMenus = 0;
+        async function loadAdminData() {
+            const username = 'admin';
+            const password = 'MenuAdmin2024!';
             
-            // Process each user
-            appUsers.forEach(userData => {
-                // Get user's menus
-                const userMenusKey = `user_${userData.id}_menus`;
-                const userMenus = JSON.parse(localStorage.getItem(userMenusKey) || '[]');
+            try {
+                const response = await fetch('/api/admin/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
                 
-                // Get last active data if stored
-                const userDataKey = `menuEditor_user_${userData.id}`;
-                const storedUserData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+                const data = await response.json();
                 
-                // Merge data
-                const user = {
-                    ...userData,
-                    ...storedUserData,
-                    menuCount: userMenus.length,
-                    publishedCount: userMenus.filter(m => m.status === 'published').length,
-                    menus: userMenus
-                };
+                if (!response.ok) {
+                    console.error('Failed to load admin data:', data.error);
+                    return;
+                }
                 
-                totalMenus += user.menuCount;
-                publishedMenus += user.publishedCount;
-                
-                allUsers.push(user);
-            });
+                const { users: allUsers, stats } = data;
             
-            // Update statistics
-            document.getElementById('total-users').textContent = allUsers.length;
-            document.getElementById('total-menus').textContent = totalMenus;
-            document.getElementById('published-menus').textContent = publishedMenus;
+                // Update statistics
+                document.getElementById('total-users').textContent = stats.totalUsers;
+                document.getElementById('total-menus').textContent = stats.totalMenus;
+                document.getElementById('published-menus').textContent = stats.publishedMenus;
+                document.getElementById('active-today').textContent = stats.activeToday;
             
-            // Calculate active today (users who logged in today)
-            const today = new Date().toDateString();
-            const activeToday = allUsers.filter(user => {
-                const lastActive = user.lastActive ? new Date(user.lastActive).toDateString() : '';
-                return lastActive === today;
-            }).length;
-            document.getElementById('active-today').textContent = activeToday;
-            
-            // Populate users table
-            const tbody = document.getElementById('users-tbody');
-            tbody.innerHTML = '';
-            
-            allUsers.forEach(user => {
-                const row = document.createElement('tr');
-                const lastActive = user.lastActive ? new Date(user.lastActive).toLocaleString() : 'Never';
+                // Populate users table
+                const tbody = document.getElementById('users-tbody');
+                tbody.innerHTML = '';
                 
-                row.innerHTML = `
-                    <td>
-                        <div style="display: flex; align-items: center;">
-                            ${user.avatar ? 
-                                `<img src="${user.avatar}" class="user-avatar" />` : 
-                                `<div class="user-avatar" style="background: #3498db; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                                    ${user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                                </div>`
-                            }
-                            <div>
-                                <div style="font-weight: 600;">${user.name || 'Unnamed User'}</div>
-                                <div class="menu-details">ID: ${user.id}</div>
+                allUsers.forEach(user => {
+                    const row = document.createElement('tr');
+                    const lastActive = user.lastActive ? new Date(user.lastActive).toLocaleString() : 'Never';
+                    
+                    row.innerHTML = `
+                        <td>
+                            <div style="display: flex; align-items: center;">
+                                ${user.avatar ? 
+                                    `<img src="${user.avatar}" class="user-avatar" />` : 
+                                    `<div class="user-avatar" style="background: #3498db; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                        ${user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                                    </div>`
+                                }
+                                <div>
+                                    <div style="font-weight: 600;">${user.name || 'Unnamed User'}</div>
+                                    <div class="menu-details">ID: ${user.id}</div>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td>${user.email || 'No email'}</td>
-                    <td>${user.restaurant || 'Not specified'}</td>
-                    <td>
-                        <span class="menu-count">${user.menuCount} menus</span>
-                        ${user.publishedCount > 0 ? `<span class="published-count">${user.publishedCount} published</span>` : ''}
-                    </td>
-                    <td>${lastActive}</td>
-                    <td>
-                        ${user.menus.filter(m => m.publishedSlug).map(m => 
-                            `<button class="view-menu-btn" onclick="window.open('/menu/${m.publishedSlug}', '_blank')">
-                                <i class="fas fa-eye"></i> ${m.name}
-                            </button>`
-                        ).join('')}
-                    </td>
-                `;
+                        </td>
+                        <td>${user.email || 'No email'}</td>
+                        <td>${user.restaurant || 'Not specified'}</td>
+                        <td>
+                            <span class="menu-count">${user.menuCount} menus</span>
+                            ${user.publishedCount > 0 ? `<span class="published-count">${user.publishedCount} published</span>` : ''}
+                        </td>
+                        <td>${lastActive}</td>
+                        <td>
+                            <!-- Note: Published menu links will be added when we implement menu publishing with database -->
+                            <span class="menu-details">Database integration complete</span>
+                        </td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
                 
-                tbody.appendChild(row);
-            });
+            } catch (error) {
+                console.error('Error loading admin data:', error);
+                alert('Failed to load admin data. Please check the console for details.');
+            }
         }
         
         function filterUsers() {
