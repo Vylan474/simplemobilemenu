@@ -163,7 +163,7 @@ class LandingPage {
                 // TODO: Implement video modal or redirect to demo
                 console.log('Demo video clicked');
                 // For now, redirect to the editor
-                window.location.href = 'index.html';
+                window.location.href = 'editor.html';
             });
         }
     }
@@ -207,10 +207,13 @@ class LandingPage {
                 throw new Error('Authentication system not initialized');
             }
             
-            await window.authManager.signInWithEmail(email, password);
+            const result = await window.authManager.signIn(email, password);
+            if (!result.success) {
+                throw new Error(result.error);
+            }
             console.log('Sign in successful, redirecting...');
             // Redirect will happen automatically via auth state change
-            window.location.href = 'index.html';
+            window.location.href = 'editor.html';
         } catch (error) {
             console.error('Sign in error:', error);
             this.showError('sign-in-form', error.message);
@@ -236,12 +239,15 @@ class LandingPage {
                 throw new Error('Authentication system not initialized');
             }
             
-            const user = await window.authManager.signUpWithEmail(userData);
-            console.log('User created:', user);
+            const result = await window.authManager.register(userData);
+            if (!result.success) {
+                throw new Error(result.error);
+            }
+            console.log('User created:', result.user);
             
             // Create a demo menu for new users
             window.authManager.createDemoMenu();
-            window.location.href = 'index.html';
+            window.location.href = 'editor.html';
         } catch (error) {
             console.error('Sign up error:', error);
             this.showError('sign-up-form', error.message);
@@ -249,19 +255,9 @@ class LandingPage {
     }
     
     async handleGoogleSignIn() {
-        try {
-            await window.authManager.signInWithGoogle();
-            // Create demo menu for new Google users
-            setTimeout(() => {
-                if (window.authManager.getUserMenus().length === 0) {
-                    window.authManager.createDemoMenu();
-                }
-            }, 1000);
-            window.location.href = 'index.html';
-        } catch (error) {
-            console.error('Google sign-in error:', error);
-            alert('Google sign-in failed. Please try again.');
-        }
+        // Google authentication not implemented in database system
+        alert('Google sign-in is not currently available. Please use email sign-in or create an account.');
+        console.log('Google sign-in not implemented in database auth system');
     }
     
     showLoadingState(formId) {

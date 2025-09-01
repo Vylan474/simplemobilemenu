@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Restaurant Menu Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-form { margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        .error-message { color: #e74c3c; margin: 10px 0; font-size: 14px; }
+        .auth-switch { text-align: center; margin-top: 15px; }
+        .auth-switch a { color: #3498db; text-decoration: none; }
+        .auth-switch a:hover { text-decoration: underline; }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name" id="user-name">Demo User</div>
+                        <div class="user-email" id="user-email">demo@example.com</div>
+                    </div>
+                </div>
+                <button id="close-sidebar" class="sidebar-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="sidebar-section">
+                    <div class="section-header" id="menus-section-header">
+                        <i class="fas fa-utensils"></i>
+                        <span>My Menus</span>
+                        <i class="fas fa-chevron-down section-toggle"></i>
+                    </div>
+                    <div class="section-content" id="menus-list">
+                        <!-- Menu items will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="section-header" id="settings-section-header">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </div>
+                    <div class="section-content" id="settings-list">
+                        <div class="setting-item" id="dark-mode-toggle">
+                            <i class="fas fa-moon"></i>
+                            <span>Dark Mode</span>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="dark-mode-checkbox">
+                                <label for="dark-mode-checkbox" class="slider"></label>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <i class="fas fa-bell"></i>
+                            <span>Notifications</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-footer">
+                    <div class="setting-item" id="sign-out-item">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sign Out</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar Overlay -->
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+        
+        <!-- Main Content -->
+        <div class="main-layout">
+            <header class="header">
+                <div class="header-left">
+                    <button id="toggle-sidebar" class="btn btn-secondary sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1><i class="fas fa-utensils"></i> Menu Editor</h1>
+                    <div class="current-menu-info">
+                        <span class="current-menu-name" id="current-menu-name">My Restaurant Menu</span>
+                        <div class="menu-status-row">
+                            <span class="menu-status" id="menu-status">Draft</span>
+                            <span class="change-indicator" id="change-indicator">
+                                <i class="fas fa-circle"></i> Saved
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <div class="save-controls">
+                        <button id="save-menu" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Menu
+                        </button>
+                        <button id="discard-changes" class="btn btn-warning" style="display: none;" title="Discard unsaved changes">
+                            <i class="fas fa-undo"></i> Discard
+                        </button>
+                    </div>
+                    <button id="export-menu" class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button id="import-menu" class="btn btn-secondary">
+                        <i class="fas fa-upload"></i> Import
+                    </button>
+                    <input type="file" id="import-file" accept=".json" style="display: none;">
+                </div>
+            </header>
+
+            <div class="toolbar">
+                <button id="add-section" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add Section
+                </button>
+                <div class="logo-controls">
+                    <button id="upload-logo" class="btn btn-secondary">
+                        <i class="fas fa-image"></i> Add Logo
+                    </button>
+                    <button id="remove-logo" class="btn btn-warning" style="display: none;">
+                        <i class="fas fa-times"></i> Remove Logo
+                    </button>
+                    <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/jpg,image/gif,image/svg+xml,image/webp" style="display: none;">
+                </div>
+                <div class="background-controls">
+                    <button id="background-options" class="btn btn-secondary">
+                        <i class="fas fa-palette"></i> Background
+                    </button>
+                    <div id="background-dropdown" class="background-dropdown" style="display: none;">
+                        <div class="background-section">
+                            <label>Background Images:</label>
+                            <div class="background-image-grid">
+                                <div class="background-option" data-type="image" data-value="Background Images/Charcoal Linen.png">
+                                    <img src="Background Images/Charcoal Linen.png" alt="Charcoal Linen">
+                                    <span>Charcoal Linen</span>
+                                </div>
+                                <div class="background-option" data-type="image" data-value="Background Images/Ivory Weave.png">
+                                    <img src="Background Images/Ivory Weave.png" alt="Ivory Weave">
+                                    <span>Ivory Weave</span>
+                                </div>
+                                <div class="background-option" data-type="image" data-value="Background Images/Textured Parchment.png">
+                                    <img src="Background Images/Textured Parchment.png" alt="Textured Parchment">
+                                    <span>Textured Parchment</span>
+                                </div>
+                                <div class="background-option" data-type="none" data-value="none">
+                                    <div class="no-background">
+                                        <i class="fas fa-ban"></i>
+                                    </div>
+                                    <span>None</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="background-section" id="recent-backgrounds-section" style="display: none;">
+                            <label>Recent Uploads:</label>
+                            <div class="recent-backgrounds-grid" id="recent-backgrounds-grid">
+                                <!-- Recent backgrounds will be loaded here -->
+                            </div>
+                        </div>
+                        <div class="background-section">
+                            <label>Upload Custom Image:</label>
+                            <div class="custom-upload-section">
+                                <div class="upload-info">
+                                    <small>Recommended: 1080×1920px (mobile) or 1200×1600px</small>
+                                    <small>Portrait orientation works best for menu scrolling</small>
+                                    <small>Formats: JPG, PNG, WEBP (max 5MB)</small>
+                                </div>
+                                <div class="upload-controls">
+                                    <input type="file" id="background-upload" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                                    <button id="upload-background-btn" class="btn btn-primary btn-small">
+                                        <i class="fas fa-upload"></i> Choose Image
+                                    </button>
+                                    <span id="upload-filename" class="upload-filename"></span>
+                                </div>
+                                <div id="upload-preview" class="upload-preview" style="display: none;">
+                                    <img id="upload-preview-img" alt="Preview">
+                                    <button id="use-uploaded-background" class="btn btn-success btn-small">
+                                        <i class="fas fa-check"></i> Use This Image
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="background-section">
+                            <label>Background Color:</label>
+                            <div class="color-picker-group">
+                                <input type="color" id="background-color-picker" value="#ffffff">
+                                <button id="use-color-background" class="btn btn-small">Use Color</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="font-controls">
+                    <button id="font-options" class="btn btn-secondary">
+                        <i class="fas fa-font"></i> Font
+                    </button>
+                    <div id="font-dropdown" class="font-dropdown" style="display: none;">
+                        <div class="font-section">
+                            <label>Font Family:</label>
+                            <div class="font-family-grid">
+                                <div class="font-option" data-font="Inter">
+                                    <span style="font-family: Inter, sans-serif;">Inter</span>
+                                    <small>Modern & Clean</small>
+                                </div>
+                                <div class="font-option" data-font="Playfair Display">
+                                    <span style="font-family: 'Playfair Display', serif;">Playfair Display</span>
+                                    <small>Elegant & Upscale</small>
+                                </div>
+                                <div class="font-option" data-font="Georgia">
+                                    <span style="font-family: Georgia, serif;">Georgia</span>
+                                    <small>Classic & Traditional</small>
+                                </div>
+                                <div class="font-option" data-font="Lato">
+                                    <span style="font-family: Lato, sans-serif;">Lato</span>
+                                    <small>Friendly & Approachable</small>
+                                </div>
+                                <div class="font-option" data-font="Montserrat">
+                                    <span style="font-family: Montserrat, sans-serif;">Montserrat</span>
+                                    <small>Bold & Impactful</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="color-controls">
+                    <button id="color-options" class="btn btn-secondary">
+                        <i class="fas fa-swatchbook"></i> Colors
+                    </button>
+                    <div id="color-dropdown" class="color-dropdown" style="display: none;">
+                        <div class="color-section">
+                            <label>Color Palettes:</label>
+                            <div class="color-palette-grid">
+                                <div class="palette-option" data-palette="classic">
+                                    <div class="palette-preview">
+                                        <div class="color-swatch" style="background-color: #2c3e50;"></div>
+                                        <div class="color-swatch" style="background-color: #7f8c8d;"></div>
+                                        <div class="color-swatch" style="background-color: #34495e;"></div>
+                                        <div class="color-swatch" style="background-color: #27ae60;"></div>
+                                        <div class="color-swatch" style="background-color: #ecf0f1;"></div>
+                                    </div>
+                                    <div class="palette-info">
+                                        <span class="palette-name">Classic</span>
+                                        <small>Timeless elegance</small>
+                                    </div>
+                                </div>
+                                <div class="palette-option" data-palette="ocean">
+                                    <div class="palette-preview">
+                                        <div class="color-swatch" style="background-color: #1e3a5f;"></div>
+                                        <div class="color-swatch" style="background-color: #5a6c7d;"></div>
+                                        <div class="color-swatch" style="background-color: #2c5282;"></div>
+                                        <div class="color-swatch" style="background-color: #3182ce;"></div>
+                                        <div class="color-swatch" style="background-color: #ebf8ff;"></div>
+                                    </div>
+                                    <div class="palette-info">
+                                        <span class="palette-name">Ocean</span>
+                                        <small>Fresh blues & teals</small>
+                                    </div>
+                                </div>
+                                <div class="palette-option" data-palette="forest">
+                                    <div class="palette-preview">
+                                        <div class="color-swatch" style="background-color: #1a202c;"></div>
+                                        <div class="color-swatch" style="background-color: #4a5568;"></div>
+                                        <div class="color-swatch" style="background-color: #2d3748;"></div>
+                                        <div class="color-swatch" style="background-color: #38a169;"></div>
+                                        <div class="color-swatch" style="background-color: #f0fff4;"></div>
+                                    </div>
+                                    <div class="palette-info">
+                                        <span class="palette-name">Forest</span>
+                                        <small>Natural greens & earth tones</small>
+                                    </div>
+                                </div>
+                                <div class="palette-option" data-palette="sunset">
+                                    <div class="palette-preview">
+                                        <div class="color-swatch" style="background-color: #742a2a;"></div>
+                                        <div class="color-swatch" style="background-color: #a0616a;"></div>
+                                        <div class="color-swatch" style="background-color: #9c2a2a;"></div>
+                                        <div class="color-swatch" style="background-color: #e53e3e;"></div>
+                                        <div class="color-swatch" style="background-color: #fffaf0;"></div>
+                                    </div>
+                                    <div class="palette-info">
+                                        <span class="palette-name">Sunset</span>
+                                        <small>Warm oranges & reds</small>
+                                    </div>
+                                </div>
+                                <div class="palette-option" data-palette="monochrome">
+                                    <div class="palette-preview">
+                                        <div class="color-swatch" style="background-color: #1a1a1a;"></div>
+                                        <div class="color-swatch" style="background-color: #4a4a4a;"></div>
+                                        <div class="color-swatch" style="background-color: #2d2d2d;"></div>
+                                        <div class="color-swatch" style="background-color: #000000;"></div>
+                                        <div class="color-swatch" style="background-color: #f7f7f7;"></div>
+                                    </div>
+                                    <div class="palette-info">
+                                        <span class="palette-name">Monochrome</span>
+                                        <small>Sophisticated grays</small>
+                                    </div>
+                                </div>
+                                <div class="palette-option" data-palette="wine">
+                                    <div class="palette-preview">
+                                        <div class="color-swatch" style="background-color: #4c1d95;"></div>
+                                        <div class="color-swatch" style="background-color: #6b46c1;"></div>
+                                        <div class="color-swatch" style="background-color: #581c87;"></div>
+                                        <div class="color-swatch" style="background-color: #7c3aed;"></div>
+                                        <div class="color-swatch" style="background-color: #faf5ff;"></div>
+                                    </div>
+                                    <div class="palette-info">
+                                        <span class="palette-name">Wine</span>
+                                        <small>Deep purples & burgundy</small>
+                                    </div>
+                                </div>
+                                <div class="palette-option" data-palette="cream">
+                                    <div class="palette-preview">
+                                        <div class="color-swatch" style="background-color: #f8f6f0;"></div>
+                                        <div class="color-swatch" style="background-color: #e8e2d4;"></div>
+                                        <div class="color-swatch" style="background-color: #d4c5a9;"></div>
+                                        <div class="color-swatch" style="background-color: #c9a96e;"></div>
+                                        <div class="color-swatch" style="background-color: #2d2a24;"></div>
+                                    </div>
+                                    <div class="palette-info">
+                                        <span class="palette-name">Cream</span>
+                                        <small>Warm ivory & gold tones</small>
+                                    </div>
+                                </div>
+                                <div class="palette-option" data-palette="pearl">
+                                    <div class="palette-preview">
+                                        <div class="color-swatch" style="background-color: #f7f7f7;"></div>
+                                        <div class="color-swatch" style="background-color: #e0e0e0;"></div>
+                                        <div class="color-swatch" style="background-color: #c4c4c4;"></div>
+                                        <div class="color-swatch" style="background-color: #a8a8a8;"></div>
+                                        <div class="color-swatch" style="background-color: #1a1a1a;"></div>
+                                    </div>
+                                    <div class="palette-info">
+                                        <span class="palette-name">Pearl</span>
+                                        <small>Clean silver & whites</small>
+                                    </div>
+                                </div>
+                                <div class="palette-option" data-palette="mint">
+                                    <div class="palette-preview">
+                                        <div class="color-swatch" style="background-color: #f0fdf4;"></div>
+                                        <div class="color-swatch" style="background-color: #bbf7d0;"></div>
+                                        <div class="color-swatch" style="background-color: #86efac;"></div>
+                                        <div class="color-swatch" style="background-color: #4ade80;"></div>
+                                        <div class="color-swatch" style="background-color: #1a2e05;"></div>
+                                    </div>
+                                    <div class="palette-info">
+                                        <span class="palette-name">Mint</span>
+                                        <small>Fresh light greens</small>
+                                    </div>
+                                </div>
+                                <div class="palette-option" data-palette="blush">
+                                    <div class="palette-preview">
+                                        <div class="color-swatch" style="background-color: #fef7f7;"></div>
+                                        <div class="color-swatch" style="background-color: #fecaca;"></div>
+                                        <div class="color-swatch" style="background-color: #f87171;"></div>
+                                        <div class="color-swatch" style="background-color: #dc2626;"></div>
+                                        <div class="color-swatch" style="background-color: #2d1b1b;"></div>
+                                    </div>
+                                    <div class="palette-info">
+                                        <span class="palette-name">Blush</span>
+                                        <small>Soft pink & coral tones</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation-controls">
+                    <button id="navigation-options" class="btn btn-secondary">
+                        <i class="fas fa-compass"></i> Navigation
+                    </button>
+                    <div id="navigation-dropdown" class="navigation-dropdown" style="display: none;">
+                        <div class="navigation-section">
+                            <label>Navigation Themes:</label>
+                            <div class="navigation-theme-grid">
+                                <div class="theme-option" data-theme="modern">
+                                    <div class="theme-preview">
+                                        <div class="nav-demo modern-demo">
+                                            <div class="demo-tab">NAV</div>
+                                            <div class="demo-dock">
+                                                <div class="demo-item"></div>
+                                                <div class="demo-item"></div>
+                                                <div class="demo-item"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme-info">
+                                        <span class="theme-name">Modern</span>
+                                        <small>Clean & contemporary</small>
+                                    </div>
+                                </div>
+                                <div class="theme-option" data-theme="glass">
+                                    <div class="theme-preview">
+                                        <div class="nav-demo glass-demo">
+                                            <div class="demo-tab">NAV</div>
+                                            <div class="demo-dock">
+                                                <div class="demo-item"></div>
+                                                <div class="demo-item"></div>
+                                                <div class="demo-item"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme-info">
+                                        <span class="theme-name">Glass</span>
+                                        <small>Translucent glass effect</small>
+                                    </div>
+                                </div>
+                                <div class="theme-option" data-theme="minimal">
+                                    <div class="theme-preview">
+                                        <div class="nav-demo minimal-demo">
+                                            <div class="demo-tab">NAV</div>
+                                            <div class="demo-dock">
+                                                <div class="demo-item"></div>
+                                                <div class="demo-item"></div>
+                                                <div class="demo-item"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme-info">
+                                        <span class="theme-name">Minimal</span>
+                                        <small>Simple & understated</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="toggle-live-preview" class="btn btn-secondary">
+                    <i class="fas fa-mobile-alt"></i> Preview
+                </button>
+                <div class="publish-group">
+                    <button id="view-published-menu" class="btn btn-secondary" title="View your published menu">
+                        <i class="fas fa-eye"></i> View Live Menu
+                    </button>
+                    <button id="publish-menu" class="btn btn-success">
+                        <i class="fas fa-share-alt"></i> Publish
+                    </button>
+                </div>
+            </div>
+
+            <div class="main-content">
+            <div id="menu-container" class="menu-container">
+                <!-- Menu sections will be dynamically added here -->
+            </div>
+
+            <div id="side-preview-panel" class="side-preview-panel hidden">
+                <div class="side-preview-controls">
+                    <h3><i class="fas fa-mobile-alt"></i> Preview</h3>
+                    <div>
+                        <button id="refresh-side-preview" class="btn btn-primary btn-small" title="Refresh Preview">
+                            <i class="fas fa-sync"></i>
+                        </button>
+                        <button id="close-side-preview" class="btn btn-secondary btn-small">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="side-preview-container">
+                    <div class="smartphone-frame">
+                        <div class="smartphone-screen" id="side-smartphone-screen">
+                            <div class="smartphone-notch"></div>
+                            <div class="smartphone-content">
+                                <div id="side-preview-content" class="preview-content">
+                                    <!-- Preview content will be generated here -->
+                                </div>
+                            </div>
+                            <div id="preview-navigation" class="preview-navigation">
+                                <div class="nav-tab" id="nav-tab">
+                                    NAV
+                                </div>
+                                <div class="nav-dock-container" id="nav-dock-container">
+                                    <!-- Dock navigation will be generated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div> <!-- Close main-layout -->
+
+        <div id="preview-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">&times;</span>
+                </div>
+                <div class="smartphone-frame">
+                    <div class="smartphone-screen">
+                        <div class="smartphone-notch"></div>
+                        <div class="smartphone-content">
+                            <div id="preview-content" class="preview-content">
+                                <!-- Preview content will be generated here -->
+                            </div>
+                        </div>
+                        <div id="modal-preview-navigation" class="preview-navigation">
+                            <div class="nav-tab" id="modal-nav-tab">
+                                <i class="fas fa-compass"></i> Navigate
+                            </div>
+                            <div class="nav-dock-container" id="modal-nav-dock-container">
+                                <!-- Dock navigation will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Section Settings</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <label for="section-name">Section Name:</label>
+                    <input type="text" id="section-name" placeholder="e.g., Appetizers, Beers, Wines">
+                    
+                    <label for="section-type">Section Type:</label>
+                    <select id="section-type">
+                        <option value="food">Food Items</option>
+                        <option value="beer">Beer</option>
+                        <option value="wine">Wine</option>
+                        <option value="cocktails">Cocktails</option>
+                        <option value="coffee">Coffee/Tea</option>
+                        <option value="desserts">Desserts</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                    
+                    <div id="custom-columns" style="display: none;">
+                        <label>Custom Columns:</label>
+                        <div id="column-builder">
+                            <!-- Custom column builder will go here -->
+                        </div>
+                        <button type="button" id="add-custom-column" class="btn btn-small">Add Column</button>
+                    </div>
+                    
+                    <div id="title-columns-section">
+                        <label>Title Columns (shown prominently in preview):</label>
+                        <div id="title-columns-list">
+                            <!-- Title column checkboxes will be generated here -->
+                        </div>
+                        <p class="help-text">Select which columns should appear as the item title in the menu preview. Drag to reorder.</p>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button id="save-section" class="btn btn-primary">Save Section</button>
+                        <button id="cancel-section" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="add-column-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-columns"></i> Add Column</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="column-options-section">
+                        <label>Choose Column Type:</label>
+                        
+                        <div class="preset-columns">
+                            <h3>Preset Columns:</h3>
+                            <div class="preset-columns-grid">
+                                <div class="preset-column-option" data-column="Item Name">
+                                    <i class="fas fa-utensils"></i>
+                                    <span>Item Name</span>
+                                </div>
+                                <div class="preset-column-option" data-column="Description">
+                                    <i class="fas fa-align-left"></i>
+                                    <span>Description</span>
+                                </div>
+                                <div class="preset-column-option" data-column="Price">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <span>Price</span>
+                                </div>
+                                <div class="preset-column-option" data-column="Category">
+                                    <i class="fas fa-tags"></i>
+                                    <span>Category</span>
+                                </div>
+                                <div class="preset-column-option" data-column="Ingredients">
+                                    <i class="fas fa-list-ul"></i>
+                                    <span>Ingredients</span>
+                                </div>
+                                <div class="preset-column-option" data-column="Allergens">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span>Allergens</span>
+                                </div>
+                                <div class="preset-column-option" data-column="Calories">
+                                    <i class="fas fa-fire"></i>
+                                    <span>Calories</span>
+                                </div>
+                                <div class="preset-column-option" data-column="Prep Time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Prep Time</span>
+                                </div>
+                                <div class="preset-column-option" data-column="Spice Level">
+                                    <i class="fas fa-pepper-hot"></i>
+                                    <span>Spice Level</span>
+                                </div>
+                                <div class="preset-column-option" data-column="Dietary">
+                                    <i class="fas fa-leaf"></i>
+                                    <span>Dietary</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="custom-column-section">
+                            <h3>Custom Column:</h3>
+                            <div class="custom-column-input">
+                                <input type="text" id="custom-column-name" placeholder="Enter custom column name">
+                                <button type="button" id="add-custom-column-btn" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Add Custom
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button id="cancel-add-column" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="publish-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-share-alt"></i> Publish Your Menu</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="publish-step">
+                        <label for="menu-url-path">Custom URL Path:</label>
+                        <div class="url-input-group">
+                            <span class="url-prefix">www.mymobilemenu.com/menu/</span>
+                            <input type="text" id="menu-url-path" placeholder="my-restaurant-name" pattern="[a-z0-9-]+" title="Only lowercase letters, numbers, and dashes allowed">
+                        </div>
+                        <p class="help-text">Choose a unique path for your menu. Use only lowercase letters, numbers, and dashes.</p>
+                        <div id="path-validation" class="validation-message"></div>
+                    </div>
+
+                    <div class="publish-step">
+                        <label for="menu-title-publish">Menu Title:</label>
+                        <input type="text" id="menu-title-publish" placeholder="Restaurant Name" value="Our Menu">
+                        <p class="help-text">This will appear at the top of your published menu.</p>
+                    </div>
+
+                    <div class="publish-step">
+                        <label for="menu-subtitle-publish">Menu Subtitle:</label>
+                        <input type="text" id="menu-subtitle-publish" placeholder="Tagline or description" value="Crafted with care and passion">
+                        <p class="help-text">Optional subtitle or tagline for your menu.</p>
+                    </div>
+
+                    <div class="publish-preview">
+                        <h3>Preview URL:</h3>
+                        <div class="preview-url">
+                            <i class="fas fa-link"></i>
+                            <span id="preview-url-display">https://www.mymobilemenu.com/menu/your-path-here</span>
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button id="check-availability" class="btn btn-secondary">
+                            <i class="fas fa-search"></i> Check Availability
+                        </button>
+                        <button id="publish-menu-confirm" class="btn btn-success" disabled>
+                            <i class="fas fa-rocket"></i> Publish Menu
+                        </button>
+                        <button id="cancel-publish" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="success-modal" class="modal">
+            <div class="modal-content success-modal-content">
+                <div class="modal-header success-header">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 id="success-title">Success!</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body success-body">
+                    <p id="success-message">Your menu has been updated successfully!</p>
+                    
+                    <div id="success-url-section" class="success-url-section" style="display: none;">
+                        <label>Your menu is now live at:</label>
+                        <div class="success-url">
+                            <i class="fas fa-link"></i>
+                            <span id="success-url-display"></span>
+                            <button id="copy-success-url" class="btn btn-secondary btn-small" title="Copy URL">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button id="view-live-menu-from-success" class="btn btn-primary" style="display: none;">
+                            <i class="fas fa-eye"></i> View Live Menu
+                        </button>
+                        <button id="close-success-modal" class="btn btn-secondary">
+                            <i class="fas fa-check"></i> Got it
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="discard-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Discard Changes</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p>You have unsaved changes. What would you like to do?</p>
+                    
+                    <div class="discard-options">
+                        <div class="discard-option">
+                            <button id="revert-to-saved" class="btn btn-secondary btn-large">
+                                <i class="fas fa-undo"></i>
+                                <div class="button-content">
+                                    <div class="button-title">Revert to Last Save</div>
+                                    <div class="button-subtitle">Restore to your most recent saved version</div>
+                                </div>
+                            </button>
+                        </div>
+                        
+                        <div class="discard-option" id="revert-published-option" style="display: none;">
+                            <button id="revert-to-published" class="btn btn-secondary btn-large">
+                                <i class="fas fa-globe"></i>
+                                <div class="button-content">
+                                    <div class="button-title">Revert to Published Version</div>
+                                    <div class="button-subtitle">Restore to the currently live menu</div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button id="cancel-discard" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="auth-modal-title">Sign In</h2>
+                <span class="close" onclick="document.getElementById('auth-modal').style.display='none'">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="auth-form-container">
+                    <!-- Login Form -->
+                    <div id="login-form" class="auth-form">
+                        <div class="form-group">
+                            <label for="login-email">Email:</label>
+                            <input type="email" id="login-email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password:</label>
+                            <input type="password" id="login-password" placeholder="Enter your password" required>
+                        </div>
+                        <div id="login-error" class="error-message"></div>
+                        <button id="login-btn" class="btn btn-primary" onclick="handleLogin()">Sign In</button>
+                        <p class="auth-switch">
+                            Don't have an account? 
+                            <a href="#" onclick="showRegisterForm()">Create one</a>
+                        </p>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="register-form" class="auth-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="register-name">Name:</label>
+                            <input type="text" id="register-name" placeholder="Your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email:</label>
+                            <input type="email" id="register-email" placeholder="Your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-restaurant">Restaurant Name (Optional):</label>
+                            <input type="text" id="register-restaurant" placeholder="Your restaurant name">
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Password:</label>
+                            <input type="password" id="register-password" placeholder="At least 8 characters" required>
+                        </div>
+                        <div id="register-error" class="error-message"></div>
+                        <button id="register-btn" class="btn btn-primary" onclick="handleRegister()">Create Account</button>
+                        <p class="auth-switch">
+                            Already have an account? 
+                            <a href="#" onclick="showLoginForm()">Sign in</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="auth-db.js?v=20250901"></script>
+    <script src="script.js?v=20250901"></script>
+</body>
+</html>

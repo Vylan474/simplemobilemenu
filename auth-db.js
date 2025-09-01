@@ -146,6 +146,9 @@ class DatabaseAuthManager {
             // In a more complete implementation, you'd also invalidate the session on the server
             // For now, the session will expire naturally
             
+            // Redirect to landing page
+            window.location.href = 'index.html';
+            
             return { success: true };
         } catch (error) {
             console.error('Logout error:', error);
