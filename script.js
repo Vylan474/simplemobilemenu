@@ -966,19 +966,57 @@ class MenuEditor {
     }
     
     deleteMenuItem(sectionId, itemIndex) {
+        console.log('🗑️ Deleting menu item from section:', sectionId, 'index:', itemIndex);
         const section = this.sections.find(s => s.id === sectionId);
+        
+        if (!section) {
+            console.error('❌ Section not found:', sectionId);
+            return;
+        }
+        
+        if (!section.items[itemIndex]) {
+            console.error('❌ Item not found at index:', itemIndex);
+            return;
+        }
+        
         section.items.splice(itemIndex, 1);
+        console.log('✅ Menu item deleted, re-rendering...');
+        
         this.renderMenu();
         this.updateSidePreview();
         this.markAsChanged();
+        this.saveToStorage();
     }
     
-    updateMenuItem(sectionId, itemIndex, column, value) {
+    duplicateMenuItem(sectionId, itemIndex) {
+        console.log('📋 Duplicating menu item from section:', sectionId, 'index:', itemIndex);
         const section = this.sections.find(s => s.id === sectionId);
-        section.items[itemIndex][column] = value;
+        
+        if (!section) {
+            console.error('❌ Section not found:', sectionId);
+            return;
+        }
+        
+        if (!section.items[itemIndex]) {
+            console.error('❌ Item not found at index:', itemIndex);
+            return;
+        }
+        
+        // Create a deep copy of the item
+        const originalItem = section.items[itemIndex];
+        const duplicatedItem = { ...originalItem };
+        
+        // Insert the duplicated item right after the original
+        section.items.splice(itemIndex + 1, 0, duplicatedItem);
+        console.log('✅ Menu item duplicated, re-rendering...');
+        
+        this.renderMenu();
         this.updateSidePreview();
         this.markAsChanged();
+        this.saveToStorage();
     }
+    
+    // updateMenuItem method moved to avoid duplication - see line ~3905
     
     addColumn(sectionId) {
         const section = this.sections.find(s => s.id === sectionId);
@@ -1197,10 +1235,10 @@ class MenuEditor {
                     >
                 `).join('')}
                 <div class="item-controls">
-                    <button class="btn btn-secondary btn-small" onclick="menuEditor.duplicateMenuItem(${section.id}, ${index})" title="Duplicate Item">
+                    <button class="btn btn-secondary btn-small duplicate-item-btn" data-section-id="${section.id}" data-item-index="${index}" title="Duplicate Item">
                         <i class="fas fa-copy"></i>
                     </button>
-                    <button class="btn btn-danger btn-small" onclick="menuEditor.deleteMenuItem(${section.id}, ${index})" title="Delete Item">
+                    <button class="btn btn-danger btn-small delete-item-btn" data-section-id="${section.id}" data-item-index="${index}" title="Delete Item">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -1408,6 +1446,15 @@ class MenuEditor {
                 const itemIndex = parseInt(button.dataset.itemIndex);
                 console.log('🗑️ Delete Item clicked for section:', sectionId, 'item:', itemIndex);
                 this.deleteMenuItem(sectionId, itemIndex);
+            }
+            
+            // Handle item duplicate buttons
+            if (e.target.closest('.duplicate-item-btn')) {
+                const button = e.target.closest('.duplicate-item-btn');
+                const sectionId = parseInt(button.dataset.sectionId);
+                const itemIndex = parseInt(button.dataset.itemIndex);
+                console.log('📋 Duplicate Item clicked for section:', sectionId, 'item:', itemIndex);
+                this.duplicateMenuItem(sectionId, itemIndex);
             }
         });
     }
@@ -1944,16 +1991,34 @@ class MenuEditor {
             return `<span class="preview-data-cell ${isPrice ? 'preview-price-cell' : ''}">${value}</span>`;
         }).join('');
         
+        // Check if there's any content to display
+        const hasTitle = titleText || titlePrice;
+        const hasDescription = description;
+        const hasVisibleData = visibleColumns.length > 0 && dataRow.trim();
+        const hasAnyContent = hasTitle || hasDescription || hasVisibleData;
+        
+        // If no content, show a placeholder
+        if (!hasAnyContent) {
+            return `
+                <div class="preview-item">
+                    <div class="preview-item-title">
+                        <span class="preview-title-text">Empty Item</span>
+                    </div>
+                    <div class="preview-item-description">Click to edit this item</div>
+                </div>
+            `;
+        }
+
         return `
             <div class="preview-item">
-                ${(titleText || titlePrice) ? `
+                ${hasTitle ? `
                     <div class="preview-item-title">
                         <span class="preview-title-text">${titleText}</span>
                         ${titlePrice ? `<span class="preview-title-price">${titlePrice}</span>` : ''}
                     </div>
                 ` : ''}
-                ${description ? `<div class="preview-item-description">${description}</div>` : ''}
-                ${visibleColumns.length > 0 ? `
+                ${hasDescription ? `<div class="preview-item-description">${description}</div>` : ''}
+                ${hasVisibleData ? `
                     <div class="preview-item-data" style="grid-template-columns: ${visibleColumns.map(col => col.toLowerCase().includes('price') ? 'auto' : '1fr').join(' ')};">
                         ${dataRow}
                     </div>
@@ -3819,6 +3884,9 @@ class MenuEditor {
         if (!section || !section.items[itemIndex]) return;
         
         section.items[itemIndex][column] = value;
+        
+        // Update preview immediately
+        this.updateSidePreview();
         this.markAsChanged();
         this.saveCurrentMenu();
     }
