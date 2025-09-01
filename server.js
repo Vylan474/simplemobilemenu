@@ -388,6 +388,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Serve the admin portal
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
 // Serve published menu pages
 app.get('/menu/:slug', async (req, res) => {
     try {

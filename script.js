@@ -240,6 +240,12 @@ class MenuEditor {
     handleAuthChange(user) {
         if (user) {
             this.currentUser = user;
+            
+            // Update last active timestamp for admin tracking
+            user.lastActive = new Date().toISOString();
+            const userKey = `menuEditor_user_${user.id}`;
+            localStorage.setItem(userKey, JSON.stringify(user));
+            
             this.updateUserInterface(user);
             this.loadUserData();
         } else {
