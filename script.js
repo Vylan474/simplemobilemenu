@@ -1205,10 +1205,50 @@ class MenuEditor {
         
         // Apply background, font, and colors after content is rendered
         setTimeout(() => {
+            console.log('Applying background in preview modal:', this.backgroundType, this.backgroundValue);
+            console.log('Modal elements check:', {
+                modal: !!document.getElementById('preview-modal'),
+                previewContent: !!document.getElementById('preview-content'),
+                smartphoneContent: !!document.querySelector('#preview-modal .smartphone-content')
+            });
             this.applyBackground();
             this.applyFontFamily();
             this.applyColorPalette();
+            this.applyNavigationTheme();
+            
+            // Force background size to contain for modal elements
+            this.forceModalBackgroundSize();
         }, 100);
+    }
+    
+    forceModalBackgroundSize() {
+        const modalElements = document.querySelectorAll('#preview-modal .smartphone-content, #preview-modal #preview-content, #preview-modal .preview-menu-container');
+        
+        modalElements.forEach(element => {
+            if (element.style.backgroundImage) {
+                element.style.backgroundSize = 'contain';
+                console.log('Forced background-size to contain for:', element.className || element.id);
+            }
+        });
+        
+        // Set up a mutation observer to watch for style changes
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    const element = mutation.target;
+                    if (element.closest('#preview-modal') && element.style.backgroundImage) {
+                        if (element.style.backgroundSize !== 'contain') {
+                            element.style.backgroundSize = 'contain';
+                            console.log('Observer: Reset background-size to contain for:', element.className || element.id);
+                        }
+                    }
+                }
+            });
+        });
+        
+        modalElements.forEach(element => {
+            observer.observe(element, { attributes: true, attributeFilter: ['style'] });
+        });
     }
     
     initializeScrollAnimations() {
@@ -2704,7 +2744,7 @@ class MenuEditor {
         fileInput.click();
     }
     
-    handleLogoUpload(event) {
+    async handleLogoUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
         
@@ -2721,19 +2761,28 @@ class MenuEditor {
             return;
         }
         
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            this.menuLogo = e.target.result;
-            this.updateLogoDisplay();
-            this.markAsChanged();
-            this.saveToStorage();
+        try {
+            // Upload to server
+            const uploadResponse = await this.uploadLogoImage(file);
             
-            // Update preview if visible
-            if (this.sidePreviewVisible) {
-                this.updateSidePreview();
+            if (uploadResponse.success) {
+                // Use the uploaded logo URL
+                this.menuLogo = uploadResponse.url;
+                this.updateLogoDisplay();
+                this.markAsChanged();
+                this.saveToStorage();
+                
+                // Update preview if visible
+                if (this.sidePreviewVisible) {
+                    this.updateSidePreview();
+                }
+            } else {
+                alert('Failed to upload logo. Please try again.');
             }
-        };
-        reader.readAsDataURL(file);
+        } catch (error) {
+            console.error('Logo upload failed:', error);
+            alert('Failed to upload logo. Please try again.');
+        }
     }
     
     removeLogo() {
@@ -3032,6 +3081,21 @@ class MenuEditor {
         return await uploadResponse.json();
     }
     
+    async uploadLogoImage(file) {
+        // Create FormData
+        const formData = new FormData();
+        formData.append('logo', file);
+        formData.append('slug', this.slug); // Include slug to track menu-specific uploads
+        
+        // Upload to server
+        const uploadResponse = await fetch('/api/upload-logo', {
+            method: 'POST',
+            body: formData
+        });
+        
+        return await uploadResponse.json();
+    }
+    
     resetUploadUI() {
         document.getElementById('upload-filename').textContent = '';
         document.getElementById('upload-preview').style.display = 'none';
@@ -3190,10 +3254,17 @@ class MenuEditor {
         switch (this.backgroundType) {
             case 'image':
                 element.style.backgroundImage = `url('${this.backgroundValue}')`;
-                element.style.backgroundSize = 'cover';
-                element.style.backgroundPosition = 'center';
+                // Check if this is in the preview modal
+                if (element.closest('#preview-modal')) {
+                    element.style.backgroundSize = 'contain'; // Scale entire image to fit phone screen
+                    element.style.backgroundPosition = 'top center';
+                    element.style.backgroundAttachment = 'local';
+                } else {
+                    element.style.backgroundSize = 'cover';
+                    element.style.backgroundPosition = 'center';
+                    element.style.backgroundAttachment = 'fixed';
+                }
                 element.style.backgroundRepeat = 'no-repeat';
-                element.style.backgroundAttachment = 'fixed';
                 break;
             case 'color':
                 element.style.backgroundColor = this.backgroundValue;
@@ -3737,7 +3808,7 @@ MenuEditor.prototype.saveToStorage = function() {
             backgroundValue: this.backgroundValue,
             fontFamily: this.fontFamily,
             colorPalette: this.colorPalette,
-            logoUrl: this.logoUrl
+            logoUrl: this.menuLogo
         },
         lastEdited: Date.now(),
         status: this.publishedSlug ? 'published' : 'draft',
@@ -3811,7 +3882,7 @@ MenuEditor.prototype.loadMenu = function(menu) {
     this.fontFamily = settings.fontFamily || 'Inter';
     this.colorPalette = settings.colorPalette || 'classic';
     this.navigationTheme = settings.navigationTheme || 'modern';
-    this.logoUrl = settings.logoUrl || null;
+    this.menuLogo = settings.logoUrl || null;
     
     // Apply loaded settings
     this.applyBackground();
@@ -3819,12 +3890,11 @@ MenuEditor.prototype.loadMenu = function(menu) {
     this.applyColorPalette();
     this.applyNavigationTheme();
     
-    if (this.logoUrl) {
-        this.displayLogo(this.logoUrl);
+    if (this.menuLogo) {
+        // Logo already loaded, just update display
+        this.updateLogoDisplay();
     } else {
-        // Clear logo without confirmation when loading menu
-        this.menuLogo = null;
-        this.logoUrl = null;
+        // No logo, update display to show "Add Logo"
         this.updateLogoDisplay();
     }
     
@@ -3877,11 +3947,28 @@ MenuEditor.prototype.applyBackground = function() {
         '.preview-menu-container, .published-menu-container, #side-preview-content, #preview-content, .smartphone-content'
     );
     
-    previewContainers.forEach(container => {
+    console.log('Found preview containers:', previewContainers.length);
+    console.log('Background settings:', { type: this.backgroundType, value: this.backgroundValue });
+    
+    previewContainers.forEach((container, index) => {
+        console.log(`Applying to container ${index}:`, container.className || container.id);
+        
         if (this.backgroundType === 'image' && this.backgroundValue) {
             container.style.backgroundImage = `url('${this.backgroundValue}')`;
-            container.style.backgroundSize = 'cover';
-            container.style.backgroundPosition = 'center';
+            // Mobile-friendly background sizing
+            if (container.closest('#preview-modal')) {
+                container.style.backgroundSize = 'contain'; // Scale entire image to fit phone screen
+                container.style.backgroundPosition = 'top center';
+                container.style.backgroundAttachment = 'local';
+            } else if (container.closest('.side-preview-panel')) {
+                container.style.backgroundSize = 'cover';
+                container.style.backgroundPosition = 'center center';
+                container.style.backgroundAttachment = 'scroll';
+            } else {
+                container.style.backgroundSize = 'cover';
+                container.style.backgroundPosition = 'center';
+            }
+            container.style.backgroundRepeat = 'no-repeat';
             container.style.backgroundColor = '';
         } else if (this.backgroundType === 'color' && this.backgroundValue) {
             container.style.backgroundImage = '';
@@ -3889,6 +3976,44 @@ MenuEditor.prototype.applyBackground = function() {
         } else {
             container.style.backgroundImage = '';
             container.style.backgroundColor = '';
+        }
+    });
+    
+    // Apply to modal elements specifically - ONLY preview-content
+    const modalTargets = [
+        '#preview-modal #preview-content'  // Only apply to this element
+    ];
+    
+    modalTargets.forEach((selector, index) => {
+        const element = document.querySelector(selector);
+        if (element) {
+            console.log(`Found modal target ${index} (${selector}):`, element);
+            if (this.backgroundType === 'image' && this.backgroundValue) {
+                element.style.backgroundImage = `url('${this.backgroundValue}')`;
+                // Mobile viewport behavior - set image width to phone screen dimensions
+                if (selector.includes('preview-modal')) {
+                    element.style.backgroundSize = 'contain'; // Scale entire image to fit phone screen
+                    element.style.backgroundPosition = 'top center';
+                    element.style.backgroundAttachment = 'local'; // Scrolls with content
+                } else {
+                    element.style.backgroundSize = 'cover';
+                    element.style.backgroundPosition = 'center center';
+                    element.style.backgroundAttachment = 'scroll';
+                }
+                element.style.backgroundRepeat = 'no-repeat';
+                element.style.backgroundColor = '';
+                console.log(`Applied mobile background to ${selector}:`, this.backgroundValue);
+            } else if (this.backgroundType === 'color' && this.backgroundValue) {
+                element.style.backgroundImage = '';
+                element.style.backgroundColor = this.backgroundValue;
+                console.log(`Applied background color to ${selector}:`, this.backgroundValue);
+            } else {
+                element.style.backgroundImage = '';
+                element.style.backgroundColor = '';
+                console.log(`Cleared background from ${selector}`);
+            }
+        } else {
+            console.log(`Modal target not found: ${selector}`);
         }
     });
 };
@@ -4107,7 +4232,7 @@ MenuEditor.prototype.createNewMenu = function() {
     this.backgroundValue = null;
     this.fontFamily = 'Inter';
     this.colorPalette = 'classic';
-    this.logoUrl = null;
+    this.menuLogo = null;
     this.hasUnsavedChanges = false;
     
     // Update UI

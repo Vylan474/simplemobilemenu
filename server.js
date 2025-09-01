@@ -11,11 +11,13 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static('./')); // Serve static files from current directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded files
+app.use('/uploads/logos', express.static(path.join(__dirname, 'uploads', 'logos'))); // Serve uploaded logos
 
 // Simple file-based storage for now (easy to migrate to database later)
 const MENUS_DIR = path.join(__dirname, 'menus');
 const USERS_DIR = path.join(__dirname, 'users');
 const UPLOADS_DIR = path.join(__dirname, 'uploads', 'backgrounds');
+const LOGOS_DIR = path.join(__dirname, 'uploads', 'logos');
 
 // Ensure directories exist
 async function ensureDirectories() {
@@ -36,10 +38,16 @@ async function ensureDirectories() {
     } catch {
         await fs.mkdir(UPLOADS_DIR, { recursive: true });
     }
+    
+    try {
+        await fs.access(LOGOS_DIR);
+    } catch {
+        await fs.mkdir(LOGOS_DIR, { recursive: true });
+    }
 }
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
+// Configure multer for background uploads
+const backgroundStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, UPLOADS_DIR);
     },
@@ -51,8 +59,36 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ 
-    storage: storage,
+// Configure multer for logo uploads  
+const logoStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, LOGOS_DIR);
+    },
+    filename: function (req, file, cb) {
+        // Generate unique filename: timestamp + random + original extension
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, 'logo-' + uniqueSuffix + ext);
+    }
+});
+
+const uploadBackground = multer({ 
+    storage: backgroundStorage,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+    },
+    fileFilter: function (req, file, cb) {
+        // Check file type
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed!'), false);
+        }
+    }
+});
+
+const uploadLogo = multer({ 
+    storage: logoStorage,
     limits: {
         fileSize: 5 * 1024 * 1024 // 5MB limit
     },
@@ -240,7 +276,7 @@ app.get('/api/menu/:slug/backgrounds', async (req, res) => {
 });
 
 // Background image upload endpoint
-app.post('/api/upload-background', upload.single('background'), async (req, res) => {
+app.post('/api/upload-background', uploadBackground.single('background'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
@@ -297,6 +333,52 @@ app.post('/api/upload-background', upload.single('background'), async (req, res)
         res.status(500).json({ 
             success: false, 
             error: 'Failed to upload image' 
+        });
+    }
+});
+
+// Logo upload endpoint
+app.post('/api/upload-logo', uploadLogo.single('logo'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+        
+        const { slug } = req.body;
+        
+        // Return the URL where the file can be accessed
+        const fileUrl = `/uploads/logos/${req.file.filename}`;
+        
+        console.log('Logo uploaded:', req.file.filename);
+        
+        // If slug is provided, update the menu's logo
+        if (slug) {
+            try {
+                const menuPath = path.join(MENUS_DIR, `${slug}.json`);
+                const menuData = JSON.parse(await fs.readFile(menuPath, 'utf8'));
+                
+                // Update the menu logo
+                menuData.menuLogo = fileUrl;
+                menuData.updatedAt = new Date().toISOString();
+                
+                // Save updated menu data
+                await fs.writeFile(menuPath, JSON.stringify(menuData, null, 2));
+            } catch (error) {
+                console.error('Error updating menu logo:', error);
+            }
+        }
+        
+        res.json({ 
+            success: true, 
+            url: fileUrl,
+            filename: req.file.filename
+        });
+        
+    } catch (error) {
+        console.error('Logo upload error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Failed to upload logo' 
         });
     }
 });

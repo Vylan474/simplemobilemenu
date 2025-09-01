@@ -629,13 +629,13 @@ body {
 
 /* Modal preview navigation positioning (inside phone frame) */
 #preview-modal .preview-navigation {
-    bottom: 15px;
-    left: 15px;
-    right: 15px;
+    bottom: 60px;
+    left: 25px;
+    right: 25px;
 }
 
 #preview-modal .nav-tab {
-    bottom: 8px;
+    bottom: 20px;
 }
 
 #preview-modal .nav-dock-container {
@@ -647,6 +647,51 @@ body {
     bottom: 10px;
     left: 10px;
     right: 10px;
+}
+
+/* Fixed-width phone background optimization */
+#preview-modal #preview-content {
+    width: 345px !important;
+    height: 782px !important;
+    background-attachment: scroll !important;
+    background-size: contain !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    overflow-y: auto !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+}
+
+#preview-modal .smartphone-content {
+    width: 345px !important;
+    height: 782px !important;
+    background-size: contain !important; /* Scale entire image to fit phone screen */
+    background-position: top center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: local !important; /* Scroll with content like mobile */
+    overflow-y: auto !important;
+}
+
+/* Remove background from other elements in modal */
+#preview-modal .smartphone-content,
+#preview-modal .preview-menu-container {
+    background-image: none !important;
+}
+
+#preview-modal #preview-content {
+    width: 345px !important;
+    min-height: 782px !important;
+    background-size: contain !important; /* Scale entire image to fit phone screen */
+    background-position: top center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: local !important; /* Scroll with content like mobile */
+}
+
+.side-preview-panel .smartphone-content {
+    background-attachment: scroll !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
 }
 
 .nav-tab {
@@ -1210,7 +1255,7 @@ body {
 }
 
 .smartphone-frame {
-    width: 380px;
+    width: 375px;
     height: 812px;
     background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
     border-radius: 25px;
@@ -1220,6 +1265,22 @@ body {
         0 0 0 3px #333,
         inset 0 2px 4px rgba(255, 255, 255, 0.1),
         0 25px 80px rgba(0, 0, 0, 0.4);
+}
+
+/* Fixed width for modal preview phone frame */
+#preview-modal .smartphone-frame {
+    width: 375px !important;
+    height: 812px !important;
+}
+
+#preview-modal .smartphone-screen {
+    width: 345px !important;
+    height: 782px !important;
+}
+
+#preview-modal .smartphone-content {
+    width: 345px !important;
+    height: 782px !important;
 }
 
 .smartphone-screen {
