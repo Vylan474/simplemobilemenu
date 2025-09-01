@@ -1,4 +1,3 @@
-const { put } = require('@vercel/blob');
 const { sql } = require('@vercel/postgres');
 
 module.exports = async function handler(req, res) {
@@ -41,26 +40,15 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'File data and name are required' });
     }
 
-    // Convert base64 to buffer
-    const base64Data = fileData.replace(/^data:image\/[a-z]+;base64,/, '');
-    const buffer = Buffer.from(base64Data, 'base64');
-
-    // Validate file size (5MB limit)
-    if (buffer.length > 5 * 1024 * 1024) {
+    // Validate file size (approximate - base64 is ~1.33x larger than binary)
+    const approximateSize = (fileData.length * 3) / 4;
+    if (approximateSize > 5 * 1024 * 1024) {
       return res.status(400).json({ error: 'File too large. Maximum size is 5MB.' });
     }
 
-    // Generate unique filename
-    const timestamp = Date.now();
-    const randomId = Math.round(Math.random() * 1E9);
-    const fileExtension = fileName.split('.').pop();
-    const uniqueFileName = `bg-${timestamp}-${randomId}.${fileExtension}`;
-
-    // Upload to Vercel Blob
-    const blob = await put(uniqueFileName, buffer, {
-      access: 'public',
-      contentType: `image/${fileExtension}`,
-    });
+    // For now, store the base64 data directly in database
+    // This is a temporary solution until Vercel Blob is set up
+    const dataUrl = fileData; // Keep as data URL for immediate use
 
     // If menuId is provided, update the menu in database
     if (menuId) {
@@ -71,32 +59,35 @@ module.exports = async function handler(req, res) {
         `;
         
         if (menuResult.rows.length > 0) {
-          // Update menu with new background
+          // Update menu with background data URL
           await sql`
             UPDATE menus 
             SET background_type = 'image', 
-                background_value = ${blob.url},
+                background_value = ${dataUrl},
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = ${menuId} AND user_id = ${userId}
           `;
         }
       } catch (error) {
         console.error('Error updating menu background:', error);
-        // Don't fail the upload if menu update fails
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Failed to update menu with background' 
+        });
       }
     }
 
     res.status(200).json({
       success: true,
-      url: blob.url,
-      filename: uniqueFileName
+      url: dataUrl, // Return the data URL for immediate display
+      filename: fileName
     });
 
   } catch (error) {
     console.error('Background upload error:', error);
     res.status(500).json({ 
       success: false, 
-      error: 'Failed to upload background image' 
+      error: 'Failed to upload background: ' + error.message 
     });
   }
 };
