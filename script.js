@@ -1344,7 +1344,16 @@ class MenuEditor {
         document.querySelectorAll('.font-option').forEach(option => {
             option.addEventListener('click', () => {
                 const fontFamily = option.dataset.font;
-                this.selectFont(fontFamily);
+                console.log('🔤 Font selected:', fontFamily);
+                
+                // Update visual selection immediately for user feedback
+                document.querySelectorAll('.font-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                option.classList.add('selected');
+                
+                // Apply the font change (this method handles dropdown closing)
+                this.selectFontFamily(fontFamily);
             });
         });
         
@@ -4245,12 +4254,7 @@ MenuEditor.prototype.removeBackground = function() {
     this.markAsChanged();
 };
 
-MenuEditor.prototype.selectFontFamily = function(fontFamily) {
-    this.fontFamily = fontFamily;
-    this.applyFontFamily();
-    this.markAsChanged();
-    this.saveToStorage();
-};
+// selectFontFamily method consolidated - using main method above
 
 MenuEditor.prototype.selectColorPalette = function(palette) {
     this.colorPalette = palette;
@@ -4748,21 +4752,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Font option selection
-    document.querySelectorAll('.font-option').forEach(option => {
-        option.addEventListener('click', () => {
-            const fontFamily = option.dataset.font;
-            
-            // Immediately update visual selection
-            document.querySelectorAll('.font-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            option.classList.add('selected');
-            
-            // Then call the selection method
-            menuEditor.selectFontFamily(fontFamily);
-        });
-    });
+    // Font option selection - consolidated with main event listeners above
 
     // Color palette functionality event listeners
     const colorBtn = document.getElementById('color-options');
