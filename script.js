@@ -238,8 +238,17 @@ class MenuEditor {
     }
     
     handleAuthChange(user) {
+        console.log('🔄 handleAuthChange called with user:', user);
+        
         if (user && user.id) {
             this.currentUser = user;
+            
+            // IMPORTANT: Hide the auth modal when user is authenticated
+            const authModal = document.getElementById('auth-modal');
+            if (authModal) {
+                console.log('✅ Hiding auth modal - user is authenticated');
+                authModal.style.display = 'none';
+            }
             
             // Update last active timestamp for admin tracking
             user.lastActive = new Date().toISOString();
@@ -358,15 +367,28 @@ class MenuEditor {
         console.log('✅ Auth manager found, initializing...');
         await window.authManager.init();
         
+        // Give a moment for the auth state change event to be processed
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         console.log('🔍 Checking authentication status...');
         const isAuthenticated = window.authManager.isAuthenticated();
-        console.log('Authentication status:', isAuthenticated);
+        const currentUser = window.authManager.getCurrentUser();
+        console.log('Authentication status:', isAuthenticated, 'User:', currentUser);
         
-        if (isAuthenticated) {
-            console.log('✅ User is authenticated, loading user data...');
+        if (isAuthenticated && currentUser) {
+            console.log('✅ User is authenticated, ensuring modal is hidden and loading user data...');
+            // Ensure auth modal is hidden
+            const authModal = document.getElementById('auth-modal');
+            if (authModal) {
+                authModal.style.display = 'none';
+            }
+            // Initialize auth integration to listen for auth state changes
+            this.initializeAuth();
             await this.loadUserData();
         } else {
             console.log('❌ User not authenticated, showing auth modal...');
+            // Initialize auth integration to listen for auth state changes
+            this.initializeAuth();
             // Show authentication modal
             this.showAuthModal();
         }
