@@ -380,7 +380,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Wait a bit for auth manager to be initialized by auth-db.js
     setTimeout(() => {
         console.log('Creating LandingPage instance');
-        new LandingPage();
+        const landingPage = new LandingPage();
+        
+        // Add a global click test
+        window.testModal = () => {
+            console.log('Testing modal manually...');
+            landingPage.openModal('sign-in-modal');
+        };
+        
+        console.log('You can test modal by calling window.testModal() in console');
     }, 100);
 });
 

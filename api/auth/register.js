@@ -61,6 +61,10 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error.message,
+      stack: error.stack?.substring(0, 200) 
+    });
   }
 }
