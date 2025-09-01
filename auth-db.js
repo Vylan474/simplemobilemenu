@@ -74,9 +74,8 @@ class DatabaseAuthManager {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include'  // Include cookies
-            },
-            body: JSON.stringify({ email, password })
+                credentials: 'include',  // Include cookies
+                body: JSON.stringify({ email, password })
             });
 
             const data = await response.json();
