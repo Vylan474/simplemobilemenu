@@ -2214,6 +2214,12 @@ class MenuEditor {
     }
     
     initializeDefaultMenu() {
+        // Don't initialize if user isn't authenticated
+        if (!this.currentUser || !this.currentUser.id) {
+            console.log('Cannot initialize default menu: user not authenticated');
+            return;
+        }
+        
         const userMenus = this.getUserMenus();
         
         if (userMenus.length === 0) {
