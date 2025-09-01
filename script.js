@@ -3783,38 +3783,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 // Add authentication methods to MenuEditor prototype
-MenuEditor.prototype.initializeAuth = function() {
-    // Listen for auth state changes
-    document.addEventListener('authStateChanged', (event) => {
-        this.handleAuthChange(event.detail.user);
-    });
-    
-    // Check if user is already authenticated
-    if (window.authManager && window.authManager.getCurrentUser()) {
-        this.handleAuthChange(window.authManager.getCurrentUser());
-    }
-    
-    // Setup sign out handler
-    const signOutItem = document.getElementById('sign-out-item');
-    if (signOutItem) {
-        signOutItem.addEventListener('click', () => {
-            this.handleSignOut();
-        });
-    }
-};
-
-MenuEditor.prototype.handleAuthChange = function(user) {
-    this.currentUser = user;
-    
-    if (user) {
-        // User is signed in
-        this.updateUserInterface(user);
-        this.loadUserData();
-    } else {
-        // User is signed out - show auth modal
-        this.showAuthModal();
-    }
-};
+// Duplicate authentication functions removed - using the updated versions above
 
 MenuEditor.prototype.updateUserInterface = function(user) {
     // Update user info in sidebar
