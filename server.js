@@ -151,6 +151,39 @@ app.get('/api/check-slug/:slug', async (req, res) => {
     }
 });
 
+// Check slug availability
+app.post('/api/menu/check-availability', async (req, res) => {
+    try {
+        const { slug } = req.body;
+        
+        if (!slug) {
+            return res.status(400).json({ 
+                available: false, 
+                error: 'Slug is required' 
+            });
+        }
+        
+        // Check if slug already exists
+        const existingMenu = await pool.query(
+            'SELECT id FROM published_menus WHERE slug = $1',
+            [slug]
+        );
+        
+        const available = existingMenu.rows.length === 0;
+        
+        res.json({ 
+            available,
+            message: available ? 'Path is available' : 'This path is already taken'
+        });
+    } catch (error) {
+        console.error('Error checking slug availability:', error);
+        res.status(500).json({ 
+            available: false, 
+            error: 'Server error checking availability' 
+        });
+    }
+});
+
 // Create/Update menu
 app.post('/api/menu', async (req, res) => {
     try {

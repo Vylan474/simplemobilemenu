@@ -274,10 +274,33 @@ class DatabaseAuthManager {
             console.log('Response status:', response.status);
             console.log('Response headers:', [...response.headers.entries()]);
 
-            const data = await response.json();
-            console.log('Response data:', data);
+            // Check if response is JSON before parsing
+            const contentType = response.headers.get('content-type');
+            let data;
+            
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
+                console.log('Response data:', data);
+            } else {
+                // If not JSON, read as text
+                const text = await response.text();
+                console.log('Response text:', text);
+                
+                // Return appropriate error message
+                if (response.status >= 500) {
+                    data = { 
+                        available: false, 
+                        error: 'Server error. Please try again later.' 
+                    };
+                } else {
+                    data = { 
+                        available: false, 
+                        error: text || `HTTP ${response.status}` 
+                    };
+                }
+            }
 
-            return response.ok ? data : { success: false, error: data.error || `HTTP ${response.status}` };
+            return response.ok ? data : { available: false, error: data.error || `HTTP ${response.status}` };
         } catch (error) {
             console.error('Check slug availability error:', error);
             return { success: false, error: `Network error: ${error.message}` };
