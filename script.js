@@ -4271,49 +4271,7 @@ MenuEditor.prototype.loadMenuById = function(menuId) {
     }
 };
 
-MenuEditor.prototype.createNewMenu = function() {
-    if (!this.currentUser) return;
-    
-    const menuName = prompt('What would you like to name your new menu?', `${this.currentUser.restaurant || 'My Restaurant'} Menu`);
-    
-    if (!menuName || menuName.trim() === '') {
-        return; // User cancelled or entered empty name
-    }
-    
-    const newMenuId = 'menu_' + Date.now();
-    const newMenu = {
-        id: newMenuId,
-        name: menuName.trim(),
-        sections: [],
-        settings: {
-            backgroundType: 'none',
-            backgroundValue: null,
-            fontFamily: 'Inter',
-            colorPalette: 'classic',
-            logoUrl: null
-        },
-        created: Date.now(),
-        lastEdited: Date.now(),
-        status: 'draft'
-    };
-    
-    // Reset editor state
-    this.sections = [];
-    this.currentMenuId = newMenuId;
-    this.backgroundType = 'none';
-    this.backgroundValue = null;
-    this.fontFamily = 'Inter';
-    this.colorPalette = 'classic';
-    this.menuLogo = null;
-    this.hasUnsavedChanges = false;
-    
-    // Update UI
-    this.updateCurrentMenuDisplay(newMenu.name);
-    this.renderMenu();
-    this.saveToStorage();
-    this.loadUserMenus();
-    this.updatePublishButtonVisibility();
-};
+// Duplicate createNewMenu function removed - using the database API version instead
 
 MenuEditor.prototype.duplicateMenu = function(menuId) {
     if (!this.currentUser) return;
