@@ -345,16 +345,29 @@ class MenuEditor {
     }
     
     async initializeWithAuth() {
+        console.log('🔧 Initializing with auth...');
+        
         // Wait for auth manager to be ready
-        if (window.authManager) {
-            await window.authManager.init();
-            
-            if (window.authManager.isAuthenticated()) {
-                await this.loadUserData();
-            } else {
-                // Show authentication modal
-                this.showAuthModal();
-            }
+        if (!window.authManager) {
+            console.error('❌ Auth manager not found');
+            this.showAuthModal();
+            return;
+        }
+        
+        console.log('✅ Auth manager found, initializing...');
+        await window.authManager.init();
+        
+        console.log('🔍 Checking authentication status...');
+        const isAuthenticated = window.authManager.isAuthenticated();
+        console.log('Authentication status:', isAuthenticated);
+        
+        if (isAuthenticated) {
+            console.log('✅ User is authenticated, loading user data...');
+            await this.loadUserData();
+        } else {
+            console.log('❌ User not authenticated, showing auth modal...');
+            // Show authentication modal
+            this.showAuthModal();
         }
     }
     
@@ -3756,10 +3769,14 @@ const menuEditor = new MenuEditor();
 
 // Initialize authentication manager and editor when page loads  
 document.addEventListener('DOMContentLoaded', async function() {
+    console.log('📄 DOM loaded, current URL:', window.location.href);
+    console.log('🔧 Page title:', document.title);
+    
     // Database auth manager is already initialized from auth-db.js
     
     // Initialize editor
     setTimeout(async () => {
+        console.log('⏰ Timeout reached, starting initialization...');
         await menuEditor.initializeWithAuth();
     }, 500); // Small delay to ensure auth manager is ready
 });

@@ -341,8 +341,14 @@ const authManager = new DatabaseAuthManager();
 window.authManager = authManager;
 
 // Auto-initialize when DOM is loaded
+console.log('🔄 Auth manager created, setting up initialization...');
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => authManager.init());
+    console.log('📄 Document still loading, waiting for DOMContentLoaded...');
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('📄 DOMContentLoaded - initializing auth manager...');
+        authManager.init();
+    });
 } else {
+    console.log('📄 Document already loaded - initializing auth manager immediately...');
     authManager.init();
 }
