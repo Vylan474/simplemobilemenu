@@ -29,9 +29,17 @@ export default async function handler(req, res) {
   try {
     // Verify authentication
     const sessionId = req.cookies?.session || req.headers.authorization?.replace('Bearer ', '');
+    console.log('🔍 Menu update auth check:', {
+      hasSessionCookie: !!req.cookies?.session,
+      hasAuthHeader: !!req.headers.authorization,
+      sessionId: sessionId ? 'exists' : 'missing'
+    });
+    
     const userId = await verifySession(sessionId);
+    console.log('🔍 Session verification result:', userId ? 'valid user' : 'no user found');
     
     if (!userId) {
+      console.log('❌ Authentication failed in menu update');
       return res.status(401).json({ error: 'Authentication required' });
     }
 
@@ -41,8 +49,12 @@ export default async function handler(req, res) {
     }
 
     // Verify menu ownership
+    console.log('🔍 Checking menu ownership:', { menuId, userId });
     const ownsMenu = await verifyMenuOwnership(menuId, userId);
+    console.log('🔍 Menu ownership result:', ownsMenu ? 'user owns menu' : 'access denied');
+    
     if (!ownsMenu) {
+      console.log('❌ 403 Forbidden: User does not own menu');
       return res.status(403).json({ error: 'Access denied' });
     }
 
