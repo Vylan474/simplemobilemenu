@@ -2472,40 +2472,7 @@ class MenuEditor {
         this.closeSidebar();
     }
     
-    createNewMenu() {
-        const menus = this.getUserMenus();
-        if (menus.length >= this.currentUser.maxMenus) {
-            alert(`You've reached the limit of ${this.currentUser.maxMenus} menus. Upgrade for more!`);
-            return;
-        }
-        
-        const menuName = prompt('Enter a name for your new menu:', `Menu ${menus.length + 1}`);
-        if (!menuName) return;
-        
-        // Save current menu first
-        this.saveCurrentMenu();
-        
-        // Create new menu
-        const newMenuId = this.generateMenuId();
-        const newMenu = {
-            id: newMenuId,
-            name: menuName,
-            description: 'New menu',
-            sections: [],
-            sectionCounter: 0,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            publishedMenuId: null,
-            publishedSlug: null,
-            publishedTitle: null,
-            publishedSubtitle: null,
-            status: 'draft'
-        };
-        
-        this.saveUserMenu(newMenu);
-        this.loadMenu(newMenuId);
-        this.closeSidebar();
-    }
+    // Duplicate createNewMenu function removed - using the database API version at line 380
     
     duplicateMenu(menuId) {
         const menus = this.getUserMenus();
