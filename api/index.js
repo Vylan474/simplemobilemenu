@@ -30,6 +30,10 @@ const getPublishedHandler = require('./menu/get-published');
 // Admin routes
 const adminUsersHandler = require('./admin/users');
 
+// Upload routes
+const uploadBackgroundHandler = require('./upload/background');
+const uploadLogoHandler = require('./upload/logo');
+
 // API Routes - wrap each handler to work with Express
 app.post('/api/init-db', (req, res) => initDbHandler(req, res));
 app.get('/api/status', (req, res) => statusHandler(req, res));
@@ -51,6 +55,10 @@ app.get('/api/menu/get-published', (req, res) => getPublishedHandler(req, res));
 
 // Admin routes
 app.post('/api/admin/users', (req, res) => adminUsersHandler(req, res));
+
+// Upload routes
+app.post('/api/upload/background', (req, res) => uploadBackgroundHandler(req, res));
+app.post('/api/upload/logo', (req, res) => uploadLogoHandler(req, res));
 
 // Validate menu slug (URL-safe)
 function validateSlug(slug) {

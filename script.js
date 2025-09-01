@@ -3370,37 +3370,62 @@ class MenuEditor {
     }
     
     async uploadBackgroundImage(imageData, filename) {
-        // Convert data URL to blob
-        const response = await fetch(imageData);
-        const blob = await response.blob();
-        
-        // Create FormData
-        const formData = new FormData();
-        formData.append('background', blob, filename);
-        formData.append('slug', this.slug); // Include slug to track menu-specific uploads
-        
-        // Upload to server
-        const uploadResponse = await fetch('/api/upload-background', {
-            method: 'POST',
-            body: formData
-        });
-        
-        return await uploadResponse.json();
+        try {
+            // Send base64 data directly to new Vercel Blob endpoint
+            const response = await fetch('/api/upload/background', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${window.authManager.sessionId}`
+                },
+                body: JSON.stringify({
+                    fileData: imageData, // Already base64 encoded
+                    fileName: filename,
+                    menuId: this.currentMenuId
+                })
+            });
+            
+            return await response.json();
+        } catch (error) {
+            console.error('Background upload error:', error);
+            return { success: false, error: error.message };
+        }
     }
     
     async uploadLogoImage(file) {
-        // Create FormData
-        const formData = new FormData();
-        formData.append('logo', file);
-        formData.append('slug', this.slug); // Include slug to track menu-specific uploads
-        
-        // Upload to server
-        const uploadResponse = await fetch('/api/upload-logo', {
-            method: 'POST',
-            body: formData
+        try {
+            // Convert file to base64
+            const base64Data = await this.fileToBase64(file);
+            
+            // Send base64 data to new Vercel Blob endpoint
+            const response = await fetch('/api/upload/logo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${window.authManager.sessionId}`
+                },
+                body: JSON.stringify({
+                    fileData: base64Data,
+                    fileName: file.name,
+                    menuId: this.currentMenuId
+                })
+            });
+            
+            return await response.json();
+        } catch (error) {
+            console.error('Logo upload error:', error);
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // Helper method to convert file to base64
+    fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
         });
-        
-        return await uploadResponse.json();
     }
     
     resetUploadUI() {
