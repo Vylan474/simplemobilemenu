@@ -623,6 +623,50 @@ class MenuEditor {
         addEventListenerSafely('revert-to-published', 'click', () => this.revertToPublished());
         addEventListenerSafely('cancel-discard', 'click', () => this.closeDiscardModal());
         
+        // Styling/Customization buttons
+        addEventListenerSafely('upload-logo', 'click', () => this.triggerLogoUpload());
+        addEventListenerSafely('remove-logo', 'click', () => this.removeLogo());
+        addEventListenerSafely('background-options', 'click', (e) => {
+            e.stopPropagation();
+            this.toggleBackgroundDropdown();
+        });
+        addEventListenerSafely('font-options', 'click', (e) => {
+            e.stopPropagation();
+            this.toggleFontDropdown();
+        });
+        addEventListenerSafely('color-options', 'click', (e) => {
+            e.stopPropagation();
+            this.toggleColorDropdown();
+        });
+        addEventListenerSafely('navigation-options', 'click', (e) => {
+            e.stopPropagation();
+            this.toggleNavigationDropdown();
+        });
+        
+        // Logo file input
+        addEventListenerSafely('logo-file-input', 'change', (event) => this.handleLogoUpload(event));
+        
+        // Background upload functionality
+        addEventListenerSafely('upload-background-btn', 'click', () => {
+            const input = document.getElementById('background-upload-input');
+            if (input) input.click();
+        });
+        addEventListenerSafely('background-upload-input', 'change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                this.handleBackgroundUpload(e.target.files[0]);
+            }
+        });
+        addEventListenerSafely('use-uploaded-background', 'click', () => this.applyUploadedBackground());
+        addEventListenerSafely('use-color-background', 'click', () => {
+            const colorInput = document.getElementById('background-color-picker');
+            if (colorInput) {
+                this.selectBackgroundColor(colorInput.value);
+            }
+        });
+        
+        // Initialize dropdown option listeners
+        this.initializeDropdownOptions();
+        
         document.querySelectorAll('.close').forEach(closeBtn => {
             closeBtn.addEventListener('click', (e) => {
                 const modal = e.target.closest('.modal');
@@ -1257,6 +1301,62 @@ class MenuEditor {
                 }
             });
             this.sortableInstances.push(itemSortable);
+        });
+    }
+    
+    initializeDropdownOptions() {
+        // Background options
+        document.querySelectorAll('.background-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const type = option.dataset.type;
+                const value = option.dataset.value;
+                
+                if (type === 'image' && value) {
+                    this.selectBackgroundImage(value);
+                } else if (type === 'none') {
+                    this.removeBackground();
+                }
+            });
+        });
+        
+        // Font options
+        document.querySelectorAll('.font-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const fontFamily = option.dataset.font;
+                this.selectFont(fontFamily);
+            });
+        });
+        
+        // Color palette options
+        document.querySelectorAll('.palette-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const palette = option.dataset.palette;
+                this.selectColorPalette(palette);
+            });
+        });
+        
+        // Navigation theme options
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const theme = option.dataset.theme;
+                this.selectNavigationTheme(theme);
+            });
+        });
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.background-controls') && this.backgroundDropdownOpen) {
+                this.closeOtherDropdowns('background');
+            }
+            if (!e.target.closest('.font-controls') && this.fontDropdownOpen) {
+                this.closeOtherDropdowns('font');
+            }
+            if (!e.target.closest('.color-controls') && this.colorDropdownOpen) {
+                this.closeOtherDropdowns('color');
+            }
+            if (!e.target.closest('.navigation-controls') && this.navigationDropdownOpen) {
+                this.closeOtherDropdowns('navigation');
+            }
         });
     }
     
