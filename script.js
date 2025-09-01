@@ -3259,6 +3259,32 @@ class MenuEditor {
         // Highlight current selection when dropdown opens
         if (this.backgroundDropdownOpen) {
             this.highlightCurrentBackgroundSelection();
+            
+            // Ensure the upload button event listener is attached
+            const uploadBtn = document.getElementById('upload-background-btn');
+            const uploadInput = document.getElementById('background-upload');
+            
+            if (uploadBtn && uploadInput) {
+                // Remove any existing listener to avoid duplicates
+                uploadBtn.replaceWith(uploadBtn.cloneNode(true));
+                const newUploadBtn = document.getElementById('upload-background-btn');
+                
+                newUploadBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🔵 Background upload button clicked (from toggleBackgroundDropdown)');
+                    uploadInput.click();
+                });
+                
+                // Also ensure the file input change handler is attached
+                const newUploadInput = document.getElementById('background-upload');
+                newUploadInput.addEventListener('change', (e) => {
+                    console.log('📁 File selected:', e.target.files);
+                    if (e.target.files && e.target.files[0]) {
+                        this.handleBackgroundUpload(e.target.files[0]);
+                    }
+                });
+            }
         }
     }
     
