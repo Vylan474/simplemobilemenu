@@ -28,15 +28,21 @@ This guide explains how to set up Google Sign-In OAuth integration for the Menu 
 
 ## Step 3: Configure Environment Variables
 
+The Google OAuth Client ID is already configured for `mymobilemenu.com` domain.
+
+**Current Configuration:**
+- Client ID: `911046669009-oevf7t3lhkui370ncavenvulu6fj8fu7.apps.googleusercontent.com`
+- Authorized domains: `mymobilemenu.com`
+
+**For Local Development:**
 1. Copy the `.env.example` file to `.env`:
    ```bash
    cp .env.example .env
    ```
 
-2. Add your Google Client ID to the `.env` file:
-   ```
-   GOOGLE_CLIENT_ID=your_client_id_here.apps.googleusercontent.com
-   ```
+2. The `.env` file already contains the correct Google Client ID for production.
+
+**Note:** If you need to test locally, you'll need to add `http://localhost:3000` to the authorized origins in Google Cloud Console for this client ID, or create a separate client ID for development.
 
 ## Step 4: Database Schema Updates
 
