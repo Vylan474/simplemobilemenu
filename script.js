@@ -667,6 +667,9 @@ class MenuEditor {
         // Initialize dropdown option listeners
         this.initializeDropdownOptions();
         
+        // Event delegation for dynamically created buttons
+        this.initializeDynamicEventListeners();
+        
         document.querySelectorAll('.close').forEach(closeBtn => {
             closeBtn.addEventListener('click', (e) => {
                 const modal = e.target.closest('.modal');
@@ -940,15 +943,26 @@ class MenuEditor {
     }
     
     addMenuItem(sectionId) {
+        console.log('➕ Adding menu item to section:', sectionId);
         const section = this.sections.find(s => s.id === sectionId);
+        
+        if (!section) {
+            console.error('❌ Section not found:', sectionId);
+            return;
+        }
+        
         const newItem = {};
         section.columns.forEach(column => {
             newItem[column] = '';
         });
         
         section.items.push(newItem);
+        console.log('✅ Menu item added, re-rendering...');
+        
         this.renderMenu();
         this.updateSidePreview();
+        this.markAsChanged();
+        this.saveToStorage();
     }
     
     deleteMenuItem(sectionId, itemIndex) {
@@ -1161,7 +1175,7 @@ class MenuEditor {
                     <div class="menu-items">
                         ${section.items.map((item, index) => this.renderMenuItem(section, item, index)).join('')}
                     </div>
-                    <button class="add-item-btn" onclick="menuEditor.addMenuItem(${section.id})">
+                    <button class="add-item-btn" data-section-id="${section.id}">
                         <i class="fas fa-plus"></i> Add Menu Item
                     </button>
                 </div>
@@ -1356,6 +1370,44 @@ class MenuEditor {
             }
             if (!e.target.closest('.navigation-controls') && this.navigationDropdownOpen) {
                 this.closeOtherDropdowns('navigation');
+            }
+        });
+    }
+    
+    initializeDynamicEventListeners() {
+        // Event delegation for dynamically created buttons
+        document.addEventListener('click', (e) => {
+            // Handle "Add Menu Item" buttons
+            if (e.target.closest('.add-item-btn')) {
+                const button = e.target.closest('.add-item-btn');
+                const sectionId = parseInt(button.dataset.sectionId);
+                console.log('🔘 Add Menu Item clicked for section:', sectionId);
+                this.addMenuItem(sectionId);
+            }
+            
+            // Handle section edit buttons
+            if (e.target.closest('.edit-section-btn')) {
+                const button = e.target.closest('.edit-section-btn');
+                const sectionId = parseInt(button.dataset.sectionId);
+                console.log('✏️ Edit Section clicked for section:', sectionId);
+                this.openSectionModal(sectionId);
+            }
+            
+            // Handle section delete buttons
+            if (e.target.closest('.delete-section-btn')) {
+                const button = e.target.closest('.delete-section-btn');
+                const sectionId = parseInt(button.dataset.sectionId);
+                console.log('🗑️ Delete Section clicked for section:', sectionId);
+                this.deleteSection(sectionId);
+            }
+            
+            // Handle item delete buttons
+            if (e.target.closest('.delete-item-btn')) {
+                const button = e.target.closest('.delete-item-btn');
+                const sectionId = parseInt(button.dataset.sectionId);
+                const itemIndex = parseInt(button.dataset.itemIndex);
+                console.log('🗑️ Delete Item clicked for section:', sectionId, 'item:', itemIndex);
+                this.deleteMenuItem(sectionId, itemIndex);
             }
         });
     }
