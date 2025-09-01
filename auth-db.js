@@ -98,13 +98,17 @@ class DatabaseAuthManager {
     }
 
     async verifySession() {
+        console.log('🔄 Starting session verification...');
         try {
             // Try to get session ID from localStorage if not set
             if (!this.sessionId) {
                 this.sessionId = localStorage.getItem('sessionId');
             }
 
+            console.log('🔑 Session ID:', this.sessionId ? 'exists' : 'missing');
+
             if (!this.sessionId) {
+                console.log('❌ No session ID found');
                 return { success: false, error: 'No session found' };
             }
 
@@ -118,8 +122,10 @@ class DatabaseAuthManager {
             });
 
             const data = await response.json();
+            console.log('🔍 Verify response:', { status: response.status, data });
 
             if (response.ok) {
+                console.log('✅ Verification successful, user data:', data.user);
                 this.currentUser = data.user;
                 return { success: true, user: data.user };
             } else {
