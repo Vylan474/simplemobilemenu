@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Restaurant Menu Editor</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -635,7 +638,7 @@
                     <div class="publish-step">
                         <label for="menu-url-path">Custom URL Path:</label>
                         <div class="url-input-group">
-                            <span class="url-prefix">yourdomain.com/menu/</span>
+                            <span class="url-prefix">www.mymobilemenu.com/menu/</span>
                             <input type="text" id="menu-url-path" placeholder="my-restaurant-name" pattern="[a-z0-9-]+" title="Only lowercase letters, numbers, and dashes allowed">
                         </div>
                         <p class="help-text">Choose a unique path for your menu. Use only lowercase letters, numbers, and dashes.</p>
@@ -658,7 +661,7 @@
                         <h3>Preview URL:</h3>
                         <div class="preview-url">
                             <i class="fas fa-link"></i>
-                            <span id="preview-url-display">yourdomain.com/menu/your-path-here</span>
+                            <span id="preview-url-display">https://www.mymobilemenu.com/menu/your-path-here</span>
                         </div>
                     </div>
 
@@ -750,8 +753,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
-    <script src="firebase-config.js"></script>
-    <script src="auth.js"></script>
-    <script src="script.js"></script>
+    <script src="auth-db.js?v=20250901"></script>
+    <script src="script.js?v=20250901"></script>
 </body>
 </html>

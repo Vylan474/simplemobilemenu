@@ -272,15 +272,18 @@ class MenuEditor {
     }
     
     async loadUserData() {
-        if (!window.authManager) return;
+        if (!window.authManager || !window.authManager.isAuthenticated()) return;
+        
+        // Set current user
+        this.currentUser = window.authManager.getCurrentUser();
         
         // Load user's menus
-        const userMenus = window.authManager.getUserMenus();
+        const userMenus = await this.getUserMenus();
         
         // If no current menu, create or load the first one
         if (!this.currentMenuId) {
             if (userMenus.length > 0) {
-                await this.loadMenu(userMenus[0]);
+                await this.loadMenu(userMenus[0].id);
             } else {
                 this.createNewMenu();
             }
@@ -290,14 +293,18 @@ class MenuEditor {
         this.loadUserMenus();
     }
     
-    getUserMenus() {
-        return window.authManager ? window.authManager.getUserMenus() : [];
+    async getUserMenus() {
+        if (window.authManager && window.authManager.isAuthenticated()) {
+            return await window.authManager.getUserMenus();
+        }
+        return [];
     }
     
-    saveUserMenu(menu) {
-        if (window.authManager) {
-            window.authManager.saveUserMenu(menu);
+    async saveUserMenu(menu) {
+        if (window.authManager && window.authManager.isAuthenticated()) {
+            return await window.authManager.updateMenu(menu.id, menu);
         }
+        return { success: false, error: 'Not authenticated' };
     }
     
     loadMenu(menuData) {
@@ -337,17 +344,36 @@ class MenuEditor {
         }, 100);
     }
     
+    async initializeWithAuth() {
+        // Wait for auth manager to be ready
+        if (window.authManager) {
+            await window.authManager.init();
+            
+            if (window.authManager.isAuthenticated()) {
+                await this.loadUserData();
+            } else {
+                // Show authentication modal
+                this.showAuthModal();
+            }
+        }
+    }
+    
+    showAuthModal() {
+        // This would show the authentication modal
+        // For now, redirect to login page or show inline login
+        console.log('User not authenticated - show login modal');
+    }
+    
     async createNewMenu() {
+        if (!window.authManager || !window.authManager.isAuthenticated()) return;
+        
         const menuName = `${this.currentUser.restaurant || this.currentUser.name}'s Menu`;
         
-        const newMenu = {
-            id: 'menu_' + Date.now(),
+        const menuData = {
             name: menuName,
             description: 'Restaurant menu',
             sections: [],
             sectionCounter: 0,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
             status: 'draft',
             fontFamily: 'Inter',
             colorPalette: 'classic',
@@ -358,8 +384,34 @@ class MenuEditor {
             logoSize: 'medium'
         };
         
-        await this.loadMenu(newMenu);
-        this.saveToStorage();
+        try {
+            const result = await window.authManager.createMenu(menuData);
+            if (result.success && result.menu) {
+                // Load the newly created menu
+                this.currentMenuId = result.menu.id;
+                this.sections = result.menu.sections || [];
+                this.sectionCounter = result.menu.sectionCounter || 0;
+                this.fontFamily = result.menu.fontFamily || 'Inter';
+                this.colorPalette = result.menu.colorPalette || 'classic';
+                this.navigationTheme = result.menu.navigationTheme || 'modern';
+                this.backgroundType = result.menu.backgroundType || 'none';
+                this.backgroundValue = result.menu.backgroundValue || null;
+                this.menuLogo = result.menu.menuLogo || null;
+                this.logoSize = result.menu.logoSize || 'medium';
+                
+                // Update UI
+                this.renderMenu();
+                this.updateSidePreview();
+                this.updateCurrentMenuDisplay();
+                this.loadUserMenus();
+            } else {
+                console.error('Failed to create menu:', result.error);
+                alert('Failed to create new menu. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error creating new menu:', error);
+            alert('Error creating new menu. Please try again.');
+        }
     }
     
     async handleSignOut() {
@@ -407,9 +459,9 @@ class MenuEditor {
         }, 500);
     }
     
-    loadUserMenus() {
+    async loadUserMenus() {
         const menusList = document.getElementById('menus-list');
-        const menus = this.getUserMenus();
+        const menus = await this.getUserMenus();
         
         let html = '';
         
@@ -1859,7 +1911,7 @@ class MenuEditor {
         e.target.value = path;
         
         const previewUrl = document.getElementById('preview-url-display');
-        previewUrl.textContent = `${window.location.origin}/menu/${path || 'your-path-here'}`;
+        previewUrl.textContent = `https://www.mymobilemenu.com/menu/${path || 'your-path-here'}`;
         
         // Only reset validation and disable button for new menus
         if (!this.publishedSlug) {
@@ -1900,22 +1952,29 @@ class MenuEditor {
         validation.textContent = 'Checking availability...';
         
         try {
-            const response = await fetch(`/api/check-slug/${encodeURIComponent(path)}`);
-            const data = await response.json();
+            // Check if auth manager exists
+            if (!window.authManager) {
+                throw new Error('Auth manager not initialized');
+            }
             
-            if (data.available) {
+            console.log('Checking availability for path:', path);
+            const result = await window.authManager.checkSlugAvailability(path);
+            console.log('Availability check result:', result);
+            
+            if (result.available) {
                 validation.className = 'validation-message success';
                 validation.textContent = '✓ This path is available!';
                 document.getElementById('publish-menu-confirm').disabled = false;
             } else {
                 validation.className = 'validation-message error';
-                validation.textContent = data.error || '✗ This path is already taken. Please try another.';
+                validation.textContent = result.error || result.message || '✗ This path is already taken. Please try another.';
                 document.getElementById('publish-menu-confirm').disabled = true;
             }
         } catch (error) {
             validation.className = 'validation-message error';
             validation.textContent = 'Error checking availability. Please try again.';
             console.error('Error checking path availability:', error);
+            console.error('Auth manager state:', window.authManager);
         }
     }
     
@@ -1925,120 +1984,51 @@ class MenuEditor {
         const title = document.getElementById('menu-title-publish').value || 'Our Menu';
         const subtitle = document.getElementById('menu-subtitle-publish').value || 'Crafted with care and passion';
         
-        console.log('Publishing with slug:', slug);
-        console.log('Will save to key:', `published-menu-${slug}`);
-        
-        // Set the slug as a property for uploads
-        this.slug = slug;
-        
         if (!slug || this.sections.length === 0) {
             alert('Please ensure you have a valid path and at least one menu section.');
             return;
         }
+
+        if (!window.authManager || !window.authManager.isAuthenticated()) {
+            alert('You must be logged in to publish a menu.');
+            return;
+        }
         
         try {
-            // First load current menu data to preserve uploadedBackgrounds
-            let existingData = {};
-            if (this.publishedMenuId) {
-                try {
-                    const existingResponse = await fetch(`/api/menu/${slug}`);
-                    if (existingResponse.ok) {
-                        existingData = await existingResponse.json();
-                    }
-                } catch (error) {
-                    console.log('Could not load existing menu data:', error);
-                }
-            }
+            // Save current menu first to ensure all changes are persisted
+            await this.saveCurrentMenu();
             
             const publishData = {
                 slug: slug,
                 title: title,
-                subtitle: subtitle,
-                sections: this.sections,
-                menuLogo: this.menuLogo,
-                logoSize: this.logoSize,
-                backgroundType: this.backgroundType,
-                backgroundValue: this.backgroundValue,
-                fontFamily: this.fontFamily,
-                colorPalette: this.colorPalette,
-                navigationTheme: this.navigationTheme,
-                menuId: this.publishedMenuId, // Pass existing menuId for updates
-                // Only include uploadedBackgrounds if we have existing data, otherwise let server preserve it
-                ...(existingData.uploadedBackgrounds && { uploadedBackgrounds: existingData.uploadedBackgrounds })
+                subtitle: subtitle
             };
             
-            console.log('Publishing with data:', publishData);
+            console.log('Publishing menu:', this.currentMenuId, 'with data:', publishData);
             
-            const response = await fetch('/api/menu', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(publishData)
-            });
+            const result = await window.authManager.publishMenu(this.currentMenuId, publishData);
             
-            console.log('Server response status:', response.status);
-            const data = await response.json();
-            console.log('Server response data:', data);
-            
-            if (response.ok) {
-                // Save published menu information for future updates
-                this.publishedMenuId = data.menuId;
+            if (result.success) {
+                // Update local menu properties
                 this.publishedSlug = slug;
                 this.publishedTitle = title;
                 this.publishedSubtitle = subtitle;
                 
-                // Update current menu with publish data
-                const menus = this.getUserMenus();
-                const currentMenu = menus.find(m => m.id === this.currentMenuId);
-                if (currentMenu) {
-                    currentMenu.lastPublishedAt = new Date().toISOString();
-                    currentMenu.status = 'published';
-                    currentMenu.publishedMenuId = data.menuId;
-                    currentMenu.publishedSlug = slug;
-                    currentMenu.publishedTitle = title;
-                    currentMenu.publishedSubtitle = subtitle;
-                    this.saveUserMenu(currentMenu);
-                }
+                // Update publish button visibility
+                this.updatePublishButtonVisibility();
                 
-                // Save to localStorage to persist published info
-                this.saveToStorage();
-                
-                // Save a copy of the published menu data for revert functionality
-                const publishedMenuData = {
-                    title: title,
-                    subtitle: subtitle,
-                    sections: JSON.parse(JSON.stringify(this.sections)), // deep copy
-                    menuLogo: this.menuLogo,
-                    logoSize: this.logoSize,
-                    backgroundType: this.backgroundType,
-                    backgroundValue: this.backgroundValue,
-                    fontFamily: this.fontFamily,
-                    colorPalette: this.colorPalette,
-                    navigationTheme: this.navigationTheme,
-                    publishedAt: new Date().toISOString()
-                };
-                localStorage.setItem(`published-menu-${slug}`, JSON.stringify(publishedMenuData));
-                console.log('Saved published menu data with key:', `published-menu-${slug}`, publishedMenuData);
-                
-                // Verify the save worked
-                const testLoad = localStorage.getItem(`published-menu-${slug}`);
-                console.log('Verification - can load saved data:', testLoad ? 'YES' : 'NO');
-                
-                // Show custom success modal
-                const isUpdate = this.publishedMenuId && this.publishedMenuId === data.menuId;
-                const action = isUpdate ? 'Updated' : 'Published';
-                const menuUrl = `${window.location.origin}/menu/${slug}`;
+                // Show success modal with the correct URL
+                const menuUrl = `https://www.mymobilemenu.com/menu/${slug}`;
                 
                 this.showSuccessModal(
-                    `Menu ${action}!`,
-                    `Your menu has been ${action.toLowerCase()} successfully and is now live!`,
+                    'Menu Published!',
+                    'Your menu has been published successfully and is now live!',
                     menuUrl
                 );
                 
                 this.closePublishModal();
             } else {
-                alert(`Error publishing menu: ${data.error}`);
+                alert(`Error publishing menu: ${result.error}`);
             }
         } catch (error) {
             alert('Error publishing menu. Please try again.');
@@ -2244,36 +2234,10 @@ class MenuEditor {
         return 'menu_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     }
     
-    getUserMenus() {
-        const userKey = `user_${this.currentUser.id}_menus`;
-        const saved = localStorage.getItem(userKey);
-        return saved ? JSON.parse(saved) : [];
-    }
-    
-    saveUserMenu(menu) {
-        const menus = this.getUserMenus();
-        const existingIndex = menus.findIndex(m => m.id === menu.id);
-        
-        if (existingIndex >= 0) {
-            menus[existingIndex] = menu;
-        } else {
-            menus.push(menu);
-        }
-        
-        const userKey = `user_${this.currentUser.id}_menus`;
-        localStorage.setItem(userKey, JSON.stringify(menus));
-    }
-    
-    deleteUserMenu(menuId) {
-        const menus = this.getUserMenus();
-        const filteredMenus = menus.filter(m => m.id !== menuId);
-        
-        const userKey = `user_${this.currentUser.id}_menus`;
-        localStorage.setItem(userKey, JSON.stringify(filteredMenus));
-    }
+    // Legacy localStorage methods - these are now handled by async getUserMenus(), saveUserMenu(), and the auth manager
     
     async loadMenu(menuId, loadFromServer = true) {
-        const menus = this.getUserMenus();
+        const menus = await this.getUserMenus();
         const menu = menus.find(m => m.id === menuId);
         
         if (menu) {
@@ -2342,34 +2306,22 @@ class MenuEditor {
         }
     }
     
-    saveCurrentMenu() {
-        if (!this.currentMenuId) return;
+    async saveCurrentMenu() {
+        if (!this.currentMenuId || !window.authManager || !window.authManager.isAuthenticated()) return;
         
         // Show saving indicator
         this.updateChangeIndicator('saving');
         
-        const menu = {
-            id: this.currentMenuId,
+        const menuData = {
             name: document.getElementById('current-menu-name').textContent,
             sections: this.sections,
             sectionCounter: this.sectionCounter,
-            updatedAt: new Date().toISOString(),
             publishedMenuId: this.publishedMenuId,
             publishedSlug: this.publishedSlug,
             publishedTitle: this.publishedTitle,
             publishedSubtitle: this.publishedSubtitle,
             menuLogo: this.menuLogo,
             logoSize: this.logoSize,
-            // Store styling properties in settings object to match loading expectations
-            settings: {
-                backgroundType: this.backgroundType,
-                backgroundValue: this.backgroundValue,
-                fontFamily: this.fontFamily,
-                colorPalette: this.colorPalette,
-                navigationTheme: this.navigationTheme,
-                logoUrl: this.menuLogo
-            },
-            // Also keep flat properties for backward compatibility
             backgroundType: this.backgroundType,
             backgroundValue: this.backgroundValue,
             fontFamily: this.fontFamily,
@@ -2380,35 +2332,32 @@ class MenuEditor {
         
         console.log('Saving menu with navigationTheme:', this.navigationTheme);
         
-        // Get existing menu to preserve other properties
-        const menus = this.getUserMenus();
-        const existingMenu = menus.find(m => m.id === this.currentMenuId);
-        
-        if (existingMenu) {
-            Object.assign(existingMenu, menu);
-            console.log('Updated existing menu:', existingMenu);
-            this.saveUserMenu(existingMenu);
-        } else {
-            menu.createdAt = new Date().toISOString();
-            menu.description = 'My restaurant menu';
-            this.saveUserMenu(menu);
+        try {
+            const result = await window.authManager.updateMenu(this.currentMenuId, menuData);
+            if (result.success) {
+                // Clear unsaved changes flag
+                this.hasUnsavedChanges = false;
+                
+                // Update displays
+                this.updateCurrentMenuDisplay();
+                this.updatePublishButtonVisibility();
+                
+                // Show saved indicator
+                setTimeout(() => {
+                    this.updateChangeIndicator('saved');
+                }, 500);
+            } else {
+                console.error('Failed to save menu:', result.error);
+                this.updateChangeIndicator('error');
+            }
+        } catch (error) {
+            console.error('Error saving menu:', error);
+            this.updateChangeIndicator('error');
         }
-        
-        // Clear unsaved changes flag
-        this.hasUnsavedChanges = false;
-        
-        // Update displays
-        this.updateCurrentMenuDisplay();
-        this.updatePublishButtonVisibility();
-        
-        // Show saved indicator
-        setTimeout(() => {
-            this.updateChangeIndicator('saved');
-        }, 500);
     }
     
-    updateCurrentMenuDisplay() {
-        const menus = this.getUserMenus();
+    async updateCurrentMenuDisplay() {
+        const menus = await this.getUserMenus();
         const currentMenu = menus.find(m => m.id === this.currentMenuId);
         
         if (currentMenu) {
@@ -2422,9 +2371,9 @@ class MenuEditor {
         this.updatePublishButtonVisibility();
     }
     
-    loadUserMenus() {
+    async loadUserMenus() {
         const menusList = document.getElementById('menus-list');
-        const menus = this.getUserMenus();
+        const menus = await this.getUserMenus();
         
         let html = '';
         
@@ -2590,8 +2539,10 @@ class MenuEditor {
         }
     }
     
-    deleteMenu(menuId) {
-        const menus = this.getUserMenus();
+    async deleteMenu(menuId) {
+        if (!window.authManager || !window.authManager.isAuthenticated()) return;
+        
+        const menus = await this.getUserMenus();
         const menu = menus.find(m => m.id === menuId);
         
         if (!menu) return;
@@ -2600,8 +2551,30 @@ class MenuEditor {
             return;
         }
         
-        this.deleteUserMenu(menuId);
-        this.loadUserMenus();
+        try {
+            const result = await window.authManager.deleteMenu(menuId);
+            
+            if (result.success) {
+                // If we deleted the current menu, load another or create new
+                if (menuId === this.currentMenuId) {
+                    const remainingMenus = await this.getUserMenus();
+                    const activeMenus = remainingMenus.filter(m => m.status !== 'deleted');
+                    if (activeMenus.length > 0) {
+                        await this.loadMenu(activeMenus[0].id);
+                    } else {
+                        this.createNewMenu();
+                    }
+                }
+                
+                await this.loadUserMenus();
+            } else {
+                console.error('Failed to delete menu:', result.error);
+                alert('Failed to delete menu. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error deleting menu:', error);
+            alert('Error deleting menu. Please try again.');
+        }
     }
     
     // === CHANGE TRACKING AND STATUS ===
@@ -3783,16 +3756,13 @@ const menuEditor = new MenuEditor();
 // === AUTHENTICATION INTEGRATION ===
 
 // Initialize authentication manager and editor when page loads  
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize auth manager
-    if (!window.authManager) {
-        window.authManager = new AuthManager();
-    }
+document.addEventListener('DOMContentLoaded', async function() {
+    // Database auth manager is already initialized from auth-db.js
     
-    // Initialize editor auth integration
-    setTimeout(() => {
-        menuEditor.initializeAuth();
-    }, 100); // Small delay to ensure auth manager is ready
+    // Initialize editor
+    setTimeout(async () => {
+        await menuEditor.initializeWithAuth();
+    }, 500); // Small delay to ensure auth manager is ready
 });
 
 // Add authentication methods to MenuEditor prototype

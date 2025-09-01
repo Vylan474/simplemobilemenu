@@ -221,6 +221,90 @@ class DatabaseAuthManager {
         }
     }
 
+    async deleteMenu(menuId) {
+        try {
+            const response = await fetch(`${this.baseURL}/api/menu/delete?menuId=${menuId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${this.sessionId}`,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+            return response.ok ? data : { success: false, error: data.error };
+        } catch (error) {
+            console.error('Delete menu error:', error);
+            return { success: false, error: 'Network error' };
+        }
+    }
+
+    async checkSlugAvailability(slug) {
+        try {
+            console.log('🔍 DatabaseAuthManager.checkSlugAvailability called with slug:', slug);
+            const url = `${this.baseURL}/api/menu/check-availability`;
+            console.log('Checking slug availability at:', url);
+            console.log('Request payload:', { slug });
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ slug })
+            });
+
+            console.log('Response status:', response.status);
+            console.log('Response headers:', [...response.headers.entries()]);
+
+            const data = await response.json();
+            console.log('Response data:', data);
+
+            return response.ok ? data : { success: false, error: data.error || `HTTP ${response.status}` };
+        } catch (error) {
+            console.error('Check slug availability error:', error);
+            return { success: false, error: `Network error: ${error.message}` };
+        }
+    }
+
+    async publishMenu(menuId, publishData) {
+        try {
+            const response = await fetch(`${this.baseURL}/api/menu/publish`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.sessionId}`,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ menuId, ...publishData })
+            });
+
+            const data = await response.json();
+            return response.ok ? data : { success: false, error: data.error };
+        } catch (error) {
+            console.error('Publish menu error:', error);
+            return { success: false, error: 'Network error' };
+        }
+    }
+
+    async getPublishedMenu(slug) {
+        try {
+            const response = await fetch(`${this.baseURL}/api/menu/${slug}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            return response.ok ? data : { success: false, error: data.error };
+        } catch (error) {
+            console.error('Get published menu error:', error);
+            return { success: false, error: 'Network error' };
+        }
+    }
+
     // Admin operations
     async getAdminData(username, password) {
         try {
