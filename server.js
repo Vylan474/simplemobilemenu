@@ -460,34 +460,8 @@ app.get('/menu/:slug', async (req, res) => {
             return res.status(400).send('Invalid menu URL');
         }
         
-        // Check if menu exists
-        const menuPath = path.join(MENUS_DIR, `${slug}.json`);
-        try {
-            await fs.access(menuPath);
-        } catch {
-            return res.status(404).send(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Menu Not Found</title>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <style>
-                        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-                               text-align: center; padding: 60px 20px; color: #666; }
-                        h1 { color: #333; margin-bottom: 20px; }
-                        .icon { font-size: 64px; margin-bottom: 20px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="icon">🍽️</div>
-                    <h1>Menu Not Found</h1>
-                    <p>The menu you're looking for doesn't exist or has been moved.</p>
-                </body>
-                </html>
-            `);
-        }
-        
-        // Serve the published menu page
+        // Simply serve the published menu page - let the frontend check if menu exists via API
+        // The published-menu.html will handle loading data and showing 404 if menu doesn't exist
         const publishedMenuHTML = await fs.readFile(path.join(__dirname, 'published-menu.html'), 'utf8');
         const customizedHTML = publishedMenuHTML.replace('{{MENU_SLUG}}', slug);
         
