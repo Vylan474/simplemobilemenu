@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
 const crypto = require('crypto');
+const multer = require('multer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,10 +10,12 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static('./')); // Serve static files from current directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded files
 
 // Simple file-based storage for now (easy to migrate to database later)
 const MENUS_DIR = path.join(__dirname, 'menus');
 const USERS_DIR = path.join(__dirname, 'users');
+const UPLOADS_DIR = path.join(__dirname, 'uploads', 'backgrounds');
 
 // Ensure directories exist
 async function ensureDirectories() {
@@ -27,7 +30,41 @@ async function ensureDirectories() {
     } catch {
         await fs.mkdir(USERS_DIR, { recursive: true });
     }
+    
+    try {
+        await fs.access(UPLOADS_DIR);
+    } catch {
+        await fs.mkdir(UPLOADS_DIR, { recursive: true });
+    }
 }
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, UPLOADS_DIR);
+    },
+    filename: function (req, file, cb) {
+        // Generate unique filename: timestamp + random + original extension
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, 'bg-' + uniqueSuffix + ext);
+    }
+});
+
+const upload = multer({ 
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+    },
+    fileFilter: function (req, file, cb) {
+        // Check file type
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed!'), false);
+        }
+    }
+});
 
 // Generate unique menu ID
 function generateMenuId() {
@@ -74,7 +111,7 @@ app.get('/api/check-slug/:slug', async (req, res) => {
 app.post('/api/menu', async (req, res) => {
     try {
         console.log('Received menu data:', req.body);
-        const { slug, title, subtitle, sections, menuId, backgroundType, backgroundValue, fontFamily, colorPalette, navigationTheme, menuLogo, logoSize } = req.body;
+        const { slug, title, subtitle, sections, menuId, backgroundType, backgroundValue, fontFamily, colorPalette, navigationTheme, menuLogo, logoSize, uploadedBackgrounds } = req.body;
         
         if (!slug || !title || !sections) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -93,6 +130,19 @@ app.post('/api/menu', async (req, res) => {
         }
         
         const finalMenuId = menuId || generateMenuId();
+        
+        // Load existing menu data to preserve uploadedBackgrounds
+        let existingMenuData = {};
+        if (menuId) {
+            try {
+                const existingMenuPath = path.join(MENUS_DIR, `${slug}.json`);
+                const existingData = await fs.readFile(existingMenuPath, 'utf8');
+                existingMenuData = JSON.parse(existingData);
+            } catch (error) {
+                // Menu doesn't exist yet, that's fine
+            }
+        }
+        
         const menuData = {
             id: finalMenuId,
             slug,
@@ -106,7 +156,8 @@ app.post('/api/menu', async (req, res) => {
             navigationTheme: navigationTheme || 'modern',
             menuLogo: menuLogo || null,
             logoSize: logoSize || 'medium',
-            publishedAt: new Date().toISOString(),
+            uploadedBackgrounds: (uploadedBackgrounds && uploadedBackgrounds.length > 0) ? uploadedBackgrounds : (existingMenuData.uploadedBackgrounds || []),
+            publishedAt: existingMenuData.publishedAt || new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             version: '1.0'
         };
@@ -132,8 +183,13 @@ app.post('/api/menu', async (req, res) => {
     }
 });
 
-// Get menu by slug
-app.get('/api/menu/:slug', async (req, res) => {
+// Get menu by slug (must be before specific background route)
+app.get('/api/menu/:slug', async (req, res, next) => {
+    // Skip if this is actually a backgrounds request
+    if (req.url.endsWith('/backgrounds')) {
+        return next();
+    }
+    
     try {
         const slug = req.params.slug.toLowerCase();
         
@@ -153,6 +209,95 @@ app.get('/api/menu/:slug', async (req, res) => {
             console.error('Error loading menu:', error);
             res.status(500).json({ error: 'Failed to load menu' });
         }
+    }
+});
+
+// Get uploaded backgrounds for a menu  
+app.get('/api/menu/:slug/backgrounds', async (req, res) => {
+    try {
+        const slug = req.params.slug.toLowerCase();
+        
+        if (!validateSlug(slug)) {
+            return res.status(400).json({ error: 'Invalid slug' });
+        }
+        
+        const menuPath = path.join(MENUS_DIR, `${slug}.json`);
+        const menuData = JSON.parse(await fs.readFile(menuPath, 'utf8'));
+        
+        res.json({
+            backgrounds: menuData.uploadedBackgrounds || [],
+            currentBackground: menuData.backgroundValue
+        });
+        
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            res.status(404).json({ error: 'Menu not found' });
+        } else {
+            console.error('Error loading menu backgrounds:', error);
+            res.status(500).json({ error: 'Failed to load backgrounds' });
+        }
+    }
+});
+
+// Background image upload endpoint
+app.post('/api/upload-background', upload.single('background'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+        
+        const { slug } = req.body;
+        
+        // Return the URL where the file can be accessed
+        const fileUrl = `/uploads/backgrounds/${req.file.filename}`;
+        
+        console.log('Background uploaded:', req.file.filename);
+        
+        // If slug is provided, update the menu's uploadedBackgrounds array
+        if (slug) {
+            try {
+                const menuPath = path.join(MENUS_DIR, `${slug}.json`);
+                const menuData = JSON.parse(await fs.readFile(menuPath, 'utf8'));
+                
+                // Add new upload to the beginning of the array
+                if (!menuData.uploadedBackgrounds) {
+                    menuData.uploadedBackgrounds = [];
+                }
+                
+                const newBackground = {
+                    url: fileUrl,
+                    filename: req.file.filename,
+                    uploadedAt: new Date().toISOString()
+                };
+                
+                // Remove if already exists (to avoid duplicates)
+                menuData.uploadedBackgrounds = menuData.uploadedBackgrounds.filter(bg => bg.url !== fileUrl);
+                
+                // Add to beginning and keep only last 3
+                menuData.uploadedBackgrounds.unshift(newBackground);
+                menuData.uploadedBackgrounds = menuData.uploadedBackgrounds.slice(0, 3);
+                
+                menuData.updatedAt = new Date().toISOString();
+                
+                // Save updated menu data
+                await fs.writeFile(menuPath, JSON.stringify(menuData, null, 2));
+            } catch (error) {
+                console.error('Error updating menu uploadedBackgrounds:', error);
+            }
+        }
+        
+        res.json({ 
+            success: true, 
+            url: fileUrl,
+            filename: req.file.filename
+        });
+        
+    } catch (error) {
+        console.error('Upload error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Failed to upload image' 
+        });
     }
 });
 

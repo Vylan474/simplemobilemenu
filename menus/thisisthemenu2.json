@@ -167,13 +167,30 @@
     }
   ],
   "backgroundType": "image",
-  "backgroundValue": "Background Images/Ivory Weave.png",
+  "backgroundValue": "/uploads/backgrounds/bg-1756688636590-810874170.png",
   "fontFamily": "Montserrat",
-  "colorPalette": "forest",
-  "navigationTheme": "minimal",
+  "colorPalette": "sunset",
+  "navigationTheme": "glass",
   "menuLogo": null,
   "logoSize": "medium",
-  "publishedAt": "2025-09-01T00:01:28.613Z",
-  "updatedAt": "2025-09-01T00:01:28.613Z",
+  "uploadedBackgrounds": [
+    {
+      "url": "/uploads/backgrounds/bg-1756688911738-49596319.png",
+      "filename": "bg-1756688911738-49596319.png",
+      "uploadedAt": "2025-09-01T01:08:31.756Z"
+    },
+    {
+      "url": "/uploads/backgrounds/bg-1756688636590-810874170.png",
+      "filename": "bg-1756688636590-810874170.png",
+      "uploadedAt": "2025-09-01T01:04:04.170Z"
+    },
+    {
+      "url": "/uploads/backgrounds/bg-1756686693020-770343449.png",
+      "filename": "bg-1756686693020-770343449.png",
+      "uploadedAt": "2025-09-01T00:31:33.020Z"
+    }
+  ],
+  "publishedAt": "2025-09-01T00:23:59.135Z",
+  "updatedAt": "2025-09-01T01:08:54.369Z",
   "version": "1.0"
 }

@@ -136,21 +136,10 @@
                         col.toLowerCase().includes('description')
                     );
                     
-                    // Filter out title and description columns from headers
-                    const visibleColumns = section.columns.filter(col => 
-                        !titleColumns.includes(col) && col !== descriptionColumn
-                    );
                     
                     return `
                         <div class="preview-section">
                             <h2>${section.name}</h2>
-                            ${visibleColumns.length > 0 ? `
-                                <div class="preview-column-headers" style="grid-template-columns: ${visibleColumns.map(col => col.toLowerCase().includes('price') ? 'auto' : '1fr').join(' ')};">
-                                    ${visibleColumns.map(column => `
-                                        <span class="preview-column-header ${column.toLowerCase().includes('price') ? 'preview-price-header' : ''}">${column}</span>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
                             <div class="preview-items">
                                 ${section.items?.map(item => {
                                     console.log('Generating item:', item);
@@ -504,7 +493,7 @@
                 const secondaryTextElements = container.querySelectorAll('.preview-item-description, .preview-menu-subtitle');
                 secondaryTextElements.forEach(el => el.style.color = palette.secondaryText);
                 
-                const headerElements = container.querySelectorAll('.preview-section h2, .preview-column-header');
+                const headerElements = container.querySelectorAll('.preview-section h2');
                 headerElements.forEach(el => el.style.color = palette.headers);
                 
                 const accentElements = container.querySelectorAll('.preview-price-cell, .preview-title-price');
@@ -657,13 +646,6 @@
                     el.style.marginLeft = 'auto';
                 });
                 
-                // Force alignment for price column headers
-                const priceHeaders = container.querySelectorAll('.preview-price-header, .preview-column-header[class*="price"]');
-                priceHeaders.forEach(el => {
-                    el.style.textAlign = 'right';
-                    el.style.justifySelf = 'end';
-                    el.style.gridColumn = '-1';
-                });
                 
                 // Force alignment for title prices
                 const titlePrices = container.querySelectorAll('.preview-title-price');

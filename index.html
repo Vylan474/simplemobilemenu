@@ -154,6 +154,35 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="background-section" id="recent-backgrounds-section" style="display: none;">
+                            <label>Recent Uploads:</label>
+                            <div class="recent-backgrounds-grid" id="recent-backgrounds-grid">
+                                <!-- Recent backgrounds will be loaded here -->
+                            </div>
+                        </div>
+                        <div class="background-section">
+                            <label>Upload Custom Image:</label>
+                            <div class="custom-upload-section">
+                                <div class="upload-info">
+                                    <small>Recommended: 1080×1920px (mobile) or 1200×1600px</small>
+                                    <small>Portrait orientation works best for menu scrolling</small>
+                                    <small>Formats: JPG, PNG, WEBP (max 5MB)</small>
+                                </div>
+                                <div class="upload-controls">
+                                    <input type="file" id="background-upload" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                                    <button id="upload-background-btn" class="btn btn-primary btn-small">
+                                        <i class="fas fa-upload"></i> Choose Image
+                                    </button>
+                                    <span id="upload-filename" class="upload-filename"></span>
+                                </div>
+                                <div id="upload-preview" class="upload-preview" style="display: none;">
+                                    <img id="upload-preview-img" alt="Preview">
+                                    <button id="use-uploaded-background" class="btn btn-success btn-small">
+                                        <i class="fas fa-check"></i> Use This Image
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="background-section">
                             <label>Background Color:</label>
                             <div class="color-picker-group">

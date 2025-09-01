@@ -1179,13 +1179,6 @@ class MenuEditor {
                     return `
                         <div class="preview-section">
                             <h2>${section.name}</h2>
-                            ${visibleColumns.length > 0 ? `
-                                <div class="preview-column-headers" style="grid-template-columns: ${visibleColumns.map(col => col.toLowerCase().includes('price') ? 'auto' : '1fr').join(' ')};">
-                                    ${visibleColumns.map(column => `
-                                        <span class="preview-column-header ${column.toLowerCase().includes('price') ? 'preview-price-header' : ''}">${column}</span>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
                             <div class="preview-items">
                                 ${section.items.map(item => this.generatePreviewItem(item, section)).join('')}
                             </div>
@@ -1397,13 +1390,6 @@ class MenuEditor {
                     return `
                         <div class="preview-section">
                             <h2>${section.name}</h2>
-                            ${visibleColumns.length > 0 ? `
-                                <div class="preview-column-headers" style="grid-template-columns: ${visibleColumns.map(col => col.toLowerCase().includes('price') ? 'auto' : '1fr').join(' ')};">
-                                    ${visibleColumns.map(column => `
-                                        <span class="preview-column-header ${column.toLowerCase().includes('price') ? 'preview-price-header' : ''}">${column}</span>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
                             <div class="preview-items">
                                 ${section.items.map(item => this.generatePreviewItem(item, section)).join('')}
                             </div>
@@ -1896,12 +1882,28 @@ class MenuEditor {
         console.log('Publishing with slug:', slug);
         console.log('Will save to key:', `published-menu-${slug}`);
         
+        // Set the slug as a property for uploads
+        this.slug = slug;
+        
         if (!slug || this.sections.length === 0) {
             alert('Please ensure you have a valid path and at least one menu section.');
             return;
         }
         
         try {
+            // First load current menu data to preserve uploadedBackgrounds
+            let existingData = {};
+            if (this.publishedMenuId) {
+                try {
+                    const existingResponse = await fetch(`/api/menu/${slug}`);
+                    if (existingResponse.ok) {
+                        existingData = await existingResponse.json();
+                    }
+                } catch (error) {
+                    console.log('Could not load existing menu data:', error);
+                }
+            }
+            
             const publishData = {
                 slug: slug,
                 title: title,
@@ -1914,7 +1916,9 @@ class MenuEditor {
                 fontFamily: this.fontFamily,
                 colorPalette: this.colorPalette,
                 navigationTheme: this.navigationTheme,
-                menuId: this.publishedMenuId // Pass existing menuId for updates
+                menuId: this.publishedMenuId, // Pass existing menuId for updates
+                // Only include uploadedBackgrounds if we have existing data, otherwise let server preserve it
+                ...(existingData.uploadedBackgrounds && { uploadedBackgrounds: existingData.uploadedBackgrounds })
             };
             
             console.log('Publishing with data:', publishData);
@@ -2124,6 +2128,12 @@ class MenuEditor {
             this.applyFontFamily();
             this.applyColorPalette();
             this.applyNavigationTheme();
+            
+            // Set the slug for this menu
+            this.slug = slug;
+            
+            // Load recent backgrounds
+            this.loadRecentBackgrounds();
             
             // Load sections if available
             if (menuData.sections) {
@@ -2928,6 +2938,208 @@ class MenuEditor {
         document.getElementById('background-options').classList.remove('active');
     }
     
+    async handleBackgroundUpload(file) {
+        // Validate file size (5MB limit)
+        const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+        if (file.size > maxSize) {
+            alert('File size must be less than 5MB');
+            return;
+        }
+        
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+            alert('Please select a JPG, PNG, or WEBP image');
+            return;
+        }
+        
+        // Show filename
+        const filenameEl = document.getElementById('upload-filename');
+        filenameEl.textContent = file.name;
+        
+        // Create preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const previewEl = document.getElementById('upload-preview');
+            const imgEl = document.getElementById('upload-preview-img');
+            
+            imgEl.src = e.target.result;
+            previewEl.style.display = 'flex';
+            
+            // Store the image data for later use
+            this.pendingUploadData = e.target.result;
+            this.pendingUploadFilename = file.name;
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    async applyUploadedBackground() {
+        if (!this.pendingUploadData) return;
+        
+        try {
+            // Upload to server
+            const uploadResponse = await this.uploadBackgroundImage(this.pendingUploadData, this.pendingUploadFilename);
+            
+            if (uploadResponse.success) {
+                // Use the uploaded image
+                this.backgroundType = 'image';
+                this.backgroundValue = uploadResponse.url;
+                this.applyBackground();
+                this.updateBackgroundSelection();
+                this.markAsChanged();
+                this.saveToStorage();
+                
+                // Update preview if visible
+                if (this.sidePreviewVisible) {
+                    this.updateSidePreview();
+                }
+                
+                // Close dropdown
+                this.backgroundDropdownOpen = false;
+                document.getElementById('background-dropdown').style.display = 'none';
+                document.getElementById('background-options').classList.remove('active');
+                
+                // Reset upload UI
+                this.resetUploadUI();
+                
+                // Refresh recent backgrounds to show the new upload
+                this.loadRecentBackgrounds();
+            } else {
+                alert('Upload failed: ' + (uploadResponse.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert('Upload failed. Please try again.');
+        }
+    }
+    
+    async uploadBackgroundImage(imageData, filename) {
+        // Convert data URL to blob
+        const response = await fetch(imageData);
+        const blob = await response.blob();
+        
+        // Create FormData
+        const formData = new FormData();
+        formData.append('background', blob, filename);
+        formData.append('slug', this.slug); // Include slug to track menu-specific uploads
+        
+        // Upload to server
+        const uploadResponse = await fetch('/api/upload-background', {
+            method: 'POST',
+            body: formData
+        });
+        
+        return await uploadResponse.json();
+    }
+    
+    resetUploadUI() {
+        document.getElementById('upload-filename').textContent = '';
+        document.getElementById('upload-preview').style.display = 'none';
+        document.getElementById('background-upload').value = '';
+        this.pendingUploadData = null;
+        this.pendingUploadFilename = null;
+    }
+    
+    async loadRecentBackgrounds() {
+        if (!this.slug) return;
+        
+        try {
+            const response = await fetch(`/api/menu/${this.slug}/backgrounds`);
+            const data = await response.json();
+            
+            if (data.backgrounds && data.backgrounds.length > 0) {
+                this.displayRecentBackgrounds(data.backgrounds, data.currentBackground);
+            } else {
+                // Hide the recent backgrounds section if no uploads
+                document.getElementById('recent-backgrounds-section').style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error loading recent backgrounds:', error);
+            document.getElementById('recent-backgrounds-section').style.display = 'none';
+        }
+    }
+    
+    displayRecentBackgrounds(backgrounds, currentBackground) {
+        const section = document.getElementById('recent-backgrounds-section');
+        const grid = document.getElementById('recent-backgrounds-grid');
+        
+        // Clear existing backgrounds
+        grid.innerHTML = '';
+        
+        backgrounds.forEach(background => {
+            const option = document.createElement('div');
+            option.className = 'recent-background-option';
+            option.dataset.url = background.url;
+            
+            // Mark as selected if it's the current background
+            if (background.url === currentBackground) {
+                option.classList.add('selected');
+            }
+            
+            // Create image element
+            const img = document.createElement('img');
+            img.src = background.url;
+            img.alt = background.filename;
+            img.onerror = () => {
+                // If image fails to load, show a placeholder
+                option.innerHTML = `
+                    <div style="display:flex;align-items:center;justify-content:center;height:80%;font-size:24px;color:#999;">
+                        🖼️
+                    </div>
+                    <div class="filename">${background.filename}</div>
+                `;
+            };
+            
+            // Create filename label
+            const filename = document.createElement('div');
+            filename.className = 'filename';
+            filename.textContent = background.filename;
+            
+            option.appendChild(img);
+            option.appendChild(filename);
+            
+            // Add click handler
+            option.addEventListener('click', () => {
+                this.selectRecentBackground(background.url);
+            });
+            
+            grid.appendChild(option);
+        });
+        
+        // Show the section
+        section.style.display = 'block';
+    }
+    
+    selectRecentBackground(url) {
+        this.backgroundType = 'image';
+        this.backgroundValue = url;
+        this.applyBackground();
+        this.updateBackgroundSelection();
+        this.updateRecentBackgroundSelection(url);
+        this.markAsChanged();
+        this.saveToStorage();
+        
+        // Update preview if visible
+        if (this.sidePreviewVisible) {
+            this.updateSidePreview();
+        }
+        
+        // Close dropdown
+        this.backgroundDropdownOpen = false;
+        document.getElementById('background-dropdown').style.display = 'none';
+        document.getElementById('background-options').classList.remove('active');
+    }
+    
+    updateRecentBackgroundSelection(selectedUrl) {
+        const recentOptions = document.querySelectorAll('.recent-background-option');
+        recentOptions.forEach(option => {
+            option.classList.remove('selected');
+            if (option.dataset.url === selectedUrl) {
+                option.classList.add('selected');
+            }
+        });
+    }
+    
     clearBackground() {
         this.removeBackground();
         
@@ -3008,6 +3220,11 @@ class MenuEditor {
                 option.classList.add('selected');
             }
         });
+        
+        // Also update recent backgrounds selection if using an uploaded image
+        if (this.backgroundType === 'image' && this.backgroundValue) {
+            this.updateRecentBackgroundSelection(this.backgroundValue);
+        }
     }
     
     // === FONT FAMILY CUSTOMIZATION ===
@@ -4011,6 +4228,29 @@ document.addEventListener('DOMContentLoaded', function() {
             if (colorInput) {
                 menuEditor.selectBackgroundColor(colorInput.value);
             }
+        });
+    }
+    
+    // Background upload functionality
+    const uploadBtn = document.getElementById('upload-background-btn');
+    const uploadInput = document.getElementById('background-upload');
+    const useUploadedBtn = document.getElementById('use-uploaded-background');
+    
+    if (uploadBtn && uploadInput) {
+        uploadBtn.addEventListener('click', () => {
+            uploadInput.click();
+        });
+        
+        uploadInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                menuEditor.handleBackgroundUpload(e.target.files[0]);
+            }
+        });
+    }
+    
+    if (useUploadedBtn) {
+        useUploadedBtn.addEventListener('click', () => {
+            menuEditor.applyUploadedBackground();
         });
     }
     
