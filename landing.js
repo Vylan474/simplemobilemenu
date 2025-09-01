@@ -255,8 +255,7 @@ class LandingPage {
             }
             console.log('User created:', result.user);
             
-            // Create a demo menu for new users
-            window.authManager.createDemoMenu();
+            // Redirect to menu editor (demo menu creation will happen in editor)
             window.location.href = 'editor.html';
         } catch (error) {
             console.error('Sign up error:', error);
