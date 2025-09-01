@@ -129,13 +129,14 @@
             
             async loadMenu() {
                 try {
-                    const response = await fetch(`/api/menu/${this.slug}`);
+                    const response = await fetch(`/api/menu/get-published?slug=${this.slug}`);
                     
                     if (!response.ok) {
                         throw new Error(`Menu not found: ${response.status}`);
                     }
                     
-                    this.menuData = await response.json();
+                    const data = await response.json();
+                    this.menuData = data.menu; // Extract menu from response
                     this.renderMenu();
                     
                 } catch (error) {
