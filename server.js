@@ -163,18 +163,24 @@ app.post('/api/menu/check-availability', async (req, res) => {
             });
         }
         
-        // Check if slug already exists
-        const existingMenu = await pool.query(
-            'SELECT id FROM published_menus WHERE slug = $1',
-            [slug]
-        );
+        // For now, check if a menu file exists with this slug
+        // (Later this should check the database)
+        const menuPath = path.join(MENUS_DIR, `${slug}.json`);
         
-        const available = existingMenu.rows.length === 0;
-        
-        res.json({ 
-            available,
-            message: available ? 'Path is available' : 'This path is already taken'
-        });
+        try {
+            await fs.access(menuPath);
+            // File exists, slug is taken
+            res.json({ 
+                available: false,
+                message: 'This path is already taken'
+            });
+        } catch {
+            // File doesn't exist, slug is available
+            res.json({ 
+                available: true,
+                message: 'Path is available'
+            });
+        }
     } catch (error) {
         console.error('Error checking slug availability:', error);
         res.status(500).json({ 
