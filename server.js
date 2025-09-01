@@ -156,10 +156,19 @@ app.post('/api/menu/check-availability', async (req, res) => {
     try {
         const { slug } = req.body;
         
-        if (!slug) {
+        if (!slug || slug.trim() === '') {
             return res.status(400).json({ 
                 available: false, 
                 error: 'Slug is required' 
+            });
+        }
+
+        // Validate slug format (lowercase letters, numbers, dashes only)
+        const slugRegex = /^[a-z0-9-]+$/;
+        if (!slugRegex.test(slug)) {
+            return res.status(400).json({ 
+                available: false, 
+                error: 'Slug must contain only lowercase letters, numbers, and dashes' 
             });
         }
         
@@ -170,22 +179,24 @@ app.post('/api/menu/check-availability', async (req, res) => {
         try {
             await fs.access(menuPath);
             // File exists, slug is taken
-            res.json({ 
+            res.status(200).json({ 
                 available: false,
-                message: 'This path is already taken'
+                slug,
+                message: 'Slug is already taken'
             });
         } catch {
             // File doesn't exist, slug is available
-            res.json({ 
+            res.status(200).json({ 
                 available: true,
-                message: 'Path is available'
+                slug,
+                message: 'Slug is available'
             });
         }
     } catch (error) {
-        console.error('Error checking slug availability:', error);
+        console.error('Check availability error:', error);
         res.status(500).json({ 
             available: false, 
-            error: 'Server error checking availability' 
+            error: 'Server error checking availability. Please try again.' 
         });
     }
 });
