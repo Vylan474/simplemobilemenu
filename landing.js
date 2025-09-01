@@ -2,6 +2,7 @@
 class LandingPage {
     constructor() {
         console.log('LandingPage constructor called');
+        console.log('Window authManager:', window.authManager);
         this.initializeEvents();
         this.initializeScrollEffects();
     }
@@ -21,11 +22,20 @@ class LandingPage {
     }
     
     setupModalEvents() {
+        console.log('Setting up modal events...');
         const signInBtn = document.getElementById('sign-in-btn');
         const signInModal = document.getElementById('sign-in-modal');
         const signUpModal = document.getElementById('sign-up-modal');
         const switchToSignup = document.getElementById('switch-to-signup');
         const switchToSignin = document.getElementById('switch-to-signin');
+        
+        console.log('Elements found:', {
+            signInBtn: !!signInBtn,
+            signInModal: !!signInModal,
+            signUpModal: !!signUpModal,
+            switchToSignup: !!switchToSignup,
+            switchToSignin: !!switchToSignin
+        });
         
         // Open sign in modal
         if (signInBtn) {
@@ -365,12 +375,13 @@ class LandingPage {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize auth manager first
-    if (!window.authManager) {
-        window.authManager = new AuthManager();
-    }
+    console.log('Landing page DOM loaded, initializing...');
     
-    new LandingPage();
+    // Wait a bit for auth manager to be initialized by auth-db.js
+    setTimeout(() => {
+        console.log('Creating LandingPage instance');
+        new LandingPage();
+    }, 100);
 });
 
 // Utility function to check if text contains substring (for event delegation)
