@@ -238,7 +238,7 @@ class MenuEditor {
     }
     
     handleAuthChange(user) {
-        if (user) {
+        if (user && user.id) {
             this.currentUser = user;
             
             // Update last active timestamp for admin tracking
@@ -249,7 +249,8 @@ class MenuEditor {
             this.updateUserInterface(user);
             this.loadUserData();
         } else {
-            // No user signed in, show auth modal
+            // No user signed in or invalid user data, show auth modal
+            console.log('No valid user data:', user);
             this.showAuthModal();
         }
     }
