@@ -257,6 +257,12 @@ class MenuEditor {
             
             this.updateUserInterface(user);
             this.loadUserData();
+            
+            // Re-initialize events after authentication to ensure all elements exist
+            setTimeout(() => {
+                console.log('🔄 Re-initializing events after authentication...');
+                this.initializeEvents();
+            }, 100);
         } else {
             // No user signed in or invalid user data, show auth modal
             console.log('No valid user data:', user);
@@ -568,42 +574,54 @@ class MenuEditor {
     }
     
     initializeEvents() {
-        document.getElementById('add-section').addEventListener('click', () => this.openSectionModal());
-        document.getElementById('save-section').addEventListener('click', () => this.saveSection());
-        document.getElementById('cancel-section').addEventListener('click', () => this.closeSectionModal());
-        document.getElementById('save-menu').addEventListener('click', () => this.saveToStorage());
-        document.getElementById('export-menu').addEventListener('click', () => this.exportMenu());
-        document.getElementById('import-menu').addEventListener('click', () => this.triggerImport());
-        document.getElementById('import-file').addEventListener('change', (e) => this.importMenu(e));
-        document.getElementById('add-custom-column').addEventListener('click', () => this.addCustomColumn());
-        document.getElementById('section-type').addEventListener('change', (e) => this.handleSectionTypeChange(e));
-        document.getElementById('toggle-live-preview').addEventListener('click', () => this.toggleSidePreview());
-        document.getElementById('close-side-preview').addEventListener('click', () => this.hideSidePreview());
-        document.getElementById('refresh-side-preview').addEventListener('click', () => this.refreshSidePreview());
-        document.getElementById('publish-menu').addEventListener('click', () => this.openPublishModal());
-        document.getElementById('check-availability').addEventListener('click', () => this.checkPathAvailability());
-        document.getElementById('publish-menu-confirm').addEventListener('click', () => this.publishMenu());
-        document.getElementById('cancel-publish').addEventListener('click', () => this.closePublishModal());
-        document.getElementById('menu-url-path').addEventListener('input', (e) => this.updatePreviewUrl(e));
-        document.getElementById('menu-title-publish').addEventListener('input', () => this.updatePublishPreview());
-        document.getElementById('menu-subtitle-publish').addEventListener('input', () => this.updatePublishPreview());
+        // Use a more robust approach with null checking
+        const addEventListenerSafely = (id, event, handler) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener(event, handler);
+                console.log(`✅ Event listener added for: ${id}`);
+            } else {
+                console.warn(`⚠️ Element not found for event listener: ${id}`);
+            }
+        };
+
+        // Core functionality buttons
+        addEventListenerSafely('add-section', 'click', () => this.openSectionModal());
+        addEventListenerSafely('save-section', 'click', () => this.saveSection());
+        addEventListenerSafely('cancel-section', 'click', () => this.closeSectionModal());
+        addEventListenerSafely('save-menu', 'click', () => this.saveToStorage());
+        addEventListenerSafely('export-menu', 'click', () => this.exportMenu());
+        addEventListenerSafely('import-menu', 'click', () => this.triggerImport());
+        addEventListenerSafely('import-file', 'change', (e) => this.importMenu(e));
+        addEventListenerSafely('add-custom-column', 'click', () => this.addCustomColumn());
+        addEventListenerSafely('section-type', 'change', (e) => this.handleSectionTypeChange(e));
+        addEventListenerSafely('toggle-live-preview', 'click', () => this.toggleSidePreview());
+        addEventListenerSafely('close-side-preview', 'click', () => this.hideSidePreview());
+        addEventListenerSafely('refresh-side-preview', 'click', () => this.refreshSidePreview());
+        addEventListenerSafely('publish-menu', 'click', () => this.openPublishModal());
+        addEventListenerSafely('check-availability', 'click', () => this.checkPathAvailability());
+        addEventListenerSafely('publish-menu-confirm', 'click', () => this.publishMenu());
+        addEventListenerSafely('cancel-publish', 'click', () => this.closePublishModal());
+        addEventListenerSafely('menu-url-path', 'input', (e) => this.updatePreviewUrl(e));
+        addEventListenerSafely('menu-title-publish', 'input', () => this.updatePublishPreview());
+        addEventListenerSafely('menu-subtitle-publish', 'input', () => this.updatePublishPreview());
         
         // Sidebar event listeners
-        document.getElementById('toggle-sidebar').addEventListener('click', () => this.toggleSidebar());
-        document.getElementById('close-sidebar').addEventListener('click', () => this.closeSidebar());
-        document.getElementById('sidebar-overlay').addEventListener('click', () => this.closeSidebar());
-        document.getElementById('menus-section-header').addEventListener('click', () => this.toggleSection('menus'));
-        document.getElementById('settings-section-header').addEventListener('click', () => this.toggleSection('settings'));
-        document.getElementById('view-published-menu').addEventListener('click', () => this.viewPublishedMenu());
+        addEventListenerSafely('toggle-sidebar', 'click', () => this.toggleSidebar());
+        addEventListenerSafely('close-sidebar', 'click', () => this.closeSidebar());
+        addEventListenerSafely('sidebar-overlay', 'click', () => this.closeSidebar());
+        addEventListenerSafely('menus-section-header', 'click', () => this.toggleSection('menus'));
+        addEventListenerSafely('settings-section-header', 'click', () => this.toggleSection('settings'));
+        addEventListenerSafely('view-published-menu', 'click', () => this.viewPublishedMenu());
         
         // Sign out functionality
-        document.getElementById('sign-out-item').addEventListener('click', () => this.handleSignOut());
+        addEventListenerSafely('sign-out-item', 'click', () => this.handleSignOut());
         
         // Discard functionality
-        document.getElementById('discard-changes').addEventListener('click', () => this.openDiscardModal());
-        document.getElementById('revert-to-saved').addEventListener('click', () => this.revertToSaved());
-        document.getElementById('revert-to-published').addEventListener('click', () => this.revertToPublished());
-        document.getElementById('cancel-discard').addEventListener('click', () => this.closeDiscardModal());
+        addEventListenerSafely('discard-changes', 'click', () => this.openDiscardModal());
+        addEventListenerSafely('revert-to-saved', 'click', () => this.revertToSaved());
+        addEventListenerSafely('revert-to-published', 'click', () => this.revertToPublished());
+        addEventListenerSafely('cancel-discard', 'click', () => this.closeDiscardModal());
         
         document.querySelectorAll('.close').forEach(closeBtn => {
             closeBtn.addEventListener('click', (e) => {
