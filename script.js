@@ -1197,7 +1197,10 @@ class MenuEditor {
                         type="text" 
                         placeholder="${column}"
                         value="${item[column] || ''}"
-                        onchange="menuEditor.updateMenuItem(${section.id}, ${index}, '${column}', this.value)"
+                        class="menu-item-input"
+                        data-section-id="${section.id}"
+                        data-item-index="${index}"
+                        data-column="${column}"
                     >
                 `).join('')}
                 <div class="item-controls">
@@ -1421,6 +1424,17 @@ class MenuEditor {
                 const itemIndex = parseInt(button.dataset.itemIndex);
                 console.log('📋 Duplicate Item clicked for section:', sectionId, 'item:', itemIndex);
                 this.duplicateMenuItem(sectionId, itemIndex);
+            }
+        });
+
+        // Handle menu item input changes
+        document.addEventListener('input', (e) => {
+            if (e.target.classList.contains('menu-item-input')) {
+                const sectionId = parseInt(e.target.dataset.sectionId);
+                const itemIndex = parseInt(e.target.dataset.itemIndex);
+                const column = e.target.dataset.column;
+                const value = e.target.value;
+                this.updateMenuItem(sectionId, itemIndex, column, value);
             }
         });
     }
@@ -3977,6 +3991,8 @@ class MenuEditor {
 }
 
 const menuEditor = new MenuEditor();
+// Make menuEditor globally accessible for inline handlers
+window.menuEditor = menuEditor;
 
 // === AUTHENTICATION INTEGRATION ===
 
