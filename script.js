@@ -614,8 +614,14 @@ class MenuEditor {
         
         // Background upload functionality
         addEventListenerSafely('upload-background-btn', 'click', () => {
+            console.log('🔵 Background upload button clicked');
             const input = document.getElementById('background-upload');
-            if (input) input.click();
+            if (input) {
+                console.log('✅ Found background-upload input, triggering click');
+                input.click();
+            } else {
+                console.error('❌ Could not find background-upload input element');
+            }
         });
         addEventListenerSafely('background-upload', 'change', (e) => {
             if (e.target.files && e.target.files[0]) {
@@ -4754,28 +4760,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Background upload functionality
-    const uploadBtn = document.getElementById('upload-background-btn');
-    const uploadInput = document.getElementById('background-upload');
-    const useUploadedBtn = document.getElementById('use-uploaded-background');
-    
-    if (uploadBtn && uploadInput) {
-        uploadBtn.addEventListener('click', () => {
-            uploadInput.click();
-        });
-        
-        uploadInput.addEventListener('change', (e) => {
-            if (e.target.files && e.target.files[0]) {
-                menuEditor.handleBackgroundUpload(e.target.files[0]);
-            }
-        });
-    }
-    
-    if (useUploadedBtn) {
-        useUploadedBtn.addEventListener('click', () => {
-            menuEditor.applyUploadedBackground();
-        });
-    }
+    // Background upload functionality is handled in initializeEvents() method
+    // Removed duplicate event listeners to prevent conflicts
     
     // Font functionality event listeners
     const fontBtn = document.getElementById('font-options');
