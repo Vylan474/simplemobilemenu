@@ -321,6 +321,42 @@ class DatabaseAuthManager {
         }
     }
 
+    // Google OAuth methods
+    async handleGoogleSignIn(credential) {
+        try {
+            const response = await fetch(`${this.baseURL}/api/auth/google`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ credential })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                this.currentUser = data.user;
+                this.sessionId = data.sessionId;
+                
+                // Store session ID in localStorage as backup
+                localStorage.setItem('sessionId', data.sessionId);
+                
+                // Broadcast auth state change
+                document.dispatchEvent(new CustomEvent('authStateChanged', {
+                    detail: { user: data.user }
+                }));
+                
+                return { success: true, user: data.user, isNewUser: data.isNewUser };
+            } else {
+                return { success: false, error: data.error };
+            }
+        } catch (error) {
+            console.error('Google sign-in error:', error);
+            return { success: false, error: 'Network error' };
+        }
+    }
+
     // Admin operations
     async getAdminData(username, password) {
         try {

@@ -13,6 +13,14 @@ app.use(express.static('./')); // Serve static files from current directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded files
 app.use('/uploads/logos', express.static(path.join(__dirname, 'uploads', 'logos'))); // Serve uploaded logos
 
+// Configuration endpoint for frontend
+app.get('/api/config', (req, res) => {
+    res.json({
+        googleClientId: process.env.GOOGLE_CLIENT_ID || 'demo-client-id',
+        environment: process.env.NODE_ENV || 'development'
+    });
+});
+
 // Simple file-based storage for now (easy to migrate to database later)
 const MENUS_DIR = path.join(__dirname, 'menus');
 const USERS_DIR = path.join(__dirname, 'users');

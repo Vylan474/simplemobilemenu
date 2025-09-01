@@ -264,9 +264,111 @@ class LandingPage {
     }
     
     async handleGoogleSignIn() {
-        // Google authentication not implemented in database system
-        alert('Google sign-in is not currently available. Please use email sign-in or create an account.');
-        console.log('Google sign-in not implemented in database auth system');
+        console.log('Google sign-in initiated');
+        
+        // Check if Google Identity Services is loaded
+        if (typeof google === 'undefined' || !google.accounts) {
+            console.error('Google Identity Services not loaded');
+            this.showError('sign-in-form', 'Google sign-in service is not available. Please try again later.');
+            return;
+        }
+
+        try {
+            // Initialize Google Sign-In
+            await this.initializeGoogleOAuth();
+            
+            // Get Google Client ID and initialize the Google Sign-In library
+            const clientId = await this.getGoogleClientId();
+            google.accounts.id.initialize({
+                client_id: clientId,
+                callback: async (response) => {
+                    try {
+                        console.log('Google sign-in response received');
+                        
+                        // Handle the ID token credential
+                        const result = await window.authManager.handleGoogleSignIn(response.credential);
+                        
+                        if (result.success) {
+                            console.log('Google sign-in successful');
+                            this.closeModal('sign-in-modal');
+                            this.closeModal('sign-up-modal');
+                            window.location.href = 'editor.html';
+                        } else {
+                            this.showError('sign-in-form', result.error || 'Google sign-in failed');
+                        }
+                    } catch (error) {
+                        console.error('Google sign-in processing error:', error);
+                        this.showError('sign-in-form', 'Google sign-in failed. Please try again.');
+                    }
+                }
+            });
+            
+            // Trigger the Google sign-in prompt
+            google.accounts.id.prompt((notification) => {
+                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                    console.log('Google sign-in prompt was dismissed or not shown');
+                    // Fallback to one-tap sign-in
+                    this.showGoogleOneTap();
+                }
+            });
+            
+        } catch (error) {
+            console.error('Google sign-in initialization error:', error);
+            this.showError('sign-in-form', 'Google sign-in is not available. Please try email sign-in.');
+        }
+    }
+
+    showGoogleOneTap() {
+        // Alternative approach: render a sign-in button
+        const container = document.createElement('div');
+        container.id = 'g_id_onload';
+        document.body.appendChild(container);
+        
+        google.accounts.id.renderButton(container, {
+            theme: 'outline',
+            size: 'large',
+            width: 300
+        });
+        
+        // Remove the container after use
+        setTimeout(() => {
+            if (container.parentNode) {
+                container.parentNode.removeChild(container);
+            }
+        }, 100);
+    }
+
+    async initializeGoogleOAuth() {
+        return new Promise((resolve, reject) => {
+            if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+                resolve();
+                return;
+            }
+            
+            // Wait for Google library to load
+            let attempts = 0;
+            const checkGoogle = setInterval(() => {
+                attempts++;
+                if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+                    clearInterval(checkGoogle);
+                    resolve();
+                } else if (attempts > 50) { // 5 seconds timeout
+                    clearInterval(checkGoogle);
+                    reject(new Error('Google Identity Services failed to load'));
+                }
+            }, 100);
+        });
+    }
+
+    async getGoogleClientId() {
+        try {
+            const response = await fetch('/api/config');
+            const config = await response.json();
+            return config.googleClientId;
+        } catch (error) {
+            console.error('Failed to fetch Google Client ID:', error);
+            return 'demo-client-id'; // Fallback
+        }
     }
     
     showLoadingState(formId) {
