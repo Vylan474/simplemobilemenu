@@ -15,7 +15,15 @@ class DatabaseAuthManager {
             await this.initializeDatabase();
             
             // Check for existing session
-            await this.verifySession();
+            const verifyResult = await this.verifySession();
+            
+            // Notify script.js if user was successfully verified
+            if (verifyResult.success && verifyResult.user) {
+                console.log('📢 Broadcasting auth state change with user:', verifyResult.user.email);
+                document.dispatchEvent(new CustomEvent('authStateChanged', {
+                    detail: { user: verifyResult.user }
+                }));
+            }
             
             this.initialized = true;
         } catch (error) {
