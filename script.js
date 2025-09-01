@@ -3859,6 +3859,8 @@ MenuEditor.prototype.saveToStorage = function() {
     this.loadUserMenus(); // Refresh menu list
 };
 
+// Duplicate saveToStorage function above removed - keeping the class-based version
+
 MenuEditor.prototype.markAsChanged = function() {
     this.hasUnsavedChanges = true;
     this.updateChangeIndicator();
