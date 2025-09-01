@@ -5,6 +5,22 @@
   "subtitle": "Crafted with care and passion",
   "sections": [
     {
+      "id": 2,
+      "name": "Cocktails",
+      "type": "cocktails",
+      "columns": [
+        "Cocktail Name",
+        "Description",
+        "Base Spirit",
+        "Price"
+      ],
+      "titleColumns": [
+        "Cocktail Name",
+        "Price"
+      ],
+      "items": []
+    },
+    {
       "id": 1,
       "name": "Appetizers",
       "type": "food",
@@ -45,22 +61,6 @@
       "items": []
     },
     {
-      "id": 2,
-      "name": "Cocktails",
-      "type": "cocktails",
-      "columns": [
-        "Cocktail Name",
-        "Description",
-        "Base Spirit",
-        "Price"
-      ],
-      "titleColumns": [
-        "Cocktail Name",
-        "Price"
-      ],
-      "items": []
-    },
-    {
       "id": 3,
       "name": "Wine",
       "type": "wine",
@@ -88,7 +88,15 @@
       ]
     }
   ],
+  "backgroundType": "image",
+  "backgroundValue": "/uploads/backgrounds/bg-1756686693020-770343449.png",
+  "fontFamily": "Inter",
+  "colorPalette": "sunset",
+  "navigationTheme": "minimal",
+  "menuLogo": "/uploads/logos/logo-1756696781185-528250268.png",
+  "logoSize": "medium",
+  "uploadedBackgrounds": [],
   "publishedAt": "2025-08-29T11:48:45.454Z",
-  "updatedAt": "2025-08-29T11:48:45.455Z",
+  "updatedAt": "2025-09-01T03:21:11.726Z",
   "version": "1.0"
 }

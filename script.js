@@ -265,7 +265,7 @@ class MenuEditor {
         }
     }
     
-    loadUserData() {
+    async loadUserData() {
         if (!window.authManager) return;
         
         // Load user's menus
@@ -274,7 +274,7 @@ class MenuEditor {
         // If no current menu, create or load the first one
         if (!this.currentMenuId) {
             if (userMenus.length > 0) {
-                this.loadMenu(userMenus[0]);
+                await this.loadMenu(userMenus[0]);
             } else {
                 this.createNewMenu();
             }
@@ -331,7 +331,7 @@ class MenuEditor {
         }, 100);
     }
     
-    createNewMenu() {
+    async createNewMenu() {
         const menuName = `${this.currentUser.restaurant || this.currentUser.name}'s Menu`;
         
         const newMenu = {
@@ -352,7 +352,7 @@ class MenuEditor {
             logoSize: 'medium'
         };
         
-        this.loadMenu(newMenu);
+        await this.loadMenu(newMenu);
         this.saveToStorage();
     }
     
@@ -453,12 +453,12 @@ class MenuEditor {
         // Add click handlers for menu items
         const menuItems = menusList.querySelectorAll('.menu-item');
         menuItems.forEach(item => {
-            item.addEventListener('click', () => {
+            item.addEventListener('click', async () => {
                 const menuId = item.dataset.menuId;
                 if (menuId !== this.currentMenuId) {
                     const menu = menus.find(m => m.id === menuId);
                     if (menu) {
-                        this.loadMenu(menu);
+                        await this.loadMenu(menu);
                     }
                 }
             });
@@ -2266,7 +2266,7 @@ class MenuEditor {
         localStorage.setItem(userKey, JSON.stringify(filteredMenus));
     }
     
-    loadMenu(menuId) {
+    async loadMenu(menuId, loadFromServer = true) {
         const menus = this.getUserMenus();
         const menu = menus.find(m => m.id === menuId);
         
@@ -2280,11 +2280,46 @@ class MenuEditor {
             this.publishedSubtitle = menu.publishedSubtitle || null;
             this.menuLogo = menu.menuLogo || null;
             this.logoSize = menu.logoSize || 'medium';
-            this.backgroundType = menu.backgroundType || 'none';
-            this.backgroundValue = menu.backgroundValue || null;
-            this.fontFamily = menu.fontFamily || 'Inter';
-            this.colorPalette = menu.colorPalette || 'classic';
-            this.navigationTheme = menu.navigationTheme || 'modern';
+            
+            // Load styling settings from localStorage first
+            // Check both flat properties and nested settings structure
+            const settings = menu.settings || {};
+            this.backgroundType = menu.backgroundType || settings.backgroundType || 'none';
+            this.backgroundValue = menu.backgroundValue || settings.backgroundValue || null;
+            this.fontFamily = menu.fontFamily || settings.fontFamily || 'Inter';
+            this.colorPalette = menu.colorPalette || settings.colorPalette || 'classic';
+            this.navigationTheme = menu.navigationTheme || settings.navigationTheme || 'modern';
+            console.log('Menu switch - loaded navigationTheme from localStorage:', this.navigationTheme, 'from menu.navigationTheme:', menu.navigationTheme, 'settings.navigationTheme:', settings.navigationTheme);
+            
+            // Only load from server if this is an initial menu switch (not during saves/updates)
+            if (loadFromServer && this.publishedSlug) {
+                console.log('Menu is published, loading settings from server for slug:', this.publishedSlug);
+                try {
+                    const response = await fetch(`/api/menu/${this.publishedSlug}`);
+                    if (response.ok) {
+                        const publishedData = await response.json();
+                        console.log('Loaded published menu data:', publishedData);
+                        
+                        // Override with published styling settings
+                        this.backgroundType = publishedData.backgroundType || this.backgroundType;
+                        this.backgroundValue = publishedData.backgroundValue || this.backgroundValue;
+                        this.fontFamily = publishedData.fontFamily || this.fontFamily;
+                        this.colorPalette = publishedData.colorPalette || this.colorPalette;
+                        this.navigationTheme = publishedData.navigationTheme || this.navigationTheme;
+                        this.menuLogo = publishedData.menuLogo || this.menuLogo;
+                        this.logoSize = publishedData.logoSize || this.logoSize;
+                        
+                        console.log('Updated navigationTheme from published data:', this.navigationTheme);
+                        
+                        // Also load sections from published if they exist and are different
+                        if (publishedData.sections) {
+                            this.sections = publishedData.sections;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading published menu settings:', error);
+                }
+            }
             
             this.renderMenu();
             this.updateSidePreview();
@@ -2297,6 +2332,7 @@ class MenuEditor {
             this.applyBackground();
             this.applyFontFamily();
             this.applyColorPalette();
+            this.applyNavigationTheme();
         }
     }
     
@@ -2318,6 +2354,16 @@ class MenuEditor {
             publishedSubtitle: this.publishedSubtitle,
             menuLogo: this.menuLogo,
             logoSize: this.logoSize,
+            // Store styling properties in settings object to match loading expectations
+            settings: {
+                backgroundType: this.backgroundType,
+                backgroundValue: this.backgroundValue,
+                fontFamily: this.fontFamily,
+                colorPalette: this.colorPalette,
+                navigationTheme: this.navigationTheme,
+                logoUrl: this.menuLogo
+            },
+            // Also keep flat properties for backward compatibility
             backgroundType: this.backgroundType,
             backgroundValue: this.backgroundValue,
             fontFamily: this.fontFamily,
@@ -2326,12 +2372,15 @@ class MenuEditor {
             status: this.publishedSlug ? 'published' : 'draft'
         };
         
+        console.log('Saving menu with navigationTheme:', this.navigationTheme);
+        
         // Get existing menu to preserve other properties
         const menus = this.getUserMenus();
         const existingMenu = menus.find(m => m.id === this.currentMenuId);
         
         if (existingMenu) {
             Object.assign(existingMenu, menu);
+            console.log('Updated existing menu:', existingMenu);
             this.saveUserMenu(existingMenu);
         } else {
             menu.createdAt = new Date().toISOString();
@@ -2426,16 +2475,16 @@ class MenuEditor {
         
         // Attach click listeners to menu items
         menusList.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', (e) => {
+            item.addEventListener('click', async (e) => {
                 if (!e.target.closest('.menu-actions')) {
                     const menuId = item.getAttribute('data-menu-id');
-                    this.switchToMenu(menuId);
+                    await this.switchToMenu(menuId);
                 }
             });
         });
     }
     
-    switchToMenu(menuId) {
+    async switchToMenu(menuId) {
         if (menuId === this.currentMenuId) {
             this.closeSidebar();
             return;
@@ -2445,7 +2494,7 @@ class MenuEditor {
         this.saveCurrentMenu();
         
         // Load new menu
-        this.loadMenu(menuId);
+        await this.loadMenu(menuId);
         this.closeSidebar();
     }
     
@@ -2715,6 +2764,18 @@ class MenuEditor {
             this.backgroundValue = menuData.backgroundValue || null;
             this.fontFamily = menuData.fontFamily || 'Inter';
             this.colorPalette = menuData.colorPalette || 'classic';
+            this.navigationTheme = menuData.navigationTheme || 'modern';
+            
+            // Apply the restored styles
+            this.applyBackground();
+            this.applyFontFamily();
+            this.applyColorPalette();
+            this.applyNavigationTheme();
+            this.updateLogoDisplay();
+            this.updateBackgroundSelection();
+            this.updateFontSelection();
+            this.updateColorSelection();
+            this.updateNavigationSelection();
             
             // Re-render the editor
             this.renderMenuEditor();
@@ -3333,7 +3394,6 @@ class MenuEditor {
     selectFontFamily(fontFamily) {
         this.fontFamily = fontFamily;
         this.applyFontFamily();
-        this.updateFontSelection();
         this.markAsChanged();
         this.saveToStorage();
         
@@ -3342,10 +3402,12 @@ class MenuEditor {
             this.updateSidePreview();
         }
         
-        // Close dropdown
-        this.fontDropdownOpen = false;
-        document.getElementById('font-dropdown').style.display = 'none';
-        document.getElementById('font-options').classList.remove('active');
+        // Close dropdown with a delay to show selection feedback
+        setTimeout(() => {
+            this.fontDropdownOpen = false;
+            document.getElementById('font-dropdown').style.display = 'none';
+            document.getElementById('font-options').classList.remove('active');
+        }, 400);
     }
     
     applyFontFamily() {
@@ -3418,8 +3480,9 @@ class MenuEditor {
     
     selectColorPalette(palette) {
         this.colorPalette = palette;
+        
+        // Apply changes immediately
         this.applyColorPalette();
-        this.updateColorSelection();
         this.markAsChanged();
         this.saveToStorage();
         
@@ -3428,10 +3491,12 @@ class MenuEditor {
             this.updateSidePreview();
         }
         
-        // Close dropdown
-        this.colorDropdownOpen = false;
-        document.getElementById('color-dropdown').style.display = 'none';
-        document.getElementById('color-options').classList.remove('active');
+        // Close dropdown with a delay to show selection feedback
+        setTimeout(() => {
+            this.colorDropdownOpen = false;
+            document.getElementById('color-dropdown').style.display = 'none';
+            document.getElementById('color-options').classList.remove('active');
+        }, 400);
     }
     
     applyColorPalette() {
@@ -3525,7 +3590,6 @@ class MenuEditor {
     selectNavigationTheme(theme) {
         this.navigationTheme = theme;
         this.applyNavigationTheme();
-        this.updateNavigationSelection();
         this.markAsChanged();
         this.saveToStorage();
         
@@ -3534,13 +3598,16 @@ class MenuEditor {
             this.updateSidePreview();
         }
         
-        // Close dropdown
-        this.navigationDropdownOpen = false;
-        document.getElementById('navigation-dropdown').style.display = 'none';
-        document.getElementById('navigation-options').classList.remove('active');
+        // Close dropdown with a delay to show selection feedback
+        setTimeout(() => {
+            this.navigationDropdownOpen = false;
+            document.getElementById('navigation-dropdown').style.display = 'none';
+            document.getElementById('navigation-options').classList.remove('active');
+        }, 400);
     }
     
     applyNavigationTheme() {
+        console.log('Applying navigation theme:', this.navigationTheme);
         // Apply theme to all navigation elements
         const navigationElements = document.querySelectorAll('.preview-navigation');
         
@@ -3837,8 +3904,26 @@ MenuEditor.prototype.markAsChanged = function() {
     }, 2000);
 };
 
-MenuEditor.prototype.loadMenu = function(menu) {
-    if (!menu) return;
+MenuEditor.prototype.loadMenu = function(menuOrId) {
+    if (!menuOrId) return;
+    
+    // Handle both menuId (string) and menu object
+    let menu;
+    if (typeof menuOrId === 'string') {
+        // It's a menuId, find the menu in user menus
+        const menus = this.getUserMenus();
+        menu = menus.find(m => m.id === menuOrId);
+        if (!menu) {
+            console.error('Menu not found with ID:', menuOrId);
+            return;
+        }
+        console.log('Loading menu by ID:', menuOrId, 'found menu:', menu.name);
+        console.log('Menu from localStorage:', menu);
+    } else {
+        // It's already a menu object
+        menu = menuOrId;
+        console.log('Loading menu object:', menu.name);
+    }
     
     console.log('Loading menu:', menu.name, 'Published data:', {
         publishedSlug: menu.publishedSlug,
@@ -3875,20 +3960,30 @@ MenuEditor.prototype.loadMenu = function(menu) {
     
     console.log('Loaded menu with', this.sections.length, 'sections, sectionCounter set to:', this.sectionCounter);
     
-    // Load settings
+    // Load settings - check both settings object and direct properties
     const settings = menu.settings || {};
-    this.backgroundType = settings.backgroundType || 'none';
-    this.backgroundValue = settings.backgroundValue || null;
-    this.fontFamily = settings.fontFamily || 'Inter';
-    this.colorPalette = settings.colorPalette || 'classic';
-    this.navigationTheme = settings.navigationTheme || 'modern';
-    this.menuLogo = settings.logoUrl || null;
+    this.backgroundType = menu.backgroundType || settings.backgroundType || 'none';
+    this.backgroundValue = menu.backgroundValue || settings.backgroundValue || null;
+    this.fontFamily = menu.fontFamily || settings.fontFamily || 'Inter';
+    this.colorPalette = menu.colorPalette || settings.colorPalette || 'classic';
+    this.navigationTheme = menu.navigationTheme || settings.navigationTheme || 'modern';
+    this.menuLogo = menu.menuLogo || settings.logoUrl || null;
+    this.logoSize = menu.logoSize || 'medium';
+    
+    console.log('Prototype loadMenu - loaded navigationTheme:', this.navigationTheme, 'from menu.navigationTheme:', menu.navigationTheme, 'settings.navigationTheme:', settings.navigationTheme);
+    console.log('Full menu object:', JSON.stringify(menu, null, 2));
     
     // Apply loaded settings
     this.applyBackground();
     this.applyFontFamily();
     this.applyColorPalette();
     this.applyNavigationTheme();
+    
+    // Update UI selections
+    this.updateBackgroundSelection();
+    this.updateFontSelection();
+    this.updateColorSelection();
+    this.updateNavigationSelection();
     
     if (this.menuLogo) {
         // Logo already loaded, just update display
@@ -3933,12 +4028,21 @@ MenuEditor.prototype.selectFontFamily = function(fontFamily) {
     this.fontFamily = fontFamily;
     this.applyFontFamily();
     this.markAsChanged();
+    this.saveToStorage();
 };
 
 MenuEditor.prototype.selectColorPalette = function(palette) {
     this.colorPalette = palette;
     this.applyColorPalette();
     this.markAsChanged();
+    this.saveToStorage();
+};
+
+MenuEditor.prototype.selectNavigationTheme = function(theme) {
+    this.navigationTheme = theme;
+    this.applyNavigationTheme();
+    this.markAsChanged();
+    this.saveToStorage();
 };
 
 MenuEditor.prototype.applyBackground = function() {
@@ -4392,6 +4496,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.font-option').forEach(option => {
         option.addEventListener('click', () => {
             const fontFamily = option.dataset.font;
+            
+            // Immediately update visual selection
+            document.querySelectorAll('.font-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            option.classList.add('selected');
+            
+            // Then call the selection method
             menuEditor.selectFontFamily(fontFamily);
         });
     });
@@ -4409,6 +4521,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.palette-option').forEach(option => {
         option.addEventListener('click', () => {
             const palette = option.dataset.palette;
+            
+            // Immediately update visual selection
+            document.querySelectorAll('.palette-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            option.classList.add('selected');
+            
+            // Then call the selection method
             menuEditor.selectColorPalette(palette);
         });
     });
@@ -4426,6 +4546,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.theme-option').forEach(option => {
         option.addEventListener('click', () => {
             const theme = option.dataset.theme;
+            
+            // Immediately update visual selection
+            document.querySelectorAll('.theme-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            option.classList.add('selected');
+            
+            // Then call the selection method
             menuEditor.selectNavigationTheme(theme);
         });
     });

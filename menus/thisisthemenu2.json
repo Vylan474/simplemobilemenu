@@ -170,8 +170,8 @@
   "backgroundValue": "/uploads/backgrounds/bg-1756688636590-810874170.png",
   "fontFamily": "Montserrat",
   "colorPalette": "sunset",
-  "navigationTheme": "glass",
-  "menuLogo": null,
+  "navigationTheme": "minimal",
+  "menuLogo": "/uploads/logos/logo-1756696249440-199730389.png",
   "logoSize": "medium",
   "uploadedBackgrounds": [
     {
@@ -191,6 +191,6 @@
     }
   ],
   "publishedAt": "2025-09-01T00:23:59.135Z",
-  "updatedAt": "2025-09-01T01:08:54.369Z",
+  "updatedAt": "2025-09-01T03:52:49.945Z",
   "version": "1.0"
 }
