@@ -1150,10 +1150,10 @@ class MenuEditor {
                         <span class="section-type-badge">${section.type}</span>
                     </div>
                     <div class="section-controls">
-                        <button onclick="menuEditor.openSectionModal(${section.id})" title="Edit Section">
+                        <button class="edit-section-btn" data-section-id="${section.id}" title="Edit Section">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button onclick="menuEditor.deleteSection(${section.id})" title="Delete Section">
+                        <button class="delete-section-btn" data-section-id="${section.id}" title="Delete Section">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -1162,16 +1162,16 @@ class MenuEditor {
                     <div class="column-headers ${gridClass}" data-section-id="${section.id}">
                         ${section.columns.map(column => `
                             <div class="column-header" data-column="${column}">
-                                <span class="column-name" onclick="menuEditor.editColumnName(${section.id}, '${column}')">${column}</span>
+                                <span class="column-name edit-column-btn" data-section-id="${section.id}" data-column="${column}">${column}</span>
                                 <div class="column-controls">
-                                    <i class="fas fa-edit column-edit" onclick="menuEditor.editColumnName(${section.id}, '${column}')" title="Rename Column"></i>
-                                    ${section.columns.length > 1 ? `<i class="fas fa-trash column-delete" onclick="menuEditor.deleteColumn(${section.id}, '${column}')" title="Delete Column"></i>` : ''}
+                                    <i class="fas fa-edit column-edit edit-column-btn" data-section-id="${section.id}" data-column="${column}" title="Rename Column"></i>
+                                    ${section.columns.length > 1 ? `<i class="fas fa-trash column-delete delete-column-btn" data-section-id="${section.id}" data-column="${column}" title="Delete Column"></i>` : ''}
                                     <i class="fas fa-grip-vertical drag-handle" title="Drag to Reorder"></i>
                                 </div>
                             </div>
                         `).join('')}
                         <div class="add-column-header">
-                            <button class="add-column-btn" onclick="menuEditor.openAddColumnModal(${section.id})" title="Add Column">
+                            <button class="add-column-btn" data-section-id="${section.id}" title="Add Column">
                                 <i class="fas fa-plus"></i> Add Column
                             </button>
                         </div>
@@ -1435,6 +1435,35 @@ class MenuEditor {
                 const column = e.target.dataset.column;
                 const value = e.target.value;
                 this.updateMenuItem(sectionId, itemIndex, column, value);
+            }
+        });
+
+        // Handle column-related buttons
+        document.addEventListener('click', (e) => {
+            // Handle edit column name
+            if (e.target.closest('.edit-column-btn')) {
+                const button = e.target.closest('.edit-column-btn');
+                const sectionId = parseInt(button.dataset.sectionId);
+                const column = button.dataset.column;
+                console.log('✏️ Edit Column clicked for section:', sectionId, 'column:', column);
+                this.editColumnName(sectionId, column);
+            }
+
+            // Handle delete column
+            if (e.target.closest('.delete-column-btn')) {
+                const button = e.target.closest('.delete-column-btn');
+                const sectionId = parseInt(button.dataset.sectionId);
+                const column = button.dataset.column;
+                console.log('🗑️ Delete Column clicked for section:', sectionId, 'column:', column);
+                this.deleteColumn(sectionId, column);
+            }
+
+            // Handle add column
+            if (e.target.closest('.add-column-btn')) {
+                const button = e.target.closest('.add-column-btn');
+                const sectionId = parseInt(button.dataset.sectionId);
+                console.log('➕ Add Column clicked for section:', sectionId);
+                this.openAddColumnModal(sectionId);
             }
         });
     }
