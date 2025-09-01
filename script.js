@@ -614,10 +614,10 @@ class MenuEditor {
         
         // Background upload functionality
         addEventListenerSafely('upload-background-btn', 'click', () => {
-            const input = document.getElementById('background-upload-input');
+            const input = document.getElementById('background-upload');
             if (input) input.click();
         });
-        addEventListenerSafely('background-upload-input', 'change', (e) => {
+        addEventListenerSafely('background-upload', 'change', (e) => {
             if (e.target.files && e.target.files[0]) {
                 this.handleBackgroundUpload(e.target.files[0]);
             }
