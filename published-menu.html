@@ -504,19 +504,71 @@
                 if (backgroundType === 'image' && backgroundValue) {
                     // Ensure the path starts with / to be relative to the server root
                     const imagePath = backgroundValue.startsWith('/') ? backgroundValue : `/${backgroundValue}`;
+                    
+                    // Apply background with proper mobile-friendly settings
                     document.body.style.backgroundImage = `url("${imagePath}")`;
                     document.body.style.backgroundSize = 'cover';
-                    document.body.style.backgroundPosition = 'center';
+                    document.body.style.backgroundPosition = 'center center';
                     document.body.style.backgroundRepeat = 'no-repeat';
-                    document.body.style.backgroundAttachment = 'fixed';
+                    // Use 'scroll' instead of 'fixed' for better mobile performance
+                    document.body.style.backgroundAttachment = 'scroll';
+                    
+                    // Ensure the background covers the full viewport
+                    document.body.style.minHeight = '100vh';
+                    document.documentElement.style.minHeight = '100vh';
+                    
+                    // Add CSS to prevent background from moving with content
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        body {
+                            background-attachment: scroll !important;
+                        }
+                        
+                        /* On larger screens, use fixed attachment for parallax effect */
+                        @media (min-width: 768px) {
+                            body {
+                                background-attachment: fixed !important;
+                            }
+                        }
+                        
+                        /* Ensure content scrolls over the background */
+                        .published-menu-container {
+                            position: relative;
+                            z-index: 1;
+                        }
+                    `;
+                    
+                    // Remove existing background style if it exists
+                    const existingStyle = document.getElementById('background-style');
+                    if (existingStyle) {
+                        existingStyle.remove();
+                    }
+                    
+                    style.id = 'background-style';
+                    document.head.appendChild(style);
+                    
                 } else if (backgroundType === 'color' && backgroundValue) {
                     document.body.style.backgroundColor = backgroundValue;
                     document.body.style.backgroundImage = '';
+                    
+                    // Remove background style if it exists
+                    const existingStyle = document.getElementById('background-style');
+                    if (existingStyle) {
+                        existingStyle.remove();
+                    }
                 } else {
                     // Reset to default
                     document.body.style.background = '';
                     document.body.style.backgroundImage = '';
                     document.body.style.backgroundColor = '';
+                    document.body.style.minHeight = '';
+                    document.documentElement.style.minHeight = '';
+                    
+                    // Remove background style if it exists
+                    const existingStyle = document.getElementById('background-style');
+                    if (existingStyle) {
+                        existingStyle.remove();
+                    }
                 }
             }
             

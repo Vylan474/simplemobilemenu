@@ -3561,17 +3561,27 @@ class MenuEditor {
         switch (this.backgroundType) {
             case 'image':
                 element.style.backgroundImage = `url('${this.backgroundValue}')`;
-                // Check if this is in the preview modal
+                element.style.backgroundRepeat = 'no-repeat';
+                
+                // Check if this is in the preview modal (mobile preview)
                 if (element.closest('#preview-modal')) {
                     element.style.backgroundSize = 'contain'; // Scale entire image to fit phone screen
                     element.style.backgroundPosition = 'top center';
                     element.style.backgroundAttachment = 'local';
                 } else {
                     element.style.backgroundSize = 'cover';
-                    element.style.backgroundPosition = 'center';
-                    element.style.backgroundAttachment = 'fixed';
+                    element.style.backgroundPosition = 'center center';
+                    // Use scroll on mobile, fixed on desktop for better performance
+                    const isMobile = window.innerWidth < 768;
+                    element.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed';
+                    
+                    // Add mobile-specific styles via CSS for better performance
+                    if (isMobile) {
+                        element.style.minHeight = '100vh';
+                        // Ensure content scrolls over background
+                        element.style.position = 'relative';
+                    }
                 }
-                element.style.backgroundRepeat = 'no-repeat';
                 break;
             case 'color':
                 element.style.backgroundColor = this.backgroundValue;
