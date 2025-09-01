@@ -173,6 +173,9 @@
                 // Generate navigation
                 this.generateNavigation();
                 
+                // Apply navigation theme
+                this.applyNavigationTheme();
+                
                 // Initialize scroll animations
                 this.initializeScrollAnimations();
             }
@@ -521,6 +524,124 @@
                         el.style.whiteSpace = 'nowrap';
                     }
                 });
+            }
+            
+            applyNavigationTheme() {
+                // Get navigation theme from menu data
+                console.log('Full menu data:', this.menuData);
+                console.log('navigationTheme in menu data:', this.menuData.navigationTheme);
+                const navigationTheme = this.menuData.navigationTheme || 'modern';
+                console.log('Applying navigation theme:', navigationTheme);
+                
+                // Apply theme class to navigation element
+                const navigation = document.querySelector('.preview-navigation');
+                if (navigation) {
+                    console.log('Found navigation element, applying theme class:', `theme-${navigationTheme}`);
+                    // Remove existing theme classes
+                    navigation.classList.remove('theme-modern', 'theme-glass', 'theme-minimal');
+                    // Add new theme class
+                    navigation.classList.add(`theme-${navigationTheme}`);
+                    console.log('Navigation classes after update:', navigation.className);
+                } else {
+                    console.log('Navigation element not found!');
+                }
+                
+                // Apply color palette to navigation
+                this.applyColorsToNavigation();
+            }
+            
+            applyColorsToNavigation() {
+                // Get current color palette
+                const palette = this.getColorPalette(this.menuData.colorPalette || 'classic');
+                if (!palette) return;
+                
+                // Apply colors to navigation elements
+                const navigation = document.querySelector('.preview-navigation');
+                if (navigation) {
+                    // Set CSS custom properties for navigation theming
+                    navigation.style.setProperty('--nav-primary-color', palette.primaryText);
+                    navigation.style.setProperty('--nav-secondary-color', palette.secondaryText);
+                    navigation.style.setProperty('--nav-accent-color', palette.accent);
+                    navigation.style.setProperty('--nav-background-color', palette.background);
+                    navigation.style.setProperty('--nav-header-color', palette.headers);
+                }
+            }
+            
+            getColorPalette(paletteName) {
+                const colorPalettes = {
+                    classic: {
+                        primaryText: '#2c3e50',
+                        secondaryText: '#7f8c8d',
+                        headers: '#34495e',
+                        accent: '#27ae60',
+                        background: '#ecf0f1'
+                    },
+                    ocean: {
+                        primaryText: '#1e3a5f',
+                        secondaryText: '#5a6c7d',
+                        headers: '#2c5282',
+                        accent: '#3182ce',
+                        background: '#ebf8ff'
+                    },
+                    forest: {
+                        primaryText: '#1a202c',
+                        secondaryText: '#4a5568',
+                        headers: '#2d3748',
+                        accent: '#38a169',
+                        background: '#f0fff4'
+                    },
+                    sunset: {
+                        primaryText: '#742a2a',
+                        secondaryText: '#a0616a',
+                        headers: '#9c2a2a',
+                        accent: '#e53e3e',
+                        background: '#fffaf0'
+                    },
+                    monochrome: {
+                        primaryText: '#1a1a1a',
+                        secondaryText: '#4a4a4a',
+                        headers: '#2d2d2d',
+                        accent: '#000000',
+                        background: '#f7f7f7'
+                    },
+                    wine: {
+                        primaryText: '#4c1d95',
+                        secondaryText: '#6b46c1',
+                        headers: '#581c87',
+                        accent: '#7c3aed',
+                        background: '#faf5ff'
+                    },
+                    cream: {
+                        primaryText: '#2d2a24',
+                        secondaryText: '#6d6658',
+                        headers: '#3d3832',
+                        accent: '#c9a96e',
+                        background: '#f8f6f0'
+                    },
+                    pearl: {
+                        primaryText: '#1a1a1a',
+                        secondaryText: '#4a4a4a',
+                        headers: '#2d2d2d',
+                        accent: '#a8a8a8',
+                        background: '#f7f7f7'
+                    },
+                    mint: {
+                        primaryText: '#1a2e05',
+                        secondaryText: '#2d5016',
+                        headers: '#365f1f',
+                        accent: '#4ade80',
+                        background: '#f0fdf4'
+                    },
+                    blush: {
+                        primaryText: '#2d1b1b',
+                        secondaryText: '#5d3838',
+                        headers: '#4a2c2c',
+                        accent: '#dc2626',
+                        background: '#fef7f7'
+                    }
+                };
+                
+                return colorPalettes[paletteName] || colorPalettes.classic;
             }
             
             ensurePriceAlignment() {

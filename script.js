@@ -201,6 +201,9 @@ class MenuEditor {
         // Initialize authentication and user data
         this.initializeAuth();
         
+        // Initialize user and load menu from server
+        this.initializeUser();
+        
         // Initialize dark mode
         this.initializeDarkMode();
         
@@ -311,6 +314,7 @@ class MenuEditor {
         this.backgroundValue = menuData.backgroundValue || null;
         this.fontFamily = menuData.fontFamily || 'Inter';
         this.colorPalette = menuData.colorPalette || 'classic';
+        this.navigationTheme = menuData.navigationTheme || 'modern';
         
         // Update UI
         document.getElementById('current-menu-name').textContent = menuData.name;
@@ -323,6 +327,7 @@ class MenuEditor {
             this.applyBackground();
             this.applyFontFamily();
             this.applyColorPalette();
+            this.applyNavigationTheme();
         }, 100);
     }
     
@@ -340,6 +345,7 @@ class MenuEditor {
             status: 'draft',
             fontFamily: 'Inter',
             colorPalette: 'classic',
+            navigationTheme: 'modern',
             backgroundType: 'none',
             backgroundValue: null,
             menuLogo: null,
@@ -2075,13 +2081,59 @@ class MenuEditor {
         // Initialize color palette display
         this.updateColorSelection();
         
+        // Initialize navigation theme display
+        this.updateNavigationSelection();
+        
         // Apply background, font, and colors after a short delay to ensure DOM is ready
         setTimeout(() => {
             this.applyBackground();
             this.applyFontFamily();
             this.applyColorPalette();
             this.initializeDarkMode();
+            
+            // Load the last published menu from server AFTER initialization
+            this.loadMenuFromServer('thisisthemenu2');
         }, 100);
+    }
+    
+    async loadMenuFromServer(slug) {
+        try {
+            const response = await fetch(`/api/menu/${slug}`);
+            
+            if (!response.ok) {
+                return;
+            }
+            
+            const menuData = await response.json();
+            
+            // Load the styling options from the server data
+            this.backgroundType = menuData.backgroundType || 'none';
+            this.backgroundValue = menuData.backgroundValue || null;
+            this.fontFamily = menuData.fontFamily || 'Inter';
+            this.colorPalette = menuData.colorPalette || 'classic';
+            this.navigationTheme = menuData.navigationTheme || 'modern';
+            
+            // Update all the UI selections
+            this.updateBackgroundSelection();
+            this.updateFontSelection();
+            this.updateColorSelection();
+            this.updateNavigationSelection();
+            
+            // Apply the loaded styles
+            this.applyBackground();
+            this.applyFontFamily();
+            this.applyColorPalette();
+            this.applyNavigationTheme();
+            
+            // Load sections if available
+            if (menuData.sections) {
+                this.sections = menuData.sections;
+                this.renderMenu();
+            }
+            
+        } catch (error) {
+            console.error('Error loading menu from server:', error);
+        }
     }
     
     initializeSidebarSections() {
@@ -2191,6 +2243,7 @@ class MenuEditor {
             this.updateBackgroundSelection();
             this.updateFontSelection();
             this.updateColorSelection();
+            this.updateNavigationSelection();
             this.applyBackground();
             this.applyFontFamily();
             this.applyColorPalette();
@@ -2721,14 +2774,19 @@ class MenuEditor {
     
     // === BACKGROUND CUSTOMIZATION ===
     
-    toggleBackgroundDropdown() {
-        const dropdown = document.getElementById('background-dropdown');
-        this.backgroundDropdownOpen = !this.backgroundDropdownOpen;
-        dropdown.style.display = this.backgroundDropdownOpen ? 'block' : 'none';
+    highlightCurrentBackgroundSelection() {
+        // Clear all previous selections
+        const allOptions = document.querySelectorAll('.background-option');
+        allOptions.forEach(option => option.classList.remove('selected'));
         
-        // Update button state
-        const button = document.getElementById('background-options');
-        button.classList.toggle('active', this.backgroundDropdownOpen);
+        // Highlight current selection
+        if (this.backgroundType === 'none') {
+            const noneOption = document.querySelector('.background-option[data-type="none"]');
+            if (noneOption) noneOption.classList.add('selected');
+        } else if (this.backgroundType === 'image' && this.backgroundValue) {
+            const imageOption = document.querySelector(`.background-option[data-value="${this.backgroundValue}"]`);
+            if (imageOption) imageOption.classList.add('selected');
+        }
     }
     
     selectBackgroundImage(imagePath) {
@@ -2825,6 +2883,11 @@ class MenuEditor {
         // Update button state
         const button = document.getElementById('background-options');
         button.classList.toggle('active', this.backgroundDropdownOpen);
+        
+        // Highlight current selection when dropdown opens
+        if (this.backgroundDropdownOpen) {
+            this.highlightCurrentBackgroundSelection();
+        }
     }
     
     selectBackgroundImage(imagePath) {
@@ -2960,6 +3023,23 @@ class MenuEditor {
         // Update button state
         const button = document.getElementById('font-options');
         button.classList.toggle('active', this.fontDropdownOpen);
+        
+        // Highlight current selection when dropdown opens
+        if (this.fontDropdownOpen) {
+            this.highlightCurrentFontSelection();
+        }
+    }
+    
+    highlightCurrentFontSelection() {
+        // Clear all previous selections
+        const allOptions = document.querySelectorAll('.font-option');
+        allOptions.forEach(option => option.classList.remove('selected'));
+        
+        // Highlight current selection
+        const currentOption = document.querySelector(`.font-option[data-font="${this.fontFamily}"]`);
+        if (currentOption) {
+            currentOption.classList.add('selected');
+        }
     }
     
     selectFontFamily(fontFamily) {
@@ -3029,6 +3109,23 @@ class MenuEditor {
         // Update button state
         const button = document.getElementById('color-options');
         button.classList.toggle('active', this.colorDropdownOpen);
+        
+        // Highlight current selection when dropdown opens
+        if (this.colorDropdownOpen) {
+            this.highlightCurrentColorSelection();
+        }
+    }
+    
+    highlightCurrentColorSelection() {
+        // Clear all previous selections
+        const allOptions = document.querySelectorAll('.palette-option');
+        allOptions.forEach(option => option.classList.remove('selected'));
+        
+        // Highlight current selection
+        const currentOption = document.querySelector(`.palette-option[data-palette="${this.colorPalette}"]`);
+        if (currentOption) {
+            currentOption.classList.add('selected');
+        }
     }
     
     selectColorPalette(palette) {
@@ -3118,6 +3215,23 @@ class MenuEditor {
         
         const button = document.getElementById('navigation-options');
         button.classList.toggle('active', this.navigationDropdownOpen);
+        
+        // Highlight current selection when dropdown opens
+        if (this.navigationDropdownOpen) {
+            this.highlightCurrentNavigationSelection();
+        }
+    }
+    
+    highlightCurrentNavigationSelection() {
+        // Clear all previous selections
+        const allOptions = document.querySelectorAll('.theme-option');
+        allOptions.forEach(option => option.classList.remove('selected'));
+        
+        // Highlight current selection
+        const currentOption = document.querySelector(`.theme-option[data-theme="${this.navigationTheme}"]`);
+        if (currentOption) {
+            currentOption.classList.add('selected');
+        }
     }
     
     selectNavigationTheme(theme) {
@@ -3125,10 +3239,9 @@ class MenuEditor {
         this.applyNavigationTheme();
         this.updateNavigationSelection();
         this.markAsChanged();
+        this.saveToStorage();
         
-        // Force save immediately
-        this.saveCurrentMenu();
-        
+        // Update preview if visible
         if (this.sidePreviewVisible) {
             this.updateSidePreview();
         }
@@ -3179,10 +3292,10 @@ class MenuEditor {
         // Update selected state in dropdown
         const options = document.querySelectorAll('.theme-option');
         options.forEach(option => {
-            option.classList.remove('active');
+            option.classList.remove('selected');
             
             if (option.dataset.theme === this.navigationTheme) {
-                option.classList.add('active');
+                option.classList.add('selected');
             }
         });
     }

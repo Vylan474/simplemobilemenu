@@ -3127,6 +3127,21 @@ body.dark-mode {
     background: #3a3a3a;
 }
 
+/* Dark mode selected states for all dropdown options */
+.dark-mode .background-option.selected,
+.dark-mode .font-option.selected,
+.dark-mode .palette-option.selected,
+.dark-mode .theme-option.selected {
+    border-color: #3498db;
+    background: #3a3a3a;
+    box-shadow: 0 0 0 1px rgba(52, 152, 219, 0.4);
+}
+
+.dark-mode .theme-option.selected .theme-preview {
+    background: rgba(45, 45, 45, 0.3);
+    border-color: rgba(52, 152, 219, 0.4);
+}
+
 .dark-mode .preset-column-option i {
     color: #bbb;
 }
@@ -3453,9 +3468,15 @@ body.dark-mode {
     box-shadow: var(--shadow-sm);
 }
 
-.theme-option.active {
-    border-color: var(--primary-color);
-    background: var(--primary-color-light);
+.theme-option.selected {
+    border-color: #3498db;
+    background: #e3f2fd;
+    box-shadow: 0 0 0 1px rgba(52, 152, 219, 0.2);
+}
+
+.theme-option.selected .theme-preview {
+    background: rgba(248, 249, 250, 0.3);
+    border-color: rgba(52, 152, 219, 0.3);
 }
 
 .theme-preview {

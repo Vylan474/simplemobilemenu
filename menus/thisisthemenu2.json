@@ -24,8 +24,33 @@
           "Price": "16"
         },
         {
-          "Item Name": "Caesar Salad",
-          "Description": "Crisp romaine lettuce with parmesan and croutons",
+          "Item Name": "Truffle Arancini",
+          "Description": "Creamy risotto balls with black truffle",
+          "Price": "16"
+        },
+        {
+          "Item Name": "Truffle Arancini",
+          "Description": "Creamy risotto balls with black truffle",
+          "Price": "16"
+        },
+        {
+          "Item Name": "Truffle Arancini",
+          "Description": "Creamy risotto balls with black truffle",
+          "Price": "16"
+        },
+        {
+          "Item Name": "Truffle Arancini",
+          "Description": "Creamy risotto balls with black truffle",
+          "Price": "16"
+        },
+        {
+          "Item Name": "Mozz Stick",
+          "Description": "Cheesy Delicious",
+          "Price": "10"
+        },
+        {
+          "Item Name": "Guacamole",
+          "Description": "Chips, Guac made table side",
           "Price": "12"
         }
       ]
@@ -52,15 +77,22 @@
       "type": "cocktails",
       "columns": [
         "Cocktail Name",
-        "Description",
         "Base Spirit",
+        "Description",
         "Price"
       ],
       "titleColumns": [
         "Cocktail Name",
         "Price"
       ],
-      "items": []
+      "items": [
+        {
+          "Cocktail Name": "Walnut Street Smash",
+          "Description": "Lemon, Cucumber, Basil",
+          "Base Spirit": "Vodka",
+          "Price": "32"
+        }
+      ]
     },
     {
       "id": 3,
@@ -134,7 +166,14 @@
       ]
     }
   ],
-  "publishedAt": "2025-08-30T01:31:44.810Z",
-  "updatedAt": "2025-08-30T01:31:44.811Z",
+  "backgroundType": "image",
+  "backgroundValue": "Background Images/Ivory Weave.png",
+  "fontFamily": "Montserrat",
+  "colorPalette": "forest",
+  "navigationTheme": "minimal",
+  "menuLogo": null,
+  "logoSize": "medium",
+  "publishedAt": "2025-09-01T00:01:28.613Z",
+  "updatedAt": "2025-09-01T00:01:28.613Z",
   "version": "1.0"
 }
