@@ -8,7 +8,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static('./')); // Serve static files from current directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded files
 app.use('/uploads/logos', express.static(path.join(__dirname, 'uploads', 'logos'))); // Serve uploaded logos
@@ -401,8 +402,24 @@ app.post('/api/upload/background', async (req, res) => {
         const { fileData, fileName, menuId } = req.body;
         
         if (!fileData || !fileName) {
-            return res.status(400).json({ error: 'File data and name are required' });
+            return res.status(400).json({ 
+                success: false,
+                error: 'File data and name are required' 
+            });
         }
+        
+        // Check approximate file size (base64 is ~1.33x larger than binary)
+        const approximateSize = (fileData.length * 3) / 4;
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        
+        if (approximateSize > maxSize) {
+            return res.status(413).json({ 
+                success: false,
+                error: `File too large. Maximum size is 5MB, your file is approximately ${(approximateSize / 1024 / 1024).toFixed(2)}MB` 
+            });
+        }
+        
+        console.log(`Background upload: ${fileName} (${(approximateSize / 1024 / 1024).toFixed(2)}MB)`);
         
         // For local development, just return the data URL directly
         // In production, this would be handled by the Vercel function
