@@ -3061,6 +3061,12 @@ input:checked + .slider:before {
 #dark-mode-toggle {
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+#dark-mode-toggle:hover {
+    background-color: rgba(52, 152, 219, 0.1);
 }
 
 /* Dark Mode Styles - Only affects editor UI, NOT preview areas */

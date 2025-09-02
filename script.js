@@ -5021,8 +5021,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const darkModeCheckbox = document.getElementById('dark-mode-checkbox');
     if (darkModeCheckbox) {
         darkModeCheckbox.addEventListener('change', function() {
-            menuEditor.toggleDarkMode();
+            console.log('Dark mode toggle clicked');
+            if (window.menuEditor && typeof window.menuEditor.toggleDarkMode === 'function') {
+                window.menuEditor.toggleDarkMode();
+            } else {
+                console.error('menuEditor or toggleDarkMode not available');
+            }
         });
+        
+        // Also add click handler to the entire toggle container for better UX
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('click', function(e) {
+                // Don't trigger if clicking directly on the checkbox (to avoid double toggle)
+                if (e.target.id !== 'dark-mode-checkbox' && e.target.tagName !== 'LABEL') {
+                    darkModeCheckbox.checked = !darkModeCheckbox.checked;
+                    darkModeCheckbox.dispatchEvent(new Event('change'));
+                }
+            });
+        }
     }
 });
 
