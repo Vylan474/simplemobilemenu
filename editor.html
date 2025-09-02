@@ -179,9 +179,9 @@
                                     <small>Portrait orientation works best for menu scrolling</small>
                                     <small>Formats: JPG, PNG, WEBP (max 5MB)</small>
                                 </div>
-                                <div class="upload-controls" onclick="console.log('🟡 Clicked on upload-controls div');">
-                                    <input type="file" id="background-upload" accept="image/jpeg,image/png,image/webp" style="display: none;">
-                                    <button type="button" id="upload-background-btn" class="btn btn-primary btn-small" style="pointer-events: auto; cursor: pointer;" onclick="console.log('🔴 Button clicked directly from HTML onclick'); event.stopPropagation(); document.getElementById('background-upload').click();">
+                                <div class="upload-controls">
+                                    <input type="file" id="background-upload" accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="window.menuEditor.handleBackgroundUpload(this.files[0]);">
+                                    <button type="button" id="upload-background-btn" class="btn btn-primary btn-small" style="pointer-events: auto; cursor: pointer;" onclick="document.getElementById('background-upload').click();">
                                         <i class="fas fa-upload"></i> Choose Image
                                     </button>
                                     <span id="upload-filename" class="upload-filename"></span>

@@ -612,22 +612,7 @@ class MenuEditor {
         // Logo file input
         addEventListenerSafely('logo-file-input', 'change', (event) => this.handleLogoUpload(event));
         
-        // Background upload functionality
-        addEventListenerSafely('upload-background-btn', 'click', () => {
-            console.log('🔵 Background upload button clicked');
-            const input = document.getElementById('background-upload');
-            if (input) {
-                console.log('✅ Found background-upload input, triggering click');
-                input.click();
-            } else {
-                console.error('❌ Could not find background-upload input element');
-            }
-        });
-        addEventListenerSafely('background-upload', 'change', (e) => {
-            if (e.target.files && e.target.files[0]) {
-                this.handleBackgroundUpload(e.target.files[0]);
-            }
-        });
+        // Background upload functionality is now handled inline in HTML
         addEventListenerSafely('use-uploaded-background', 'click', () => this.applyUploadedBackground());
         addEventListenerSafely('use-color-background', 'click', () => {
             const colorInput = document.getElementById('background-color-picker');
@@ -3259,32 +3244,6 @@ class MenuEditor {
         // Highlight current selection when dropdown opens
         if (this.backgroundDropdownOpen) {
             this.highlightCurrentBackgroundSelection();
-            
-            // Ensure the upload button event listener is attached
-            const uploadBtn = document.getElementById('upload-background-btn');
-            const uploadInput = document.getElementById('background-upload');
-            
-            if (uploadBtn && uploadInput) {
-                // Remove any existing listener to avoid duplicates
-                uploadBtn.replaceWith(uploadBtn.cloneNode(true));
-                const newUploadBtn = document.getElementById('upload-background-btn');
-                
-                newUploadBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('🔵 Background upload button clicked (from toggleBackgroundDropdown)');
-                    uploadInput.click();
-                });
-                
-                // Also ensure the file input change handler is attached
-                const newUploadInput = document.getElementById('background-upload');
-                newUploadInput.addEventListener('change', (e) => {
-                    console.log('📁 File selected:', e.target.files);
-                    if (e.target.files && e.target.files[0]) {
-                        this.handleBackgroundUpload(e.target.files[0]);
-                    }
-                });
-            }
         }
     }
     
