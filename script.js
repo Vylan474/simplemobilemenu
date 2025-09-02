@@ -612,7 +612,13 @@ class MenuEditor {
         // Logo file input
         addEventListenerSafely('logo-file-input', 'change', (event) => this.handleLogoUpload(event));
         
-        // Background upload functionality is now handled inline in HTML
+        // Background upload functionality
+        addEventListenerSafely('background-upload', 'change', (e) => {
+            console.log('📁 Background file selected:', e.target.files);
+            if (e.target.files && e.target.files[0]) {
+                this.handleBackgroundUpload(e.target.files[0]);
+            }
+        });
         addEventListenerSafely('use-uploaded-background', 'click', () => this.applyUploadedBackground());
         addEventListenerSafely('use-color-background', 'click', () => {
             const colorInput = document.getElementById('background-color-picker');
