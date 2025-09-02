@@ -395,7 +395,59 @@ app.post('/api/upload-background', uploadBackground.single('background'), async 
     }
 });
 
-// Logo upload endpoint
+// New JSON-based background upload endpoint (matches Vercel function)
+app.post('/api/upload/background', async (req, res) => {
+    try {
+        const { fileData, fileName, menuId } = req.body;
+        
+        if (!fileData || !fileName) {
+            return res.status(400).json({ error: 'File data and name are required' });
+        }
+        
+        // For local development, just return the data URL directly
+        // In production, this would be handled by the Vercel function
+        res.json({
+            success: true,
+            url: fileData, // Return the data URL for immediate display
+            filename: fileName
+        });
+        
+    } catch (error) {
+        console.error('Background upload error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Failed to upload background: ' + error.message 
+        });
+    }
+});
+
+// New JSON-based logo upload endpoint (matches Vercel function)
+app.post('/api/upload/logo', async (req, res) => {
+    try {
+        const { fileData, fileName, menuId } = req.body;
+        
+        if (!fileData || !fileName) {
+            return res.status(400).json({ error: 'File data and name are required' });
+        }
+        
+        // For local development, just return the data URL directly
+        // In production, this would be handled by the Vercel function
+        res.json({
+            success: true,
+            url: fileData, // Return the data URL for immediate display
+            filename: fileName
+        });
+        
+    } catch (error) {
+        console.error('Logo upload error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Failed to upload logo: ' + error.message 
+        });
+    }
+});
+
+// Logo upload endpoint (old multipart version)
 app.post('/api/upload-logo', uploadLogo.single('logo'), async (req, res) => {
     try {
         if (!req.file) {

@@ -617,6 +617,8 @@ class MenuEditor {
             console.log('📁 Background file selected:', e.target.files);
             if (e.target.files && e.target.files[0]) {
                 this.handleBackgroundUpload(e.target.files[0]);
+                // Reset the input value so the same file can be selected again if needed
+                e.target.value = '';
             }
         });
         addEventListenerSafely('use-uploaded-background', 'click', () => this.applyUploadedBackground());
@@ -3382,7 +3384,21 @@ class MenuEditor {
                 })
             });
             
-            return await response.json();
+            // Check if response is ok
+            if (!response.ok) {
+                const text = await response.text();
+                console.error('Upload failed with status:', response.status, 'Response:', text);
+                throw new Error(`Upload failed: ${response.status}`);
+            }
+            
+            // Try to parse JSON
+            const responseText = await response.text();
+            try {
+                return JSON.parse(responseText);
+            } catch (e) {
+                console.error('Failed to parse response:', responseText);
+                throw new Error('Invalid response from server');
+            }
         } catch (error) {
             console.error('Background upload error:', error);
             return { success: false, error: error.message };
