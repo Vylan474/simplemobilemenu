@@ -502,11 +502,13 @@
                 const backgroundValue = this.menuData.backgroundValue;
                 
                 if (backgroundType === 'image' && backgroundValue) {
-                    // Ensure the path starts with / to be relative to the server root
-                    const imagePath = backgroundValue.startsWith('/') ? backgroundValue : `/${backgroundValue}`;
+                    // Check if backgroundValue is a data URL (base64) or a path
+                    const imageSrc = backgroundValue.startsWith('data:') 
+                        ? backgroundValue 
+                        : (backgroundValue.startsWith('/') ? backgroundValue : `/${backgroundValue}`);
                     
                     // Apply background with proper mobile-friendly settings
-                    document.body.style.backgroundImage = `url("${imagePath}")`;
+                    document.body.style.backgroundImage = `url("${imageSrc}")`;
                     document.body.style.backgroundSize = 'cover';
                     document.body.style.backgroundPosition = 'center center';
                     document.body.style.backgroundRepeat = 'no-repeat';
