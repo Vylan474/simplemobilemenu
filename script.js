@@ -4736,6 +4736,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Background functionality event listeners
+    // NOTE: These are already added in initializeEvents() method, commenting out to avoid duplicates
+    /*
     const backgroundBtn = document.getElementById('background-options');
     if (backgroundBtn) {
         backgroundBtn.addEventListener('click', (e) => {
@@ -4743,6 +4745,7 @@ document.addEventListener('DOMContentLoaded', function() {
             menuEditor.toggleBackgroundDropdown();
         });
     }
+    */
     
     // Background image options
     const backgroundOptions = document.querySelectorAll('.background-option');
@@ -4774,6 +4777,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Removed duplicate event listeners to prevent conflicts
     
     // Font functionality event listeners
+    // NOTE: These are already added in initializeEvents() method, commenting out to avoid duplicates
+    /*
     const fontBtn = document.getElementById('font-options');
     if (fontBtn) {
         fontBtn.addEventListener('click', (e) => {
@@ -4781,10 +4786,13 @@ document.addEventListener('DOMContentLoaded', function() {
             menuEditor.toggleFontDropdown();
         });
     }
+    */
     
     // Font option selection - consolidated with main event listeners above
 
     // Color palette functionality event listeners
+    // NOTE: These are already added in initializeEvents() method, commenting out to avoid duplicates
+    /*
     const colorBtn = document.getElementById('color-options');
     if (colorBtn) {
         colorBtn.addEventListener('click', (e) => {
@@ -4792,6 +4800,7 @@ document.addEventListener('DOMContentLoaded', function() {
             menuEditor.toggleColorDropdown();
         });
     }
+    */
     
     // Color palette option selection
     document.querySelectorAll('.palette-option').forEach(option => {
@@ -4810,6 +4819,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Navigation functionality event listeners
+    // NOTE: These are already added in initializeEvents() method, commenting out to avoid duplicates
+    /*
     const navigationBtn = document.getElementById('navigation-options');
     if (navigationBtn) {
         navigationBtn.addEventListener('click', (e) => {
@@ -4817,6 +4828,7 @@ document.addEventListener('DOMContentLoaded', function() {
             menuEditor.toggleNavigationDropdown();
         });
     }
+    */
 
     // Navigation theme option selection
     document.querySelectorAll('.theme-option').forEach(option => {
