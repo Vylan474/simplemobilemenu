@@ -189,42 +189,42 @@ class MenuEditor {
             cream: {
                 name: 'Cream',
                 description: 'Warm ivory & gold tones',
-                primaryText: '#f8f6f0',      // Warm off-white for main text
-                secondaryText: '#e8e2d4',    // Cream for descriptions
-                headers: '#d4c5a9',          // Light gold for headers
-                accent: '#c9a96e',           // Gold for prices/accents
-                background: '#2d2a24',       // Dark brown for backgrounds
-                muted: '#b8ab94'            // Muted gold for muted elements
+                primaryText: '#3d2f1f',      // Dark brown for main text
+                secondaryText: '#8b7355',    // Medium brown for descriptions
+                headers: '#2c1810',          // Very dark brown for headers
+                accent: '#b8860b',           // Dark goldenrod for prices/accents
+                background: '#faf6f0',       // Cream for backgrounds
+                muted: '#a0906b'            // Muted brown for muted elements
             },
             pearl: {
                 name: 'Pearl',
                 description: 'Clean silver & whites',
-                primaryText: '#f7f7f7',      // Almost white for main text
-                secondaryText: '#e0e0e0',    // Light gray for descriptions
-                headers: '#c4c4c4',          // Silver for headers
-                accent: '#a8a8a8',           // Gray for prices/accents
-                background: '#1a1a1a',       // Dark gray for backgrounds
-                muted: '#d3d3d3'            // Light silver for muted elements
+                primaryText: '#2d2d2d',      // Dark gray for main text
+                secondaryText: '#5a5a5a',    // Medium gray for descriptions
+                headers: '#1a1a1a',          // Very dark gray for headers
+                accent: '#4169e1',           // Royal blue for prices/accents
+                background: '#f8f8f8',       // Light pearl for backgrounds
+                muted: '#888888'            // Medium gray for muted elements
             },
             mint: {
                 name: 'Mint',
                 description: 'Fresh light greens',
-                primaryText: '#f0fdf4',      // Very light green for main text
-                secondaryText: '#bbf7d0',    // Light mint for descriptions
-                headers: '#86efac',          // Medium mint for headers
-                accent: '#4ade80',           // Bright mint for prices/accents
-                background: '#1a2e05',       // Dark forest green for backgrounds
-                muted: '#a7f3d0'            // Light mint for muted elements
+                primaryText: '#064e3b',      // Dark green for main text
+                secondaryText: '#059669',    // Medium green for descriptions
+                headers: '#047857',          // Dark emerald for headers
+                accent: '#10b981',           // Bright emerald for prices/accents
+                background: '#f0fdfa',       // Very light mint for backgrounds
+                muted: '#6ee7b7'            // Light mint for muted elements
             },
             blush: {
                 name: 'Blush',
                 description: 'Soft pink & coral tones',
-                primaryText: '#fef7f7',      // Very light pink for main text
-                secondaryText: '#fecaca',    // Light pink for descriptions
-                headers: '#f87171',          // Coral for headers
-                accent: '#dc2626',           // Red for prices/accents
-                background: '#2d1b1b',       // Dark red-brown for backgrounds
-                muted: '#fbb6b6'            // Light coral for muted elements
+                primaryText: '#7c2d12',      // Dark red-brown for main text
+                secondaryText: '#dc2626',    // Red for descriptions
+                headers: '#991b1b',          // Dark red for headers
+                accent: '#f59e0b',           // Amber for prices/accents
+                background: '#fef7f6',       // Very light pink for backgrounds
+                muted: '#fca5a5'            // Light coral for muted elements
             }
         };
         
