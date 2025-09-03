@@ -4865,21 +4865,6 @@ document.addEventListener('DOMContentLoaded', function() {
             menuEditor.saveToStorage();
         });
     }
-    // Logo upload button
-    const uploadLogoBtn = document.getElementById('upload-logo');
-    if (uploadLogoBtn) {
-        uploadLogoBtn.addEventListener('click', () => {
-            menuEditor.triggerLogoUpload();
-        });
-    }
-    
-    // Logo file input
-    const logoFileInput = document.getElementById('logo-file-input');
-    if (logoFileInput) {
-        logoFileInput.addEventListener('change', (event) => {
-            menuEditor.handleLogoUpload(event);
-        });
-    }
     
     // Remove logo button
     const removeLogoBtn = document.getElementById('remove-logo');
