@@ -61,6 +61,9 @@ class MenuEditor {
         // Event delegation flag to prevent duplicate listeners
         this.globalEventListenersAttached = false;
         
+        // Event initialization flag to prevent duplicate event listeners
+        this.eventsInitialized = false;
+        
         // Change tracking
         this.hasUnsavedChanges = false;
         this.lastSavedState = null;
@@ -589,12 +592,19 @@ class MenuEditor {
     }
     
     initializeEvents() {
+        // Prevent multiple initialization
+        if (this.eventsInitialized) {
+            console.log('🚫 Events already initialized, skipping...');
+            return;
+        }
+        
+        console.log('🎯 Initializing event listeners...');
+        this.eventsInitialized = true;
+        
         // Use a more robust approach with null checking and duplicate prevention
         const addEventListenerSafely = (id, event, handler) => {
             const element = document.getElementById(id);
             if (element) {
-                // Remove existing listener to prevent duplicates
-                element.removeEventListener(event, handler);
                 element.addEventListener(event, handler);
                 console.log(`✅ Event listener added for: ${id}`);
             } else {
