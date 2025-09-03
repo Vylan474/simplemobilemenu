@@ -17,7 +17,27 @@ const CONFIG = {
     DEFAULT_MAX_MENUS: 5
 };
 
+// === LOGGING UTILITY ===
+const Logger = {
+    auth: (msg, ...args) => console.log('[AUTH]', msg, ...args),
+    menu: (msg, ...args) => console.log('[MENU]', msg, ...args),
+    section: (msg, ...args) => console.log('[SECTION]', msg, ...args),
+    item: (msg, ...args) => console.log('[ITEM]', msg, ...args),
+    upload: (msg, ...args) => console.log('[UPLOAD]', msg, ...args),
+    ui: (msg, ...args) => console.log('[UI]', msg, ...args),
+    error: (msg, ...args) => console.error('[ERROR]', msg, ...args),
+    warn: (msg, ...args) => console.warn('[WARN]', msg, ...args)
+};
+
+/**
+ * Main Menu Editor class that handles the restaurant menu editor functionality.
+ * Manages sections, menu items, styling, authentication, and publishing.
+ */
 class MenuEditor {
+    /**
+     * Initialize the MenuEditor with default state and properties.
+     * Sets up sections array, styling options, user management, and event delegation.
+     */
     constructor() {
         this.sections = [];
         this.currentSectionId = null;
@@ -243,6 +263,11 @@ class MenuEditor {
     
     // === AUTHENTICATION INTEGRATION ===
     
+    /**
+     * Initialize authentication system integration.
+     * Sets up event listeners for auth state changes and checks current authentication status.
+     * If user is authenticated, loads user data; otherwise shows auth modal.
+     */
     initializeAuth() {
         // Check authentication state
         document.addEventListener('authStateChanged', (event) => {
@@ -929,6 +954,12 @@ class MenuEditor {
         }
     }
     
+    /**
+     * Add a new empty menu item to the specified section.
+     * Creates an item with empty values for all columns in the section.
+     * 
+     * @param {number} sectionId - The ID of the section to add the item to
+     */
     addMenuItem(sectionId) {
         console.log('➕ Adding menu item to section:', sectionId);
         const section = this.sections.find(s => s.id === sectionId);
@@ -952,6 +983,12 @@ class MenuEditor {
         this.saveToStorage();
     }
     
+    /**
+     * Delete a menu item from the specified section at the given index.
+     * 
+     * @param {number} sectionId - The ID of the section containing the item
+     * @param {number} itemIndex - The index of the item to delete within the section
+     */
     deleteMenuItem(sectionId, itemIndex) {
         console.log('🗑️ Deleting menu item from section:', sectionId, 'index:', itemIndex);
         const section = this.sections.find(s => s.id === sectionId);
@@ -2288,7 +2325,14 @@ class MenuEditor {
         }
     }
     
-    
+    /**
+     * Publish the current menu to a public URL.
+     * Takes the menu data, styling, and metadata to create a published menu
+     * accessible via a public URL slug.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
     async publishMenu() {
         const slug = document.getElementById('menu-url-path').value;
         const title = document.getElementById('menu-title-publish').value || 'Our Menu';
