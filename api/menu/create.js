@@ -64,7 +64,7 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid background type' });
     }
 
-    const validFontFamilies = ['Inter', 'Playfair Display', 'Roboto', 'Montserrat', 'Open Sans'];
+    const validFontFamilies = ['Inter', 'Playfair Display', 'Roboto', 'Montserrat', 'Open Sans', 'Georgia', 'Lato'];
     if (!validFontFamilies.includes(fontFamily)) {
       return res.status(400).json({ error: 'Invalid font family' });
     }

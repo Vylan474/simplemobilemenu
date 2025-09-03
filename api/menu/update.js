@@ -85,7 +85,7 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid background type' });
     }
 
-    const validFontFamilies = ['Inter', 'Playfair Display', 'Roboto', 'Montserrat', 'Open Sans'];
+    const validFontFamilies = ['Inter', 'Playfair Display', 'Roboto', 'Montserrat', 'Open Sans', 'Georgia', 'Lato'];
     if (menuUpdates.fontFamily !== undefined && !validFontFamilies.includes(menuUpdates.fontFamily)) {
       return res.status(400).json({ error: 'Invalid font family' });
     }
@@ -115,12 +115,10 @@ module.exports = async function handler(req, res) {
 
     // Update sections if provided
     if (sections && Array.isArray(sections)) {
-      console.log(`[UPDATE] Saving ${sections.length} sections for menu ${menuId}`);
       const sectionsResult = await saveMenuSections(menuId, sections);
       if (!sectionsResult.success) {
         return res.status(500).json({ error: 'Failed to update menu sections' });
       }
-      console.log(`[UPDATE] Successfully saved sections for menu ${menuId}`);
     }
 
     res.status(200).json({ 

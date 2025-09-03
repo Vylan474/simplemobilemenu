@@ -85,8 +85,6 @@ module.exports = async function handler(req, res) {
       ORDER BY section_id
     `;
 
-    console.log(`[PUBLISH] Found ${sectionsResult.rows.length} sections for menu ${menuId}`);
-    
     const sections = sectionsResult.rows.map(section => ({
       id: section.section_id,
       name: section.name,
@@ -95,10 +93,6 @@ module.exports = async function handler(req, res) {
       titleColumns: section.title_columns,
       items: section.items
     }));
-    
-    if (sectionsResult.rows.length > 0) {
-      console.log(`[PUBLISH] First section: ${sections[0].name} with ${sections[0].items?.length || 0} items`);
-    }
 
     // Update the menu with published info
     await sql`
