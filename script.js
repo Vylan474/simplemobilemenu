@@ -237,7 +237,7 @@ class MenuEditor {
         }
     }
     
-    handleAuthChange(user) {
+    async handleAuthChange(user) {
         console.log('🔄 handleAuthChange called with user:', user);
         
         if (user && user.id) {
@@ -255,8 +255,8 @@ class MenuEditor {
             const userKey = `menuEditor_user_${user.id}`;
             localStorage.setItem(userKey, JSON.stringify(user));
             
-            this.updateUserInterface(user);
-            this.loadUserData();
+            await this.updateUserInterface(user);
+            await this.loadUserData();
             
             // Re-initialize events after authentication to ensure all elements exist
             setTimeout(() => {
@@ -4100,7 +4100,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Add authentication methods to MenuEditor prototype
 // Duplicate authentication functions removed - using the updated versions above
 
-MenuEditor.prototype.updateUserInterface = function(user) {
+MenuEditor.prototype.updateUserInterface = async function(user) {
     // Update user info in sidebar
     const userNameElement = document.getElementById('user-name');
     const userEmailElement = document.getElementById('user-email');
@@ -4120,15 +4120,15 @@ MenuEditor.prototype.updateUserInterface = function(user) {
     }
     
     // Load user's menus in sidebar
-    this.loadUserMenus();
+    await this.loadUserMenus();
 };
 
-MenuEditor.prototype.loadUserData = function() {
+MenuEditor.prototype.loadUserData = async function() {
     if (!this.currentUser) return;
     
-    const userMenus = window.authManager.getUserMenus();
+    const userMenus = await window.authManager.getUserMenus();
     
-    if (userMenus.length > 0) {
+    if (userMenus && userMenus.length > 0) {
         // Load the first menu or last edited menu
         const lastMenu = userMenus.find(menu => menu.lastEdited) || userMenus[0];
         this.loadMenu(lastMenu);
@@ -4452,18 +4452,19 @@ MenuEditor.prototype.applyColorsToContainer = function(container, palette) {
     descriptions.forEach(d => d.style.color = palette.secondaryText);
 };
 
-MenuEditor.prototype.loadUserMenus = function() {
+MenuEditor.prototype.loadUserMenus = async function() {
     if (!this.currentUser) return;
     
     const menusList = document.getElementById('menus-list');
     if (!menusList) return;
     
-    const userMenus = window.authManager.getUserMenus();
+    const userMenus = await window.authManager.getUserMenus();
     
     menusList.innerHTML = '';
     
-    if (userMenus.length === 0) {
+    if (!userMenus || userMenus.length === 0) {
         menusList.innerHTML = '<div class="no-menus">No menus yet. Create your first menu!</div>';
+        return;
     }
     
     userMenus.forEach(menu => {
