@@ -189,42 +189,42 @@ class MenuEditor {
             cream: {
                 name: 'Cream',
                 description: 'Warm ivory & gold tones',
-                primaryText: '#3d2f1f',      // Dark brown for main text
-                secondaryText: '#8b7355',    // Medium brown for descriptions
-                headers: '#2c1810',          // Very dark brown for headers
-                accent: '#b8860b',           // Dark goldenrod for prices/accents
-                background: '#faf6f0',       // Cream for backgrounds
-                muted: '#a0906b'            // Muted brown for muted elements
+                primaryText: '#f4e5d3',      // Light warm cream for main text
+                secondaryText: '#e6d0b5',    // Medium cream for descriptions
+                headers: '#f5e6d3',          // Light cream for headers
+                accent: '#ffd700',           // Bright gold for prices/accents
+                background: '#2d1810',       // Dark brown for backgrounds
+                muted: '#d4c4a8'            // Muted cream for muted elements
             },
             pearl: {
                 name: 'Pearl',
                 description: 'Clean silver & whites',
-                primaryText: '#2d2d2d',      // Dark gray for main text
-                secondaryText: '#5a5a5a',    // Medium gray for descriptions
-                headers: '#1a1a1a',          // Very dark gray for headers
-                accent: '#4169e1',           // Royal blue for prices/accents
-                background: '#f8f8f8',       // Light pearl for backgrounds
-                muted: '#888888'            // Medium gray for muted elements
+                primaryText: '#f8f8ff',      // Ghost white for main text
+                secondaryText: '#e6e6fa',    // Lavender for descriptions
+                headers: '#ffffff',          // Pure white for headers
+                accent: '#87ceeb',           // Sky blue for prices/accents
+                background: '#2c2c2c',       // Dark gray for backgrounds
+                muted: '#d3d3d3'            // Light gray for muted elements
             },
             mint: {
                 name: 'Mint',
                 description: 'Fresh light greens',
-                primaryText: '#064e3b',      // Dark green for main text
-                secondaryText: '#059669',    // Medium green for descriptions
-                headers: '#047857',          // Dark emerald for headers
-                accent: '#10b981',           // Bright emerald for prices/accents
-                background: '#f0fdfa',       // Very light mint for backgrounds
-                muted: '#6ee7b7'            // Light mint for muted elements
+                primaryText: '#f0fff0',      // Honeydew for main text
+                secondaryText: '#e0ffe0',    // Light green for descriptions
+                headers: '#f5fffa',          // Mint cream for headers
+                accent: '#00ff7f',           // Spring green for prices/accents
+                background: '#064e3b',       // Dark emerald for backgrounds
+                muted: '#b3ffcc'            // Light mint for muted elements
             },
             blush: {
                 name: 'Blush',
                 description: 'Soft pink & coral tones',
-                primaryText: '#7c2d12',      // Dark red-brown for main text
-                secondaryText: '#dc2626',    // Red for descriptions
-                headers: '#991b1b',          // Dark red for headers
-                accent: '#f59e0b',           // Amber for prices/accents
-                background: '#fef7f6',       // Very light pink for backgrounds
-                muted: '#fca5a5'            // Light coral for muted elements
+                primaryText: '#ffe4e1',      // Misty rose for main text
+                secondaryText: '#ffb6c1',    // Light pink for descriptions
+                headers: '#ffeee6',          // Seashell for headers
+                accent: '#ff69b4',           // Hot pink for prices/accents
+                background: '#4a1a1a',       // Dark maroon for backgrounds
+                muted: '#ffcccb'            // Light coral for muted elements
             }
         };
         
@@ -3983,7 +3983,11 @@ class MenuEditor {
         secondaryTextElements.forEach(el => el.style.color = palette.secondaryText);
         
         const headerElements = container.querySelectorAll('.preview-section h2, .preview-column-header');
-        headerElements.forEach(el => el.style.color = palette.headers);
+        headerElements.forEach(el => {
+            el.style.color = palette.headers;
+            // Add colored divider line using accent color
+            el.style.borderBottomColor = palette.accent;
+        });
         
         const accentElements = container.querySelectorAll('.preview-price-cell, .preview-title-price');
         accentElements.forEach(el => el.style.color = palette.accent);

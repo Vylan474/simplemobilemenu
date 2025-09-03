@@ -494,7 +494,11 @@
                 secondaryTextElements.forEach(el => el.style.color = palette.secondaryText);
                 
                 const headerElements = container.querySelectorAll('.preview-section h2');
-                headerElements.forEach(el => el.style.color = palette.headers);
+                headerElements.forEach(el => {
+                    el.style.color = palette.headers;
+                    // Add colored divider line using accent color
+                    el.style.borderBottomColor = palette.accent;
+                });
                 
                 const accentElements = container.querySelectorAll('.preview-price-cell, .preview-title-price');
                 accentElements.forEach(el => {
@@ -601,32 +605,32 @@
                         background: '#faf5ff'
                     },
                     cream: {
-                        primaryText: '#2d2a24',
-                        secondaryText: '#6d6658',
-                        headers: '#3d3832',
-                        accent: '#c9a96e',
-                        background: '#f8f6f0'
+                        primaryText: '#f4e5d3',
+                        secondaryText: '#e6d0b5',
+                        headers: '#f5e6d3',
+                        accent: '#ffd700',
+                        background: '#2d1810'
                     },
                     pearl: {
-                        primaryText: '#1a1a1a',
-                        secondaryText: '#4a4a4a',
-                        headers: '#2d2d2d',
-                        accent: '#a8a8a8',
-                        background: '#f7f7f7'
+                        primaryText: '#f8f8ff',
+                        secondaryText: '#e6e6fa',
+                        headers: '#ffffff',
+                        accent: '#87ceeb',
+                        background: '#2c2c2c'
                     },
                     mint: {
-                        primaryText: '#1a2e05',
-                        secondaryText: '#2d5016',
-                        headers: '#365f1f',
-                        accent: '#4ade80',
-                        background: '#f0fdf4'
+                        primaryText: '#f0fff0',
+                        secondaryText: '#e0ffe0',
+                        headers: '#f5fffa',
+                        accent: '#00ff7f',
+                        background: '#064e3b'
                     },
                     blush: {
-                        primaryText: '#2d1b1b',
-                        secondaryText: '#5d3838',
-                        headers: '#4a2c2c',
-                        accent: '#dc2626',
-                        background: '#fef7f7'
+                        primaryText: '#ffe4e1',
+                        secondaryText: '#ffb6c1',
+                        headers: '#ffeee6',
+                        accent: '#ff69b4',
+                        background: '#4a1a1a'
                     }
                 };
                 

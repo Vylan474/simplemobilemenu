@@ -461,36 +461,36 @@
                         muted: '#a78bfa'
                     },
                     cream: {
-                        primaryText: '#3d2f1f',
-                        secondaryText: '#8b7355',
-                        headers: '#2c1810',
-                        accent: '#b8860b',
-                        background: '#faf6f0',
-                        muted: '#a0906b'
+                        primaryText: '#f4e5d3',
+                        secondaryText: '#e6d0b5',
+                        headers: '#f5e6d3',
+                        accent: '#ffd700',
+                        background: '#2d1810',
+                        muted: '#d4c4a8'
                     },
                     pearl: {
-                        primaryText: '#2d2d2d',
-                        secondaryText: '#5a5a5a',
-                        headers: '#1a1a1a',
-                        accent: '#4169e1',
-                        background: '#f8f8f8',
-                        muted: '#888888'
+                        primaryText: '#f8f8ff',
+                        secondaryText: '#e6e6fa',
+                        headers: '#ffffff',
+                        accent: '#87ceeb',
+                        background: '#2c2c2c',
+                        muted: '#d3d3d3'
                     },
                     mint: {
-                        primaryText: '#064e3b',
-                        secondaryText: '#059669',
-                        headers: '#047857',
-                        accent: '#10b981',
-                        background: '#f0fdfa',
-                        muted: '#6ee7b7'
+                        primaryText: '#f0fff0',
+                        secondaryText: '#e0ffe0',
+                        headers: '#f5fffa',
+                        accent: '#00ff7f',
+                        background: '#064e3b',
+                        muted: '#b3ffcc'
                     },
                     blush: {
-                        primaryText: '#7c2d12',
-                        secondaryText: '#dc2626',
-                        headers: '#991b1b',
-                        accent: '#f59e0b',
-                        background: '#fef7f6',
-                        muted: '#fca5a5'
+                        primaryText: '#ffe4e1',
+                        secondaryText: '#ffb6c1',
+                        headers: '#ffeee6',
+                        accent: '#ff69b4',
+                        background: '#4a1a1a',
+                        muted: '#ffcccb'
                     }
                 };
                 
@@ -625,7 +625,11 @@
                 secondaryTextElements.forEach(el => el.style.color = palette.secondaryText);
                 
                 const headerElements = container.querySelectorAll('.preview-section h2');
-                headerElements.forEach(el => el.style.color = palette.headers);
+                headerElements.forEach(el => {
+                    el.style.color = palette.headers;
+                    // Add colored divider line using accent color
+                    el.style.borderBottomColor = palette.accent;
+                });
                 
                 const accentElements = container.querySelectorAll('.preview-price-cell, .preview-title-price');
                 accentElements.forEach(el => {
