@@ -818,7 +818,30 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
-    <script src="auth-db.js?v=20250901"></script>
-    <script src="script.js?v=20250901"></script>
+    <script>
+        // Error handler to catch script loading issues
+        window.addEventListener('error', function(e) {
+            console.error('Script error detected:', e.message, 'at', e.filename + ':' + e.lineno + ':' + e.colno);
+            console.error('Error object:', e.error);
+        });
+        
+        // Log when scripts start loading
+        console.log('Starting to load scripts...');
+    </script>
+    <script src="auth-db.js?v=20250903"></script>
+    <script src="script.js?v=20250903"></script>
+    <script>
+        // Check if scripts loaded successfully
+        setTimeout(function() {
+            console.log('Script load check:');
+            console.log('- window.authManager:', !!window.authManager);
+            console.log('- window.menuEditor:', !!window.menuEditor);
+            console.log('- MenuEditor class:', typeof MenuEditor);
+            
+            if (!window.menuEditor) {
+                console.error('MenuEditor failed to initialize! Check for errors above.');
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
