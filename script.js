@@ -2386,7 +2386,7 @@ class MenuEditor {
         };
         
         // Create default menu if none exists
-        this.initializeDefaultMenu();
+        this.initializeDefaultMenu();  // This is now async but we don't await here since initializeUser isn't async
         this.loadUserMenus();
         this.updateCurrentMenuDisplay();
         
@@ -2484,16 +2484,16 @@ class MenuEditor {
         }
     }
     
-    initializeDefaultMenu() {
+    async initializeDefaultMenu() {
         // Don't initialize if user isn't authenticated
         if (!this.currentUser || !this.currentUser.id) {
             console.log('Cannot initialize default menu: user not authenticated');
             return;
         }
         
-        const userMenus = this.getUserMenus();
+        const userMenus = await this.getUserMenus();
         
-        if (userMenus.length === 0) {
+        if (!userMenus || userMenus.length === 0) {
             // Create a default menu
             const defaultMenuId = this.generateMenuId();
             const defaultMenu = {
@@ -2513,10 +2513,12 @@ class MenuEditor {
             
             this.saveUserMenu(defaultMenu);
             this.currentMenuId = defaultMenuId;
-        } else {
-            // Load the first menu
+        } else if (userMenus[0]) {
+            // Load the first menu if it exists
             this.currentMenuId = userMenus[0].id;
             this.loadMenu(this.currentMenuId);
+        } else {
+            console.error('Unexpected state: userMenus is not empty but first element is undefined');
         }
     }
     
