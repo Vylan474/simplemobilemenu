@@ -526,8 +526,19 @@
                             background-attachment: scroll !important;
                         }
                         
+                        /* Mobile responsive background */
+                        @media (max-width: 768px) {
+                            body {
+                                background-size: cover !important;
+                                background-position: center center !important;
+                                background-repeat: no-repeat !important;
+                                background-attachment: scroll !important;
+                                min-height: 100vh !important;
+                            }
+                        }
+                        
                         /* On larger screens, use fixed attachment for parallax effect */
-                        @media (min-width: 768px) {
+                        @media (min-width: 769px) {
                             body {
                                 background-attachment: fixed !important;
                             }
@@ -666,7 +677,7 @@
                         header.insertBefore(logoElement, header.firstChild);
                     }
                     
-                    logoElement.innerHTML = `<img src="${logoData}" alt="Restaurant Logo" class="logo-${logoSize}">`;
+                    logoElement.innerHTML = `<img src="${logoData}" alt="Restaurant Logo" class="menu-logo ${logoSize}">`;
                     logoElement.style.display = 'block';
                 } else {
                     // Remove logo if it exists

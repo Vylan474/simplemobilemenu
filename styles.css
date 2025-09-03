@@ -987,6 +987,23 @@ body {
         grid-template-columns: 1fr;
         gap: 25px;
     }
+    
+    /* Mobile background optimization */
+    .published-menu-container,
+    .smartphone-content,
+    .preview-content,
+    #preview-content {
+        background-size: cover !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+        background-attachment: scroll !important;
+    }
+    
+    /* Ensure background adapts to mobile viewport */
+    .published-menu-container[style*="background-image"] {
+        min-height: 100vh;
+        background-size: cover !important;
+    }
 }
 
 .smartphone-content {
@@ -2709,6 +2726,24 @@ body .preview-navigation {
 .menu-logo.large {
     max-width: 300px;
     max-height: 180px;
+}
+
+/* Mobile responsive logo scaling */
+@media (max-width: 768px) {
+    .menu-logo {
+        max-width: min(60vw, 180px);
+        max-height: min(20vh, 100px);
+    }
+    
+    .menu-logo.small {
+        max-width: min(45vw, 120px);
+        max-height: min(15vh, 75px);
+    }
+    
+    .menu-logo.large {
+        max-width: min(80vw, 240px);
+        max-height: min(25vh, 150px);
+    }
 }
 
 /* Logo controls in editor */
