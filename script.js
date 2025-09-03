@@ -72,6 +72,7 @@ class MenuEditor {
         // Logo properties
         this.menuLogo = null;
         this.logoSize = 'medium'; // small, medium, large
+        this.logoDropdownOpen = false;
         
         // Background properties
         this.backgroundType = 'none'; // 'none', 'image', 'color'
@@ -651,8 +652,12 @@ class MenuEditor {
         addEventListenerSafely('cancel-discard', 'click', () => this.closeDiscardModal());
         
         // Styling/Customization buttons
+        addEventListenerSafely('logo-options', 'click', (e) => {
+            e.stopPropagation();
+            this.toggleLogoDropdown();
+        });
         addEventListenerSafely('upload-logo', 'click', () => this.triggerLogoUpload());
-        addEventListenerSafely('remove-logo', 'click', () => this.removeLogo());
+        addEventListenerSafely('remove-logo-thumb', 'click', () => this.removeLogo());
         addEventListenerSafely('background-options', 'click', (e) => {
             e.stopPropagation();
             this.toggleBackgroundDropdown();
@@ -672,6 +677,15 @@ class MenuEditor {
         
         // Logo file input
         addEventListenerSafely('logo-file-input', 'change', (event) => this.handleLogoUpload(event));
+        
+        // Logo size options
+        document.querySelectorAll('.size-option').forEach(option => {
+            addEventListenerSafely(option, 'click', (e) => {
+                e.stopPropagation();
+                const size = option.getAttribute('data-size');
+                this.setLogoSize(size);
+            });
+        });
         
         // Background upload functionality
         addEventListenerSafely('background-upload', 'change', (e) => {
@@ -1447,6 +1461,9 @@ class MenuEditor {
         
         // Close dropdowns when clicking outside
         document.addEventListener('click', (e) => {
+            if (!e.target.closest('.logo-controls') && this.logoDropdownOpen) {
+                this.closeOtherDropdowns('logo');
+            }
             if (!e.target.closest('.background-controls') && this.backgroundDropdownOpen) {
                 this.closeOtherDropdowns('background');
             }
@@ -3158,6 +3175,7 @@ class MenuEditor {
                 // Use the uploaded logo URL
                 this.menuLogo = uploadResponse.url;
                 this.updateLogoDisplay();
+                this.updateLogoDropdownState();
                 this.markAsChanged();
                 this.saveToStorage();
                 
@@ -3181,6 +3199,7 @@ class MenuEditor {
         
         this.menuLogo = null;
         this.updateLogoDisplay();
+        this.updateLogoDropdownState();
         this.markAsChanged();
         this.saveToStorage();
         
@@ -3203,6 +3222,48 @@ class MenuEditor {
         }
     }
     
+    toggleLogoDropdown() {
+        // Close other dropdowns first
+        this.closeOtherDropdowns('logo');
+        
+        const dropdown = document.getElementById('logo-dropdown');
+        this.logoDropdownOpen = !this.logoDropdownOpen;
+        dropdown.style.display = this.logoDropdownOpen ? 'block' : 'none';
+        
+        // Update button state
+        const button = document.getElementById('logo-options');
+        button.classList.toggle('active', this.logoDropdownOpen);
+        
+        if (this.logoDropdownOpen) {
+            this.updateLogoDropdownState();
+        }
+    }
+    
+    updateLogoDropdownState() {
+        // Update thumbnail
+        const thumbnail = document.getElementById('logo-preview-thumbnail');
+        const thumbnailImg = thumbnail.querySelector('img');
+        const sizeSection = document.getElementById('logo-size-section');
+        
+        if (this.menuLogo) {
+            thumbnailImg.src = this.menuLogo;
+            thumbnail.style.display = 'block';
+            sizeSection.style.display = 'block';
+        } else {
+            thumbnail.style.display = 'none';
+            sizeSection.style.display = 'none';
+        }
+        
+        // Update size button states
+        document.querySelectorAll('.size-option').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        const activeBtn = document.querySelector(`.size-option[data-size="${this.logoSize}"]`);
+        if (activeBtn) {
+            activeBtn.classList.add('active');
+        }
+    }
+
     setLogoSize(size) {
         this.logoSize = size;
         this.markAsChanged();
@@ -3213,11 +3274,14 @@ class MenuEditor {
             this.updateSidePreview();
         }
         
-        // Update size button states
-        document.querySelectorAll('.logo-size-btn').forEach(btn => {
+        // Update size button states in the new dropdown
+        document.querySelectorAll('.size-option').forEach(btn => {
             btn.classList.remove('active');
         });
-        document.getElementById(`logo-size-${size}`).classList.add('active');
+        const activeBtn = document.querySelector(`.size-option[data-size="${size}"]`);
+        if (activeBtn) {
+            activeBtn.classList.add('active');
+        }
     }
     
     // === BACKGROUND CUSTOMIZATION ===
@@ -3283,6 +3347,15 @@ class MenuEditor {
     }
     
     closeOtherDropdowns(except = null) {
+        // Close logo dropdown
+        if (except !== 'logo' && this.logoDropdownOpen) {
+            this.logoDropdownOpen = false;
+            const logoDropdown = document.getElementById('logo-dropdown');
+            const logoButton = document.getElementById('logo-options');
+            if (logoDropdown) logoDropdown.style.display = 'none';
+            if (logoButton) logoButton.classList.remove('active');
+        }
+        
         // Close background dropdown
         if (except !== 'background' && this.backgroundDropdownOpen) {
             this.backgroundDropdownOpen = false;

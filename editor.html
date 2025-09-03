@@ -129,15 +129,48 @@
                     <i class="fas fa-plus"></i> Add Section
                 </button>
                 <div class="logo-controls">
-                    <button id="upload-logo" class="btn btn-secondary">
-                        <i class="fas fa-image"></i> Add Logo
+                    <button id="logo-options" class="btn btn-secondary">
+                        <i class="fas fa-image"></i> Logo
                     </button>
-                    <button id="remove-logo" class="btn btn-warning" style="display: none;">
-                        <i class="fas fa-times"></i> Remove Logo
-                    </button>
-                    <div class="logo-recommendations" style="font-size: 11px; color: #666; margin-top: 5px; line-height: 1.3;">
-                        <small>Recommended: 300×150px (landscape) or 200×200px (square)</small><br>
-                        <small>Max 2MB • Formats: PNG, JPG, SVG, WEBP</small>
+                    <div id="logo-dropdown" class="logo-dropdown" style="display: none;">
+                        <div class="logo-section">
+                            <label>Upload Logo:</label>
+                            <div class="logo-upload-area">
+                                <div id="logo-preview-thumbnail" class="logo-thumbnail" style="display: none;">
+                                    <img src="" alt="Logo preview">
+                                    <button id="remove-logo-thumb" class="remove-thumbnail-btn">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <button id="upload-logo" class="btn btn-primary btn-small">
+                                    <i class="fas fa-upload"></i> Choose Logo
+                                </button>
+                                <div class="logo-recommendations" style="font-size: 11px; color: #666; margin-top: 8px; line-height: 1.4;">
+                                    <small>Recommended: 300×150px (landscape) or 200×200px (square)</small><br>
+                                    <small>Max 2MB • Formats: PNG, JPG, SVG, WEBP</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="logo-section" id="logo-size-section" style="display: none;">
+                            <label>Logo Size:</label>
+                            <div class="logo-size-options">
+                                <button class="size-option" data-size="small">
+                                    <i class="fas fa-compress"></i>
+                                    <span>Small</span>
+                                    <small>50% width</small>
+                                </button>
+                                <button class="size-option active" data-size="medium">
+                                    <i class="fas fa-expand-alt"></i>
+                                    <span>Medium</span>
+                                    <small>75% width</small>
+                                </button>
+                                <button class="size-option" data-size="large">
+                                    <i class="fas fa-expand"></i>
+                                    <span>Large</span>
+                                    <small>100% width</small>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/jpg,image/gif,image/svg+xml,image/webp" style="display: none;">
                 </div>

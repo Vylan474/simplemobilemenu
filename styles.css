@@ -2708,9 +2708,8 @@ body .preview-navigation {
 /* Logo Styles */
 .menu-logo {
     display: block;
-    max-width: 200px;
-    max-height: 120px;
-    width: auto;
+    width: 75vw;
+    max-width: 75vw;
     height: auto;
     margin: 0 auto 20px auto;
     border-radius: 8px;
@@ -2719,34 +2718,174 @@ body .preview-navigation {
 }
 
 .menu-logo.small {
-    max-width: 150px;
-    max-height: 90px;
+    width: 50vw;
+    max-width: 50vw;
+}
+
+.menu-logo.medium {
+    width: 75vw;
+    max-width: 75vw;
 }
 
 .menu-logo.large {
-    max-width: 300px;
-    max-height: 180px;
+    width: 100vw;
+    max-width: 100vw;
 }
 
-/* Mobile responsive logo scaling */
-@media (max-width: 768px) {
+/* Desktop overrides for reasonable max sizes */
+@media (min-width: 769px) {
     .menu-logo {
-        max-width: min(60vw, 180px);
-        max-height: min(20vh, 100px);
+        width: auto;
+        max-width: 300px;
+        max-height: 180px;
     }
     
     .menu-logo.small {
-        max-width: min(45vw, 120px);
-        max-height: min(15vh, 75px);
+        max-width: 200px;
+        max-height: 120px;
+    }
+    
+    .menu-logo.medium {
+        max-width: 300px;
+        max-height: 180px;
     }
     
     .menu-logo.large {
-        max-width: min(80vw, 240px);
-        max-height: min(25vh, 150px);
+        max-width: 400px;
+        max-height: 240px;
     }
 }
 
 /* Logo controls in editor */
+.logo-controls {
+    position: relative;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.logo-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    min-width: 300px;
+    margin-top: 5px;
+}
+
+.logo-section {
+    margin-bottom: 15px;
+}
+
+.logo-section:last-child {
+    margin-bottom: 0;
+}
+
+.logo-section label {
+    font-weight: 600;
+    font-size: 12px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.logo-upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-thumbnail {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background: #f9f9f9;
+}
+
+.logo-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.remove-thumbnail-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.remove-thumbnail-btn:hover {
+    background: #dc3545;
+}
+
+.logo-size-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.size-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 8px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.size-option:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+}
+
+.size-option.active {
+    border-color: #007bff;
+    background: #f0f8ff;
+}
+
+.size-option i {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.size-option span {
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.size-option small {
+    font-size: 10px;
+    color: #999;
+}
+
 .logo-preview {
     max-width: 120px;
     max-height: 80px;
@@ -3250,6 +3389,7 @@ body.dark-mode {
     background: #454545;
 }
 
+.dark-mode .logo-dropdown,
 .dark-mode .background-dropdown,
 .dark-mode .font-dropdown,
 .dark-mode .color-dropdown,
@@ -3259,6 +3399,7 @@ body.dark-mode {
     color: #e0e0e0;
 }
 
+.dark-mode .size-option,
 .dark-mode .background-option,
 .dark-mode .font-option,
 .dark-mode .palette-option,
@@ -3267,6 +3408,7 @@ body.dark-mode {
     border: 2px solid #404040;
 }
 
+.dark-mode .size-option:hover,
 .dark-mode .background-option:hover,
 .dark-mode .font-option:hover,
 .dark-mode .palette-option:hover,
@@ -3275,6 +3417,7 @@ body.dark-mode {
     background: #353535;
 }
 
+.dark-mode .logo-section label,
 .dark-mode .background-section label,
 .dark-mode .font-section label,
 .dark-mode .color-section label,
@@ -3387,6 +3530,7 @@ body.dark-mode {
 }
 
 /* Dark mode selected states for all dropdown options */
+.dark-mode .size-option.active,
 .dark-mode .background-option.selected,
 .dark-mode .font-option.selected,
 .dark-mode .palette-option.selected,
