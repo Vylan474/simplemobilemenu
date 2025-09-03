@@ -60,6 +60,51 @@ module.exports = async function handler(req, res) {
 
     const { sections, ...menuUpdates } = req.body;
 
+    // Input validation for menu updates
+    if (menuUpdates.name !== undefined) {
+      if (!menuUpdates.name || typeof menuUpdates.name !== 'string' || menuUpdates.name.trim() === '') {
+        return res.status(400).json({ error: 'Menu name must be a non-empty string' });
+      }
+      if (menuUpdates.name.trim().length > 100) {
+        return res.status(400).json({ error: 'Menu name cannot exceed 100 characters' });
+      }
+    }
+
+    if (menuUpdates.description !== undefined) {
+      if (menuUpdates.description && typeof menuUpdates.description !== 'string') {
+        return res.status(400).json({ error: 'Description must be a string' });
+      }
+      if (menuUpdates.description && menuUpdates.description.length > 500) {
+        return res.status(400).json({ error: 'Description cannot exceed 500 characters' });
+      }
+    }
+
+    // Validate enum fields if provided
+    const validBackgroundTypes = ['none', 'image', 'color'];
+    if (menuUpdates.backgroundType !== undefined && !validBackgroundTypes.includes(menuUpdates.backgroundType)) {
+      return res.status(400).json({ error: 'Invalid background type' });
+    }
+
+    const validFontFamilies = ['Inter', 'Playfair Display', 'Roboto', 'Montserrat', 'Open Sans'];
+    if (menuUpdates.fontFamily !== undefined && !validFontFamilies.includes(menuUpdates.fontFamily)) {
+      return res.status(400).json({ error: 'Invalid font family' });
+    }
+
+    const validColorPalettes = ['classic', 'modern', 'elegant', 'vibrant', 'minimal'];
+    if (menuUpdates.colorPalette !== undefined && !validColorPalettes.includes(menuUpdates.colorPalette)) {
+      return res.status(400).json({ error: 'Invalid color palette' });
+    }
+
+    const validNavigationThemes = ['modern', 'classic', 'elegant', 'minimal'];
+    if (menuUpdates.navigationTheme !== undefined && !validNavigationThemes.includes(menuUpdates.navigationTheme)) {
+      return res.status(400).json({ error: 'Invalid navigation theme' });
+    }
+
+    const validLogoSizes = ['small', 'medium', 'large'];
+    if (menuUpdates.logoSize !== undefined && !validLogoSizes.includes(menuUpdates.logoSize)) {
+      return res.status(400).json({ error: 'Invalid logo size' });
+    }
+
     // Update menu data if provided
     if (Object.keys(menuUpdates).length > 0) {
       const updateResult = await updateMenu(menuId, menuUpdates);

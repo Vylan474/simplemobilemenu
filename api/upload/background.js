@@ -43,10 +43,33 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'File data and name are required' });
     }
 
+    // Validate filename
+    if (typeof fileName !== 'string' || fileName.trim() === '') {
+      return res.status(400).json({ error: 'File name must be a non-empty string' });
+    }
+
+    // Validate file type by checking data URL format
+    const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    const dataUrlMatch = fileData.match(/^data:([^;]+);base64,/);
+    
+    if (!dataUrlMatch) {
+      return res.status(400).json({ error: 'Invalid file format. Must be base64 data URL.' });
+    }
+
+    const mimeType = dataUrlMatch[1];
+    if (!validImageTypes.includes(mimeType)) {
+      return res.status(400).json({ error: 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.' });
+    }
+
     // Validate file size (approximate - base64 is ~1.33x larger than binary)
     const approximateSize = (fileData.length * 3) / 4;
     if (approximateSize > MAX_FILE_SIZE) {
       return res.status(400).json({ error: 'File too large. Maximum size is 5MB.' });
+    }
+
+    // Additional safety check for menuId if provided
+    if (menuId && (typeof menuId !== 'string' || menuId.trim() === '')) {
+      return res.status(400).json({ error: 'Menu ID must be a non-empty string if provided' });
     }
 
     // For now, store the base64 data directly in database

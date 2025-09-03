@@ -41,8 +41,47 @@ module.exports = async function handler(req, res) {
       logoSize = 'medium'
     } = req.body;
 
-    if (!name || name.trim() === '') {
-      return res.status(400).json({ error: 'Menu name is required' });
+    // Input validation
+    if (!name || typeof name !== 'string' || name.trim() === '') {
+      return res.status(400).json({ error: 'Menu name is required and must be a non-empty string' });
+    }
+
+    if (name.trim().length > 100) {
+      return res.status(400).json({ error: 'Menu name cannot exceed 100 characters' });
+    }
+
+    if (description && typeof description !== 'string') {
+      return res.status(400).json({ error: 'Description must be a string' });
+    }
+
+    if (description && description.length > 500) {
+      return res.status(400).json({ error: 'Description cannot exceed 500 characters' });
+    }
+
+    // Validate enum fields
+    const validBackgroundTypes = ['none', 'image', 'color'];
+    if (!validBackgroundTypes.includes(backgroundType)) {
+      return res.status(400).json({ error: 'Invalid background type' });
+    }
+
+    const validFontFamilies = ['Inter', 'Playfair Display', 'Roboto', 'Montserrat', 'Open Sans'];
+    if (!validFontFamilies.includes(fontFamily)) {
+      return res.status(400).json({ error: 'Invalid font family' });
+    }
+
+    const validColorPalettes = ['classic', 'modern', 'elegant', 'vibrant', 'minimal'];
+    if (!validColorPalettes.includes(colorPalette)) {
+      return res.status(400).json({ error: 'Invalid color palette' });
+    }
+
+    const validNavigationThemes = ['modern', 'classic', 'elegant', 'minimal'];
+    if (!validNavigationThemes.includes(navigationTheme)) {
+      return res.status(400).json({ error: 'Invalid navigation theme' });
+    }
+
+    const validLogoSizes = ['small', 'medium', 'large'];
+    if (!validLogoSizes.includes(logoSize)) {
+      return res.status(400).json({ error: 'Invalid logo size' });
     }
 
     // Create menu
