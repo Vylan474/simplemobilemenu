@@ -2364,7 +2364,12 @@ class MenuEditor {
         
         try {
             // Save current menu first to ensure all changes are persisted
+            console.log('📝 Publishing: Starting save of current menu...');
             await this.saveCurrentMenu();
+            console.log('✅ Publishing: Menu saved successfully');
+            
+            // Small delay to ensure database transaction completes
+            await new Promise(resolve => setTimeout(resolve, 500));
             
             const publishData = {
                 slug: slug,

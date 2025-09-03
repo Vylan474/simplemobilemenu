@@ -115,10 +115,12 @@ module.exports = async function handler(req, res) {
 
     // Update sections if provided
     if (sections && Array.isArray(sections)) {
+      console.log(`[UPDATE] Saving ${sections.length} sections for menu ${menuId}`);
       const sectionsResult = await saveMenuSections(menuId, sections);
       if (!sectionsResult.success) {
         return res.status(500).json({ error: 'Failed to update menu sections' });
       }
+      console.log(`[UPDATE] Successfully saved sections for menu ${menuId}`);
     }
 
     res.status(200).json({ 

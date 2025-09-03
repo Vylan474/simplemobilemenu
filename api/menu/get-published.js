@@ -43,6 +43,8 @@ module.exports = async function handler(req, res) {
       WHERE menu_id = ${menu.id} 
       ORDER BY section_id
     `;
+    
+    console.log(`[GET-PUBLISHED] Menu ${slug} (ID: ${menu.id}) has ${sectionsResult.rows.length} sections`);
 
     const sections = sectionsResult.rows.map(section => ({
       id: section.section_id,
@@ -52,6 +54,10 @@ module.exports = async function handler(req, res) {
       titleColumns: section.title_columns,
       items: section.items
     }));
+    
+    if (sections.length > 0) {
+      console.log(`[GET-PUBLISHED] First section: ${sections[0].name} with ${sections[0].items?.length || 0} items`);
+    }
 
     // Format the response
     const publishedMenu = {
