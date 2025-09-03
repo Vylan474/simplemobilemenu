@@ -522,7 +522,9 @@ class MenuEditor {
         // Add existing menus
         menus.forEach(menu => {
             const isActive = menu.id === this.currentMenuId;
-            const updatedDate = new Date(menu.updatedAt).toLocaleDateString();
+            const updatedDate = menu.updatedAt ? 
+                new Date(menu.updatedAt).toLocaleDateString() : 
+                'No date';
             
             html += `
                 <div class="menu-item ${isActive ? 'active' : ''}" data-menu-id="${menu.id}">
@@ -587,10 +589,12 @@ class MenuEditor {
     }
     
     initializeEvents() {
-        // Use a more robust approach with null checking
+        // Use a more robust approach with null checking and duplicate prevention
         const addEventListenerSafely = (id, event, handler) => {
             const element = document.getElementById(id);
             if (element) {
+                // Remove existing listener to prevent duplicates
+                element.removeEventListener(event, handler);
                 element.addEventListener(event, handler);
                 console.log(`✅ Event listener added for: ${id}`);
             } else {
@@ -2752,7 +2756,9 @@ class MenuEditor {
         // Add existing menus
         menus.forEach(menu => {
             const isActive = menu.id === this.currentMenuId;
-            const updatedDate = new Date(menu.updatedAt).toLocaleDateString();
+            const updatedDate = menu.updatedAt ? 
+                new Date(menu.updatedAt).toLocaleDateString() : 
+                'No date';
             
             html += `
                 <div class="menu-item ${isActive ? 'active' : ''}" data-menu-id="${menu.id}">
