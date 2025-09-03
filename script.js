@@ -1,3 +1,22 @@
+// === CONSTANTS ===
+const CONFIG = {
+    // File upload limits
+    MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB in bytes
+    MAX_FILE_SIZE_MB: 5,
+    
+    // Timeouts and delays
+    AUTH_RETRY_DELAY: 100,
+    STATUS_UPDATE_DELAY: 2000,
+    SCRIPT_LOAD_TIMEOUT: 1000,
+    
+    // UI feedback delays  
+    DROPDOWN_CLOSE_DELAY: 400,
+    SUCCESS_MESSAGE_DELAY: 500,
+    
+    // User limits
+    DEFAULT_MAX_MENUS: 5
+};
+
 class MenuEditor {
     constructor() {
         this.sections = [];
@@ -374,7 +393,7 @@ class MenuEditor {
         await window.authManager.init();
         
         // Give a moment for the auth state change event to be processed
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, CONFIG.AUTH_RETRY_DELAY));
         
         console.log('🔍 Checking authentication status...');
         const isAuthenticated = window.authManager.isAuthenticated();
@@ -3064,8 +3083,8 @@ class MenuEditor {
         }
         
         // Check file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            alert('File size too large. Please select an image smaller than 5MB.');
+        if (file.size > CONFIG.MAX_FILE_SIZE) {
+            alert(`File size too large. Please select an image smaller than ${CONFIG.MAX_FILE_SIZE_MB}MB.`);
             return;
         }
         
@@ -3297,9 +3316,9 @@ class MenuEditor {
     
     async handleBackgroundUpload(file) {
         // Validate file size (5MB limit)
-        const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+        const maxSize = CONFIG.MAX_FILE_SIZE;
         if (file.size > maxSize) {
-            alert('File size must be less than 5MB');
+            alert(`File size must be less than ${CONFIG.MAX_FILE_SIZE_MB}MB`);
             return;
         }
         
@@ -4036,7 +4055,7 @@ class MenuEditor {
             button.innerHTML = '<i class="fas fa-check"></i>';
             setTimeout(() => {
                 button.innerHTML = originalText;
-            }, 2000);
+            }, CONFIG.STATUS_UPDATE_DELAY);
         });
     }
     

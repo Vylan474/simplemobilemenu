@@ -1,5 +1,8 @@
 const { sql } = require('@vercel/postgres');
 
+// Constants
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+
 module.exports = async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -42,7 +45,7 @@ module.exports = async function handler(req, res) {
 
     // Validate file size (approximate - base64 is ~1.33x larger than binary)
     const approximateSize = (fileData.length * 3) / 4;
-    if (approximateSize > 5 * 1024 * 1024) {
+    if (approximateSize > MAX_FILE_SIZE) {
       return res.status(400).json({ error: 'File too large. Maximum size is 5MB.' });
     }
 
