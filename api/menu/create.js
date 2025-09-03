@@ -69,7 +69,7 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid font family' });
     }
 
-    const validColorPalettes = ['classic', 'modern', 'elegant', 'vibrant', 'minimal'];
+    const validColorPalettes = ['classic', 'ocean', 'forest', 'sunset', 'monochrome', 'wine', 'cream', 'pearl'];
     if (!validColorPalettes.includes(colorPalette)) {
       return res.status(400).json({ error: 'Invalid color palette' });
     }
