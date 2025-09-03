@@ -59,14 +59,6 @@ module.exports = async function handler(req, res) {
     }
 
     const { sections, ...menuUpdates } = req.body;
-    
-    console.log('📧 Update menu request received:', {
-      menuId,
-      hasSections: !!sections,
-      sectionsLength: sections?.length,
-      sectionsPreview: sections?.map(s => ({ id: s.id, name: s.name, itemCount: s.items?.length })),
-      menuUpdates: Object.keys(menuUpdates)
-    });
 
     // Input validation for menu updates
     if (menuUpdates.name !== undefined) {
@@ -103,7 +95,7 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid color palette' });
     }
 
-    const validNavigationThemes = ['modern', 'classic', 'elegant', 'minimal'];
+    const validNavigationThemes = ['modern', 'classic', 'elegant', 'minimal', 'glass'];
     if (menuUpdates.navigationTheme !== undefined && !validNavigationThemes.includes(menuUpdates.navigationTheme)) {
       return res.status(400).json({ error: 'Invalid navigation theme' });
     }
@@ -123,16 +115,10 @@ module.exports = async function handler(req, res) {
 
     // Update sections if provided
     if (sections && Array.isArray(sections)) {
-      console.log('💾 Saving sections to database:', sections.length, 'sections');
       const sectionsResult = await saveMenuSections(menuId, sections);
       if (!sectionsResult.success) {
-        console.error('❌ Failed to save sections:', sectionsResult.error);
         return res.status(500).json({ error: 'Failed to update menu sections' });
-      } else {
-        console.log('✅ Sections saved successfully');
       }
-    } else {
-      console.log('⚠️ No sections provided for update');
     }
 
     res.status(200).json({ 

@@ -74,7 +74,7 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid color palette' });
     }
 
-    const validNavigationThemes = ['modern', 'classic', 'elegant', 'minimal'];
+    const validNavigationThemes = ['modern', 'classic', 'elegant', 'minimal', 'glass'];
     if (!validNavigationThemes.includes(navigationTheme)) {
       return res.status(400).json({ error: 'Invalid navigation theme' });
     }

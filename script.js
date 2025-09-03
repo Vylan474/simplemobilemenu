@@ -2364,9 +2364,7 @@ class MenuEditor {
         
         try {
             // Save current menu first to ensure all changes are persisted
-            console.log('🔄 Publishing - current sections before save:', this.sections);
             await this.saveCurrentMenu();
-            console.log('✅ Menu saved before publish');
             
             const publishData = {
                 slug: slug,
@@ -2719,7 +2717,6 @@ class MenuEditor {
         };
         
         console.log('Saving menu with navigationTheme:', this.navigationTheme);
-        console.log('📊 Sections being saved:', this.sections);
         
         try {
             const result = await window.authManager.updateMenu(this.currentMenuId, menuData);
