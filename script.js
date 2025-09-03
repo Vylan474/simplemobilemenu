@@ -38,6 +38,9 @@ class MenuEditor {
         // Dark mode
         this.darkMode = localStorage.getItem('darkMode') === 'true';
         
+        // Event delegation flag to prevent duplicate listeners
+        this.globalEventListenersAttached = false;
+        
         // Change tracking
         this.hasUnsavedChanges = false;
         this.lastSavedState = null;
@@ -1409,9 +1412,12 @@ class MenuEditor {
     }
     
     initializeDynamicEventListeners() {
-        // Event delegation for dynamically created buttons
-        document.addEventListener('click', (e) => {
-            // Handle "Add Menu Item" buttons
+        // Event delegation for dynamically created buttons (attach only once)
+        if (!this.globalEventListenersAttached) {
+            this.globalEventListenersAttached = true;
+            
+            document.addEventListener('click', (e) => {
+                // Handle "Add Menu Item" buttons
             if (e.target.closest('.add-item-btn')) {
                 const button = e.target.closest('.add-item-btn');
                 const sectionId = parseInt(button.dataset.sectionId);
@@ -1493,6 +1499,7 @@ class MenuEditor {
                 this.openAddColumnModal(sectionId);
             }
         });
+        }
     }
     
     showPreview() {
