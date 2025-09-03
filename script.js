@@ -5018,29 +5018,102 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Dark mode toggle event listener
+    console.log('Setting up dark mode toggle...');
     const darkModeCheckbox = document.getElementById('dark-mode-checkbox');
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    
+    console.log('Dark mode checkbox found:', !!darkModeCheckbox);
+    console.log('Dark mode toggle container found:', !!darkModeToggle);
+    console.log('menuEditor available:', !!window.menuEditor);
+    
     if (darkModeCheckbox) {
+        console.log('Adding change listener to checkbox');
         darkModeCheckbox.addEventListener('change', function() {
-            console.log('Dark mode toggle clicked');
+            console.log('Dark mode checkbox changed!');
+            console.log('Checkbox checked state:', darkModeCheckbox.checked);
+            
             if (window.menuEditor && typeof window.menuEditor.toggleDarkMode === 'function') {
+                console.log('Calling toggleDarkMode...');
                 window.menuEditor.toggleDarkMode();
             } else {
                 console.error('menuEditor or toggleDarkMode not available');
+                console.log('window.menuEditor:', window.menuEditor);
             }
         });
         
         // Also add click handler to the entire toggle container for better UX
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
         if (darkModeToggle) {
+            console.log('Adding click listener to toggle container');
             darkModeToggle.addEventListener('click', function(e) {
+                console.log('Toggle container clicked!');
+                console.log('Click target:', e.target);
+                console.log('Target ID:', e.target.id);
+                console.log('Target tag:', e.target.tagName);
+                
                 // Don't trigger if clicking directly on the checkbox (to avoid double toggle)
                 if (e.target.id !== 'dark-mode-checkbox' && e.target.tagName !== 'LABEL') {
+                    console.log('Triggering checkbox change programmatically');
                     darkModeCheckbox.checked = !darkModeCheckbox.checked;
                     darkModeCheckbox.dispatchEvent(new Event('change'));
                 }
             });
         }
+    } else {
+        console.error('Dark mode checkbox not found in DOM!');
+        
+        // Try again after a delay in case the DOM isn't fully ready
+        console.log('Retrying dark mode setup in 1 second...');
+        setTimeout(function() {
+            console.log('Retrying dark mode setup...');
+            const retryCheckbox = document.getElementById('dark-mode-checkbox');
+            const retryToggle = document.getElementById('dark-mode-toggle');
+            
+            console.log('Retry - checkbox found:', !!retryCheckbox);
+            console.log('Retry - toggle found:', !!retryToggle);
+            
+            if (retryCheckbox) {
+                retryCheckbox.addEventListener('change', function() {
+                    console.log('Dark mode checkbox changed (retry handler)!');
+                    if (window.menuEditor && typeof window.menuEditor.toggleDarkMode === 'function') {
+                        window.menuEditor.toggleDarkMode();
+                    }
+                });
+                
+                if (retryToggle) {
+                    retryToggle.addEventListener('click', function(e) {
+                        if (e.target.id !== 'dark-mode-checkbox' && e.target.tagName !== 'LABEL') {
+                            retryCheckbox.checked = !retryCheckbox.checked;
+                            retryCheckbox.dispatchEvent(new Event('change'));
+                        }
+                    });
+                }
+            } else {
+                console.error('Dark mode elements still not found after retry!');
+            }
+        }, 1000);
     }
 });
 
 // Dark mode toggle event listener (moved to main DOMContentLoaded section above)
+
+// Global function for manual testing
+window.testDarkMode = function() {
+    console.log('Testing dark mode manually...');
+    const checkbox = document.getElementById('dark-mode-checkbox');
+    const toggle = document.getElementById('dark-mode-toggle');
+    
+    console.log('Elements found:', {
+        checkbox: !!checkbox,
+        toggle: !!toggle,
+        menuEditor: !!window.menuEditor,
+        toggleFunction: !!(window.menuEditor && window.menuEditor.toggleDarkMode)
+    });
+    
+    if (window.menuEditor && window.menuEditor.toggleDarkMode) {
+        console.log('Calling toggleDarkMode directly...');
+        window.menuEditor.toggleDarkMode();
+        console.log('Dark mode toggled!');
+    } else {
+        console.error('Cannot toggle - menuEditor or function not available');
+    }
+};
