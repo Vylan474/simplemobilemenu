@@ -4546,7 +4546,9 @@ MenuEditor.prototype.loadUserMenus = async function() {
                 <div class="menu-name">${menu.name}</div>
                 <div class="menu-meta">
                     <span class="menu-status">${menu.status || 'draft'}</span>
-                    <span class="menu-date">${new Date(menu.lastEdited || menu.created).toLocaleDateString()}</span>
+                    <span class="menu-date">${(menu.lastEdited || menu.created || menu.updatedAt || menu.createdAt) ? 
+                        new Date(menu.lastEdited || menu.created || menu.updatedAt || menu.createdAt).toLocaleDateString() : 
+                        'No date'}</span>
                 </div>
             </div>
             <div class="menu-actions">
