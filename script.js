@@ -2984,12 +2984,7 @@ class MenuEditor {
             viewButton.style.display = 'inline-flex';
             publishButton.innerHTML = '<i class="fas fa-sync"></i> Update Menu';
             
-            // Check if there are changes since last publish - this section needs to be async
-            // For now, skip this check to avoid the Promise issue
-            // const menus = await this.getUserMenus();
-            // const currentMenu = menus.find(m => m.id === this.currentMenuId);
-            
-            // Skip the change check for now since we'd need to make this method async
+            // TODO: Add change detection by making this method async in future refactor
         } else {
             // Menu not published - hide view button
             viewButton.style.display = 'none';
@@ -4811,17 +4806,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Background functionality event listeners
-    // NOTE: These are already added in initializeEvents() method, commenting out to avoid duplicates
-    /*
-    const backgroundBtn = document.getElementById('background-options');
-    if (backgroundBtn) {
-        backgroundBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menuEditor.toggleBackgroundDropdown();
-        });
-    }
-    */
+    // Background functionality event listeners handled in initializeEvents()
     
     // Background image options
     const backgroundOptions = document.querySelectorAll('.background-option');
@@ -4852,31 +4837,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Background upload functionality is handled in initializeEvents() method
     // Removed duplicate event listeners to prevent conflicts
     
-    // Font functionality event listeners
-    // NOTE: These are already added in initializeEvents() method, commenting out to avoid duplicates
-    /*
-    const fontBtn = document.getElementById('font-options');
-    if (fontBtn) {
-        fontBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menuEditor.toggleFontDropdown();
-        });
-    }
-    */
+    // Font functionality event listeners handled in initializeEvents()
     
     // Font option selection - consolidated with main event listeners above
 
-    // Color palette functionality event listeners
-    // NOTE: These are already added in initializeEvents() method, commenting out to avoid duplicates
-    /*
-    const colorBtn = document.getElementById('color-options');
-    if (colorBtn) {
-        colorBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menuEditor.toggleColorDropdown();
-        });
-    }
-    */
+    // Color palette functionality event listeners handled in initializeEvents()
     
     // Color palette option selection
     document.querySelectorAll('.palette-option').forEach(option => {
@@ -4894,17 +4859,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Navigation functionality event listeners
-    // NOTE: These are already added in initializeEvents() method, commenting out to avoid duplicates
-    /*
-    const navigationBtn = document.getElementById('navigation-options');
-    if (navigationBtn) {
-        navigationBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menuEditor.toggleNavigationDropdown();
-        });
-    }
-    */
+    // Navigation functionality event listeners handled in initializeEvents()
 
     // Navigation theme option selection
     document.querySelectorAll('.theme-option').forEach(option => {
