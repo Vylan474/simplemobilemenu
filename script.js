@@ -678,13 +678,14 @@ class MenuEditor {
         // Logo file input
         addEventListenerSafely('logo-file-input', 'change', (event) => this.handleLogoUpload(event));
         
-        // Logo size options
-        document.querySelectorAll('.size-option').forEach(option => {
-            addEventListenerSafely(option, 'click', (e) => {
+        // Logo size options - using event delegation since they're in a dropdown
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.size-option')) {
                 e.stopPropagation();
-                const size = option.getAttribute('data-size');
+                const sizeOption = e.target.closest('.size-option');
+                const size = sizeOption.getAttribute('data-size');
                 this.setLogoSize(size);
-            });
+            }
         });
         
         // Background upload functionality
@@ -3211,14 +3212,11 @@ class MenuEditor {
     
     updateLogoDisplay() {
         const uploadBtn = document.getElementById('upload-logo');
-        const removeBtn = document.getElementById('remove-logo');
         
         if (this.menuLogo) {
-            uploadBtn.innerHTML = '<i class="fas fa-image"></i> Change Logo';
-            removeBtn.style.display = 'inline-flex';
+            uploadBtn.innerHTML = '<i class="fas fa-upload"></i> Change Logo';
         } else {
-            uploadBtn.innerHTML = '<i class="fas fa-image"></i> Add Logo';
-            removeBtn.style.display = 'none';
+            uploadBtn.innerHTML = '<i class="fas fa-upload"></i> Choose Logo';
         }
     }
     
