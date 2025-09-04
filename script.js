@@ -1,8 +1,8 @@
 // === CONSTANTS ===
 const CONFIG = {
     // File upload limits
-    MAX_FILE_SIZE: 2 * 1024 * 1024, // 2MB in bytes (reduced to prevent 413 errors)
-    MAX_FILE_SIZE_MB: 2,
+    MAX_FILE_SIZE: 4 * 1024 * 1024, // 4MB in bytes
+    MAX_FILE_SIZE_MB: 4,
     
     // Timeouts and delays
     AUTH_RETRY_DELAY: 100,
@@ -3240,7 +3240,7 @@ class MenuEditor {
             return;
         }
         
-        // Check file size (max 2MB)
+        // Check file size (max 4MB)
         if (file.size > CONFIG.MAX_FILE_SIZE) {
             const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
             alert(`File size (${fileSizeMB}MB) exceeds the maximum allowed size of ${CONFIG.MAX_FILE_SIZE_MB}MB.\n\nPlease choose a smaller image or compress your image before uploading.`);
@@ -3527,7 +3527,7 @@ class MenuEditor {
     }
     
     async handleBackgroundUpload(file) {
-        // Validate file size (2MB limit to prevent server errors)
+        // Validate file size (4MB limit)
         const maxSize = CONFIG.MAX_FILE_SIZE;
         if (file.size > maxSize) {
             const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
@@ -3596,7 +3596,7 @@ class MenuEditor {
             } else {
                 const errorMessage = uploadResponse?.error || 'Unknown error';
                 if (errorMessage.includes('413') || errorMessage.includes('too large')) {
-                    alert('The image file is too large. Please choose a smaller image (max 2MB) or compress it before uploading.');
+                    alert('The image file is too large. Please choose a smaller image (max 4MB) or compress it before uploading.');
                 } else {
                     alert('Upload failed: ' + errorMessage);
                 }
@@ -3604,7 +3604,7 @@ class MenuEditor {
         } catch (error) {
             console.error('Upload error:', error);
             if (error.message && (error.message.includes('413') || error.message.includes('Entity Too Large'))) {
-                alert('The image file is too large. Please choose a smaller image (max 2MB) or compress it before uploading.');
+                alert('The image file is too large. Please choose a smaller image (max 4MB) or compress it before uploading.');
             } else {
                 alert('Upload failed. Please try again with a smaller image.');
             }
