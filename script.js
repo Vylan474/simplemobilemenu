@@ -417,6 +417,11 @@ class MenuEditor {
         // Load and display saved system updated timestamp
         this.loadSystemTimestamp();
         
+        // Refresh timestamp every 5 minutes
+        setInterval(() => {
+            this.loadSystemTimestamp();
+        }, 5 * 60 * 1000);
+        
         // Wait for auth manager to be ready
         if (!window.authManager) {
             console.error('❌ Auth manager not found');
@@ -2403,9 +2408,6 @@ class MenuEditor {
                 this.publishedTitle = title;
                 this.publishedSubtitle = subtitle;
                 
-                // Update system updated timestamp
-                this.updateSystemTimestamp();
-                
                 // Update publish button visibility
                 this.updatePublishButtonVisibility();
                 
@@ -3054,12 +3056,50 @@ class MenuEditor {
     loadSystemTimestamp() {
         const timestampElement = document.getElementById('system-updated-time');
         if (timestampElement) {
-            const savedTimestamp = localStorage.getItem('systemUpdatedTime');
-            if (savedTimestamp) {
-                timestampElement.textContent = savedTimestamp;
-            } else {
-                timestampElement.textContent = 'Never';
-            }
+            // First try to get the last commit time from GitHub
+            this.fetchLastCommitTime().then(commitTime => {
+                if (commitTime) {
+                    timestampElement.textContent = commitTime;
+                    localStorage.setItem('systemUpdatedTime', commitTime);
+                } else {
+                    // Fall back to saved timestamp
+                    const savedTimestamp = localStorage.getItem('systemUpdatedTime');
+                    if (savedTimestamp) {
+                        timestampElement.textContent = savedTimestamp;
+                    } else {
+                        timestampElement.textContent = 'Never';
+                    }
+                }
+            }).catch(err => {
+                // On error, use saved timestamp
+                const savedTimestamp = localStorage.getItem('systemUpdatedTime');
+                timestampElement.textContent = savedTimestamp || 'Never';
+            });
+        }
+    }
+    
+    async fetchLastCommitTime() {
+        try {
+            // Fetch the last commit from GitHub API
+            const response = await fetch('https://api.github.com/repos/Vylan474/simplemobilemenu/commits/master');
+            if (!response.ok) return null;
+            
+            const data = await response.json();
+            const commitDate = new Date(data.commit.committer.date);
+            
+            const options = {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            };
+            
+            return commitDate.toLocaleDateString('en-US', options);
+        } catch (error) {
+            console.error('Error fetching last commit time:', error);
+            return null;
         }
     }
     
