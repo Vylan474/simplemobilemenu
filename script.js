@@ -2624,7 +2624,7 @@ class MenuEditor {
         } else if (userMenus[0]) {
             // Load the first menu if it exists
             this.currentMenuId = userMenus[0].id;
-            this.loadMenu(this.currentMenuId);
+            await this.loadMenu(this.currentMenuId);
         } else {
             console.error('Unexpected state: userMenus is not empty but first element is undefined');
         }
@@ -4330,7 +4330,7 @@ MenuEditor.prototype.loadUserData = async function() {
     if (userMenus && userMenus.length > 0) {
         // Load the first menu or last edited menu
         const lastMenu = userMenus.find(menu => menu.lastEdited) || userMenus[0];
-        this.loadMenu(lastMenu);
+        await this.loadMenu(lastMenu);
         this.currentMenuId = lastMenu.id;
         this.updateCurrentMenuDisplay(lastMenu.name);
     } else {
@@ -4382,14 +4382,14 @@ MenuEditor.prototype.markAsChanged = function() {
     }, 2000);
 };
 
-MenuEditor.prototype.loadMenu = function(menuOrId) {
+MenuEditor.prototype.loadMenu = async function(menuOrId) {
     if (!menuOrId) return;
     
     // Handle both menuId (string) and menu object
     let menu;
     if (typeof menuOrId === 'string') {
         // It's a menuId, find the menu in user menus
-        const menus = this.getUserMenus();
+        const menus = await this.getUserMenus();
         menu = menus.find(m => m.id === menuOrId);
         if (!menu) {
             console.error('Menu not found with ID:', menuOrId);
@@ -4796,10 +4796,10 @@ MenuEditor.prototype.loadMenuById = async function(menuId) {
 
 // Duplicate createNewMenu function removed - using the database API version instead
 
-MenuEditor.prototype.duplicateMenu = function(menuId) {
+MenuEditor.prototype.duplicateMenu = async function(menuId) {
     if (!this.currentUser) return;
     
-    const userMenus = window.authManager.getUserMenus();
+    const userMenus = await window.authManager.getUserMenus();
     const originalMenu = userMenus.find(m => m.id === menuId);
     
     if (originalMenu) {
