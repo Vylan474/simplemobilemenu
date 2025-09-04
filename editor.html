@@ -964,15 +964,21 @@
                 if (response.ok) {
                     const config = await response.json();
                     GOOGLE_CLIENT_ID = config.googleClientId;
-                    console.log('Google client ID loaded successfully');
+                    console.log('Google client ID loaded successfully from API');
                     return true;
                 } else {
-                    console.error('Failed to load Google config:', response.status);
-                    return false;
+                    console.error('Failed to load Google config from API:', response.status);
+                    // Fallback to hardcoded client ID for production
+                    GOOGLE_CLIENT_ID = "911046669009-oevf7t3lhkui370ncavenvulu6fj8fu7.apps.googleusercontent.com";
+                    console.log('Using fallback Google client ID');
+                    return true;
                 }
             } catch (error) {
-                console.error('Error loading Google config:', error);
-                return false;
+                console.error('Error loading Google config from API:', error);
+                // Fallback to hardcoded client ID
+                GOOGLE_CLIENT_ID = "911046669009-oevf7t3lhkui370ncavenvulu6fj8fu7.apps.googleusercontent.com";
+                console.log('Using fallback Google client ID due to network error');
+                return true;
             }
         }
         
@@ -992,7 +998,8 @@
                         client_id: GOOGLE_CLIENT_ID,
                         callback: handleGoogleCredentialResponse,
                         auto_select: false,
-                        cancel_on_tap_outside: true
+                        cancel_on_tap_outside: true,
+                        use_fedcm_for_prompt: false  // Disable FedCM to avoid deprecation warnings
                     });
                     googleInitialized = true;
                     console.log('Google Sign-In initialized successfully');
