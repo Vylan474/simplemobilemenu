@@ -1,7 +1,7 @@
 const { sql } = require('@vercel/postgres');
 
-// Constants
-const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB in bytes
+// Constants  
+const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB in bytes (becomes ~4MB when base64 encoded)
 
 module.exports = async function handler(req, res) {
   // Set CORS headers
@@ -64,7 +64,7 @@ module.exports = async function handler(req, res) {
     // Validate file size (approximate - base64 is ~1.33x larger than binary)
     const approximateSize = (fileData.length * 3) / 4;
     if (approximateSize > MAX_FILE_SIZE) {
-      return res.status(400).json({ error: 'File too large. Maximum size is 4MB. Please compress your image before uploading.' });
+      return res.status(400).json({ error: 'File too large. Maximum size is 3MB. Please compress your image before uploading.' });
     }
 
     // Additional safety check for menuId if provided
