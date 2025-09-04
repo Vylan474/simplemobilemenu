@@ -210,7 +210,15 @@ class DatabaseAuthManager {
             });
 
             const data = await response.json();
-            return response.ok ? data.menus : [];
+            console.log('🔍 getUserMenus API response:', { ok: response.ok, status: response.status, data });
+            
+            if (response.ok && data.success && Array.isArray(data.menus)) {
+                console.log('✅ Returning menus array:', data.menus.length, 'items');
+                return data.menus;
+            } else {
+                console.log('❌ API error or invalid response format, returning empty array');
+                return [];
+            }
         } catch (error) {
             console.error('Get menus error:', error);
             return [];
