@@ -414,6 +414,9 @@ class MenuEditor {
     async initializeWithAuth() {
         console.log('🔧 Initializing with auth...');
         
+        // Load and display saved system updated timestamp
+        this.loadSystemTimestamp();
+        
         // Wait for auth manager to be ready
         if (!window.authManager) {
             console.error('❌ Auth manager not found');
@@ -2400,6 +2403,9 @@ class MenuEditor {
                 this.publishedTitle = title;
                 this.publishedSubtitle = subtitle;
                 
+                // Update system updated timestamp
+                this.updateSystemTimestamp();
+                
                 // Update publish button visibility
                 this.updatePublishButtonVisibility();
                 
@@ -3023,6 +3029,38 @@ class MenuEditor {
     hasChangesForPublishing(menu) {
         // Simple check - could be more sophisticated
         return menu.updatedAt > (menu.lastPublishedAt || menu.createdAt);
+    }
+    
+    updateSystemTimestamp() {
+        const timestampElement = document.getElementById('system-updated-time');
+        if (timestampElement) {
+            const now = new Date();
+            const options = {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            };
+            const formattedTime = now.toLocaleDateString('en-US', options);
+            timestampElement.textContent = formattedTime;
+            
+            // Save timestamp to localStorage for persistence
+            localStorage.setItem('systemUpdatedTime', formattedTime);
+        }
+    }
+    
+    loadSystemTimestamp() {
+        const timestampElement = document.getElementById('system-updated-time');
+        if (timestampElement) {
+            const savedTimestamp = localStorage.getItem('systemUpdatedTime');
+            if (savedTimestamp) {
+                timestampElement.textContent = savedTimestamp;
+            } else {
+                timestampElement.textContent = 'Never';
+            }
+        }
     }
     
     // === DISCARD FUNCTIONALITY ===

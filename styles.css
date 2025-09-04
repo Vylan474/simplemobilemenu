@@ -1587,6 +1587,44 @@ body {
     background: rgba(231, 76, 60, 0.2);
 }
 
+/* System Updated Info */
+.system-updated-info {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(52, 73, 94, 0.3);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    color: #bdc3c7;
+    font-size: 12px;
+}
+
+.system-updated-info i {
+    font-size: 16px;
+    margin-right: 10px;
+    color: #3498db;
+}
+
+.system-updated-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.system-updated-label {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 10px;
+    color: #95a5a6;
+    margin-bottom: 2px;
+}
+
+.system-updated-time {
+    font-size: 13px;
+    color: #ecf0f1;
+    font-weight: 500;
+}
+
 .empty-state {
     text-align: center;
     padding: 60px 20px;
