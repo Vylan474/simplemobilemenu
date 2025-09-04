@@ -486,6 +486,19 @@
                 const container = document.querySelector('.published-menu-container');
                 if (!container) return;
                 
+                // Apply colors using CSS custom properties for consistency
+                container.style.setProperty('--primary-text-color', palette.primaryText);
+                container.style.setProperty('--secondary-text-color', palette.secondaryText);
+                container.style.setProperty('--header-color', palette.headers);
+                container.style.setProperty('--accent-color', palette.accent);
+                container.style.setProperty('--background-color', palette.background);
+                container.style.setProperty('--muted-color', palette.muted);
+                
+                // Apply background color from palette if no custom background is set
+                if (!this.menuData.backgroundType || this.menuData.backgroundType === 'none' || !this.menuData.backgroundValue) {
+                    container.style.backgroundColor = palette.background;
+                }
+                
                 // Apply specific element colors with important priority to override dark mode
                 const primaryTextElements = container.querySelectorAll('.preview-item-title .preview-title-text, .preview-menu-title');
                 primaryTextElements.forEach(el => el.style.setProperty('color', palette.primaryText, 'important'));
@@ -493,7 +506,7 @@
                 const secondaryTextElements = container.querySelectorAll('.preview-item-description, .preview-menu-subtitle');
                 secondaryTextElements.forEach(el => el.style.setProperty('color', palette.secondaryText, 'important'));
                 
-                const headerElements = container.querySelectorAll('.preview-section h2');
+                const headerElements = container.querySelectorAll('.preview-section h2, .preview-column-header');
                 headerElements.forEach(el => {
                     el.style.setProperty('color', palette.headers, 'important');
                     // Add colored divider line using accent color
@@ -501,22 +514,11 @@
                 });
                 
                 const accentElements = container.querySelectorAll('.preview-price-cell, .preview-title-price');
-                accentElements.forEach(el => {
-                    el.style.setProperty('color', palette.accent, 'important');
-                    // Ensure price alignment is maintained after color application
-                    if (el.classList.contains('preview-price-cell')) {
-                        el.style.textAlign = 'right';
-                        el.style.justifySelf = 'end';
-                        el.style.gridColumn = '-1';
-                        el.style.marginLeft = 'auto';
-                    }
-                    if (el.classList.contains('preview-title-price')) {
-                        el.style.textAlign = 'right';
-                        el.style.marginLeft = 'auto';
-                        el.style.flexShrink = '0';
-                        el.style.whiteSpace = 'nowrap';
-                    }
-                });
+                accentElements.forEach(el => el.style.setProperty('color', palette.accent, 'important'));
+                
+                // Apply secondary text color to all non-price data cells
+                const dataElements = container.querySelectorAll('.preview-data-cell:not(.preview-price-cell)');
+                dataElements.forEach(el => el.style.setProperty('color', palette.secondaryText, 'important'));
             }
             
             applyNavigationTheme() {

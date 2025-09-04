@@ -3975,6 +3975,11 @@ class MenuEditor {
         container.style.setProperty('--background-color', palette.background);
         container.style.setProperty('--muted-color', palette.muted);
         
+        // Apply background color from palette if no custom background is set
+        if (this.backgroundType === 'none' || !this.backgroundValue) {
+            container.style.backgroundColor = palette.background;
+        }
+        
         // Apply specific element colors with important priority to override dark mode
         const primaryTextElements = container.querySelectorAll('.preview-item-title .preview-title-text, .preview-menu-title');
         primaryTextElements.forEach(el => el.style.setProperty('color', palette.primaryText, 'important'));
