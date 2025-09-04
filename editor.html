@@ -955,53 +955,135 @@
         console.log('Starting to load scripts...');
         
         // Google Sign-In configuration and handlers
+        let GOOGLE_CLIENT_ID = null;
         let googleInitialized = false;
         
-        function initializeGoogle() {
-            if (typeof google !== 'undefined' && google.accounts) {
-                google.accounts.id.initialize({
-                    client_id: "911046669009-oevf7t3lhkui370ncavenvulu6fj8fu7.apps.googleusercontent.com",
-                    callback: handleGoogleSignIn
-                });
-                googleInitialized = true;
-                console.log('Google Sign-In initialized');
-            } else {
-                console.error('Google Identity Services not loaded');
+        async function loadGoogleConfig() {
+            try {
+                const response = await fetch('/api/config');
+                if (response.ok) {
+                    const config = await response.json();
+                    GOOGLE_CLIENT_ID = config.googleClientId;
+                    console.log('Google client ID loaded successfully');
+                    return true;
+                } else {
+                    console.error('Failed to load Google config:', response.status);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error loading Google config:', error);
+                return false;
             }
         }
         
-        function handleGoogleSignIn(response) {
-            console.log('Google Sign-In response:', response);
-            if (window.authManager) {
-                window.authManager.handleGoogleSignIn(response.credential)
-                    .then(result => {
-                        if (result.success) {
-                            console.log('Google sign-in successful');
-                            document.getElementById('auth-modal').style.display = 'none';
-                            location.reload(); // Refresh to show authenticated state
-                        } else {
-                            console.error('Google sign-in failed:', result.error);
-                            document.getElementById('login-error').textContent = result.error || 'Google sign-in failed';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Google sign-in error:', error);
-                        document.getElementById('login-error').textContent = 'Google sign-in failed';
+        async function initializeGoogle() {
+            // Load config if not already loaded
+            if (!GOOGLE_CLIENT_ID) {
+                const configLoaded = await loadGoogleConfig();
+                if (!configLoaded) {
+                    setTimeout(initializeGoogle, 2000);
+                    return;
+                }
+            }
+            
+            if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+                try {
+                    google.accounts.id.initialize({
+                        client_id: GOOGLE_CLIENT_ID,
+                        callback: handleGoogleCredentialResponse,
+                        auto_select: false,
+                        cancel_on_tap_outside: true
                     });
+                    googleInitialized = true;
+                    console.log('Google Sign-In initialized successfully');
+                } catch (error) {
+                    console.error('Error initializing Google Sign-In:', error);
+                }
+            } else {
+                console.error('Google Identity Services not loaded yet');
+                // Retry initialization after a delay
+                setTimeout(initializeGoogle, 1000);
+            }
+        }
+        
+        function handleGoogleCredentialResponse(response) {
+            console.log('Google credential response received');
+            if (response.credential) {
+                if (window.authManager && window.authManager.handleGoogleSignIn) {
+                    window.authManager.handleGoogleSignIn(response.credential)
+                        .then(result => {
+                            if (result.success) {
+                                console.log('Google sign-in successful');
+                                document.getElementById('auth-modal').style.display = 'none';
+                                location.reload(); // Refresh to show authenticated state
+                            } else {
+                                console.error('Google sign-in failed:', result.error);
+                                const errorEl = document.getElementById('login-error') || document.getElementById('register-error');
+                                if (errorEl) {
+                                    errorEl.textContent = result.error || 'Google sign-in failed';
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Google sign-in error:', error);
+                            const errorEl = document.getElementById('login-error') || document.getElementById('register-error');
+                            if (errorEl) {
+                                errorEl.textContent = 'Google sign-in failed. Please try again.';
+                            }
+                        });
+                } else {
+                    console.error('Auth manager not available');
+                }
             }
         }
         
         function triggerGoogleSignIn() {
-            if (googleInitialized && google.accounts) {
-                google.accounts.id.prompt();
-            } else {
-                console.error('Google Sign-In not initialized');
+            if (!googleInitialized) {
+                console.error('Google Sign-In not initialized yet');
+                // Try to initialize again
+                initializeGoogle();
+                return;
+            }
+            
+            try {
+                // Use the modern prompt method instead of deprecated renderButton approach
+                google.accounts.id.prompt((notification) => {
+                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                        console.log('Google Sign-In prompt was not displayed or was skipped');
+                        // Fallback to renderButton if prompt fails
+                        const buttonContainer = document.createElement('div');
+                        buttonContainer.style.display = 'none';
+                        document.body.appendChild(buttonContainer);
+                        
+                        google.accounts.id.renderButton(buttonContainer, {
+                            type: 'standard',
+                            theme: 'outline',
+                            size: 'large'
+                        });
+                        
+                        // Programmatically click the rendered button
+                        const googleBtn = buttonContainer.querySelector('div[role="button"]');
+                        if (googleBtn) {
+                            googleBtn.click();
+                        }
+                        
+                        // Clean up
+                        setTimeout(() => {
+                            if (buttonContainer.parentNode) {
+                                document.body.removeChild(buttonContainer);
+                            }
+                        }, 100);
+                    }
+                });
+            } catch (error) {
+                console.error('Error triggering Google sign-in:', error);
             }
         }
         
         // Initialize Google when the script loads
         window.addEventListener('load', function() {
-            setTimeout(initializeGoogle, 1000); // Wait for Google script to load
+            // Wait a bit for the Google script to fully load
+            setTimeout(initializeGoogle, 1500);
         });
     </script>
     <script src="auth-db.js?v=20250903"></script>
