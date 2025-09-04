@@ -1,5 +1,13 @@
 {
   "version": 2,
+  "functions": {
+    "api/upload/background.js": {
+      "maxDuration": 10
+    },
+    "api/**/*.js": {
+      "maxDuration": 10
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",

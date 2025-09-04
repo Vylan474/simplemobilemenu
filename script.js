@@ -1,8 +1,8 @@
 // === CONSTANTS ===
 const CONFIG = {
     // File upload limits
-    MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB in bytes
-    MAX_FILE_SIZE_MB: 5,
+    MAX_FILE_SIZE: 2 * 1024 * 1024, // 2MB in bytes (reduced to prevent 413 errors)
+    MAX_FILE_SIZE_MB: 2,
     
     // Timeouts and delays
     AUTH_RETRY_DELAY: 100,
@@ -3240,9 +3240,10 @@ class MenuEditor {
             return;
         }
         
-        // Check file size (max 5MB)
+        // Check file size (max 2MB)
         if (file.size > CONFIG.MAX_FILE_SIZE) {
-            alert(`File size too large. Please select an image smaller than ${CONFIG.MAX_FILE_SIZE_MB}MB.`);
+            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            alert(`File size (${fileSizeMB}MB) exceeds the maximum allowed size of ${CONFIG.MAX_FILE_SIZE_MB}MB.\n\nPlease choose a smaller image or compress your image before uploading.`);
             return;
         }
         
@@ -3526,10 +3527,11 @@ class MenuEditor {
     }
     
     async handleBackgroundUpload(file) {
-        // Validate file size (5MB limit)
+        // Validate file size (2MB limit to prevent server errors)
         const maxSize = CONFIG.MAX_FILE_SIZE;
         if (file.size > maxSize) {
-            alert(`File size must be less than ${CONFIG.MAX_FILE_SIZE_MB}MB`);
+            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            alert(`File size (${fileSizeMB}MB) exceeds the maximum allowed size of ${CONFIG.MAX_FILE_SIZE_MB}MB.\n\nPlease choose a smaller image or compress your image before uploading.`);
             return;
         }
         
@@ -3567,7 +3569,7 @@ class MenuEditor {
             // Upload to server
             const uploadResponse = await this.uploadBackgroundImage(this.pendingUploadData, this.pendingUploadFilename);
             
-            if (uploadResponse.success) {
+            if (uploadResponse && uploadResponse.success) {
                 // Use the uploaded image
                 this.backgroundType = 'image';
                 this.backgroundValue = uploadResponse.url;
@@ -3592,11 +3594,20 @@ class MenuEditor {
                 // Refresh recent backgrounds to show the new upload
                 this.loadRecentBackgrounds();
             } else {
-                alert('Upload failed: ' + (uploadResponse.error || 'Unknown error'));
+                const errorMessage = uploadResponse?.error || 'Unknown error';
+                if (errorMessage.includes('413') || errorMessage.includes('too large')) {
+                    alert('The image file is too large. Please choose a smaller image (max 2MB) or compress it before uploading.');
+                } else {
+                    alert('Upload failed: ' + errorMessage);
+                }
             }
         } catch (error) {
             console.error('Upload error:', error);
-            alert('Upload failed. Please try again.');
+            if (error.message && (error.message.includes('413') || error.message.includes('Entity Too Large'))) {
+                alert('The image file is too large. Please choose a smaller image (max 2MB) or compress it before uploading.');
+            } else {
+                alert('Upload failed. Please try again with a smaller image.');
+            }
         }
     }
     
