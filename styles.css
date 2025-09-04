@@ -2746,6 +2746,34 @@ body .preview-navigation {
     max-width: 75vw;
 }
 
+/* Preview Modal specific logo sizing - fixed pixel sizes for phone frame */
+#preview-modal .menu-logo {
+    width: 60%;
+    max-width: 207px; /* 60% of 345px phone width */
+    max-height: 120px;
+    height: auto;
+    margin: 0 auto 15px auto;
+    object-fit: contain;
+}
+
+#preview-modal .menu-logo.small {
+    width: 45%;
+    max-width: 155px; /* 45% of 345px phone width */
+    max-height: 80px;
+}
+
+#preview-modal .menu-logo.medium {
+    width: 60%;
+    max-width: 207px; /* 60% of 345px phone width */
+    max-height: 120px;
+}
+
+#preview-modal .menu-logo.large {
+    width: 75%;
+    max-width: 259px; /* 75% of 345px phone width */
+    max-height: 150px;
+}
+
 /* Desktop overrides for reasonable max sizes */
 @media (min-width: 769px) {
     .menu-logo {
