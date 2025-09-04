@@ -17,6 +17,51 @@
         .auth-switch { text-align: center; margin-top: 15px; }
         .auth-switch a { color: #3498db; text-decoration: none; }
         .auth-switch a:hover { text-decoration: underline; }
+        
+        .auth-divider { 
+            margin: 20px 0; 
+            text-align: center; 
+            position: relative; 
+            color: #999; 
+        }
+        .auth-divider:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ddd;
+        }
+        .auth-divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+        }
+        
+        .google-signin-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            color: #444;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 15px;
+        }
+        .google-signin-btn:hover {
+            border-color: #4285f4;
+            background: #f8f9ff;
+            color: #4285f4;
+        }
+        .google-signin-btn i {
+            font-size: 18px;
+        }
     </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -841,6 +886,16 @@
                         </div>
                         <div id="login-error" class="error-message"></div>
                         <button id="login-btn" class="btn btn-primary" onclick="handleLogin()">Sign In</button>
+                        
+                        <div class="auth-divider">
+                            <span>or</span>
+                        </div>
+                        
+                        <div id="google-signin-button" class="google-signin-btn">
+                            <i class="fab fa-google"></i>
+                            Sign in with Google
+                        </div>
+                        
                         <p class="auth-switch">
                             Don't have an account? 
                             <a href="#" onclick="showRegisterForm()">Create one</a>
@@ -867,6 +922,16 @@
                         </div>
                         <div id="register-error" class="error-message"></div>
                         <button id="register-btn" class="btn btn-primary" onclick="handleRegister()">Create Account</button>
+                        
+                        <div class="auth-divider">
+                            <span>or</span>
+                        </div>
+                        
+                        <div id="google-signup-button" class="google-signin-btn">
+                            <i class="fab fa-google"></i>
+                            Sign up with Google
+                        </div>
+                        
                         <p class="auth-switch">
                             Already have an account? 
                             <a href="#" onclick="showLoginForm()">Sign in</a>
@@ -878,6 +943,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         // Error handler to catch script loading issues
         window.addEventListener('error', function(e) {
@@ -887,6 +953,56 @@
         
         // Log when scripts start loading
         console.log('Starting to load scripts...');
+        
+        // Google Sign-In configuration and handlers
+        let googleInitialized = false;
+        
+        function initializeGoogle() {
+            if (typeof google !== 'undefined' && google.accounts) {
+                google.accounts.id.initialize({
+                    client_id: "911046669009-oevf7t3lhkui370ncavenvulu6fj8fu7.apps.googleusercontent.com",
+                    callback: handleGoogleSignIn
+                });
+                googleInitialized = true;
+                console.log('Google Sign-In initialized');
+            } else {
+                console.error('Google Identity Services not loaded');
+            }
+        }
+        
+        function handleGoogleSignIn(response) {
+            console.log('Google Sign-In response:', response);
+            if (window.authManager) {
+                window.authManager.handleGoogleSignIn(response.credential)
+                    .then(result => {
+                        if (result.success) {
+                            console.log('Google sign-in successful');
+                            document.getElementById('auth-modal').style.display = 'none';
+                            location.reload(); // Refresh to show authenticated state
+                        } else {
+                            console.error('Google sign-in failed:', result.error);
+                            document.getElementById('login-error').textContent = result.error || 'Google sign-in failed';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Google sign-in error:', error);
+                        document.getElementById('login-error').textContent = 'Google sign-in failed';
+                    });
+            }
+        }
+        
+        function triggerGoogleSignIn() {
+            if (googleInitialized && google.accounts) {
+                google.accounts.id.prompt();
+            } else {
+                console.error('Google Sign-In not initialized');
+            }
+        }
+        
+        // Initialize Google when the script loads
+        window.addEventListener('load', function() {
+            setTimeout(initializeGoogle, 1000); // Wait for Google script to load
+        });
     </script>
     <script src="auth-db.js?v=20250903"></script>
     <script src="script.js?v=20250903"></script>
@@ -900,6 +1016,20 @@
             
             if (!window.menuEditor) {
                 console.error('MenuEditor failed to initialize! Check for errors above.');
+            }
+            
+            // Add click handlers for Google sign-in buttons
+            const googleSigninBtn = document.getElementById('google-signin-button');
+            const googleSignupBtn = document.getElementById('google-signup-button');
+            
+            if (googleSigninBtn) {
+                googleSigninBtn.addEventListener('click', triggerGoogleSignIn);
+                console.log('Google sign-in button handler added');
+            }
+            
+            if (googleSignupBtn) {
+                googleSignupBtn.addEventListener('click', triggerGoogleSignIn);
+                console.log('Google sign-up button handler added');
             }
         }, 1000);
     </script>
