@@ -4731,7 +4731,16 @@ MenuEditor.prototype.loadMenuById = async function(menuId) {
     
     try {
         const userMenus = await window.authManager.getUserMenus();
+        console.log('getUserMenus returned:', userMenus, 'Type:', typeof userMenus, 'Is array:', Array.isArray(userMenus));
+        
+        // Ensure userMenus is an array
+        if (!Array.isArray(userMenus)) {
+            console.error('getUserMenus did not return an array:', userMenus);
+            return;
+        }
+        
         const menu = userMenus.find(m => m.id === menuId);
+        console.log('Found menu:', menu);
         
         if (menu) {
             await this.loadMenu(menuId);
@@ -4740,7 +4749,7 @@ MenuEditor.prototype.loadMenuById = async function(menuId) {
             await this.loadUserMenus(); // Refresh to update active state
             this.updatePublishButtonVisibility();
         } else {
-            console.error('Menu not found:', menuId);
+            console.error('Menu not found:', menuId, 'Available menus:', userMenus.map(m => ({id: m.id, name: m.name})));
         }
     } catch (error) {
         console.error('Error loading menu by ID:', error);
