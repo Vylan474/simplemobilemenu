@@ -4653,8 +4653,8 @@ MenuEditor.prototype.loadUserMenus = async function() {
         
         // Add click handler for menu info area
         const menuInfo = menuItem.querySelector('.menu-info');
-        menuInfo.addEventListener('click', () => {
-            this.loadMenuById(menu.id);
+        menuInfo.addEventListener('click', async () => {
+            await this.loadMenuById(menu.id);
         });
         
         if (menu.id === this.currentMenuId) {
@@ -4726,18 +4726,24 @@ MenuEditor.prototype.updateChangeIndicator = function() {
     }
 };
 
-MenuEditor.prototype.loadMenuById = function(menuId) {
+MenuEditor.prototype.loadMenuById = async function(menuId) {
     if (!this.currentUser) return;
     
-    const userMenus = window.authManager.getUserMenus();
-    const menu = userMenus.find(m => m.id === menuId);
-    
-    if (menu) {
-        this.loadMenu(menu);
-        this.currentMenuId = menuId;
-        this.updateCurrentMenuDisplay(menu.name);
-        this.loadUserMenus(); // Refresh to update active state
-        this.updatePublishButtonVisibility();
+    try {
+        const userMenus = await window.authManager.getUserMenus();
+        const menu = userMenus.find(m => m.id === menuId);
+        
+        if (menu) {
+            await this.loadMenu(menuId);
+            this.currentMenuId = menuId;
+            this.updateCurrentMenuDisplay(menu.name);
+            await this.loadUserMenus(); // Refresh to update active state
+            this.updatePublishButtonVisibility();
+        } else {
+            console.error('Menu not found:', menuId);
+        }
+    } catch (error) {
+        console.error('Error loading menu by ID:', error);
     }
 };
 
@@ -4765,23 +4771,23 @@ MenuEditor.prototype.duplicateMenu = function(menuId) {
     }
 };
 
-MenuEditor.prototype.deleteMenu = function(menuId) {
+MenuEditor.prototype.deleteMenu = async function(menuId) {
     if (!this.currentUser) return;
     
     if (confirm('Are you sure you want to delete this menu? This action cannot be undone.')) {
-        window.authManager.deleteUserMenu(menuId);
+        await window.authManager.deleteUserMenu(menuId);
         
         // If we deleted the current menu, load another or create new
         if (menuId === this.currentMenuId) {
-            const remainingMenus = window.authManager.getUserMenus();
+            const remainingMenus = await window.authManager.getUserMenus();
             if (remainingMenus.length > 0) {
-                this.loadMenuById(remainingMenus[0].id);
+                await this.loadMenuById(remainingMenus[0].id);
             } else {
                 this.createNewMenu();
             }
         }
         
-        this.loadUserMenus();
+        await this.loadUserMenus();
     }
 };
 
