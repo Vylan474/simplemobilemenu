@@ -2757,21 +2757,21 @@ body .preview-navigation {
 }
 
 #preview-modal .menu-logo.small {
-    width: 45%;
-    max-width: 155px; /* 45% of 345px phone width */
-    max-height: 80px;
+    width: 45% !important;
+    max-width: 155px !important; /* 45% of 345px phone width */
+    max-height: 80px !important;
 }
 
 #preview-modal .menu-logo.medium {
-    width: 60%;
-    max-width: 207px; /* 60% of 345px phone width */
-    max-height: 120px;
+    width: 60% !important;
+    max-width: 207px !important; /* 60% of 345px phone width */
+    max-height: 120px !important;
 }
 
 #preview-modal .menu-logo.large {
-    width: 75%;
-    max-width: 259px; /* 75% of 345px phone width */
-    max-height: 150px;
+    width: 75% !important;
+    max-width: 259px !important; /* 75% of 345px phone width */
+    max-height: 150px !important;
 }
 
 /* Desktop overrides for reasonable max sizes */
