@@ -3780,12 +3780,28 @@ body.dark-mode {
     color: #333333 !important;
 }
 
-/* Ensure all content within preview areas uses light mode colors */
-.dark-mode .preview-content *,
-.dark-mode .smartphone-content *,
-.dark-mode .side-preview-content * {
+/* Ensure all content within preview areas uses light mode colors, but exclude color palette elements */
+.dark-mode .preview-content *:not(.preview-section h2):not(.preview-item-title):not(.preview-item-description):not(.preview-price-cell):not(.preview-title-price):not(.preview-menu-title):not(.preview-menu-subtitle):not(.preview-column-header):not(.preview-data-cell):not(.preview-title-text),
+.dark-mode .smartphone-content *:not(.preview-section h2):not(.preview-item-title):not(.preview-item-description):not(.preview-price-cell):not(.preview-title-price):not(.preview-menu-title):not(.preview-menu-subtitle):not(.preview-column-header):not(.preview-data-cell):not(.preview-title-text),
+.dark-mode .side-preview-content *:not(.preview-section h2):not(.preview-item-title):not(.preview-item-description):not(.preview-price-cell):not(.preview-title-price):not(.preview-menu-title):not(.preview-menu-subtitle):not(.preview-column-header):not(.preview-data-cell):not(.preview-title-text) {
     color: inherit !important;
     background-color: transparent !important;
+}
+
+/* Allow color palette elements to use their applied colors even in dark mode - higher specificity */
+.dark-mode .preview-section h2[style*="color"] {
+    color: unset !important;
+}
+.dark-mode .preview-item-title[style*="color"],
+.dark-mode .preview-item-description[style*="color"],
+.dark-mode .preview-price-cell[style*="color"], 
+.dark-mode .preview-title-price[style*="color"],
+.dark-mode .preview-menu-title[style*="color"],
+.dark-mode .preview-menu-subtitle[style*="color"],
+.dark-mode .preview-column-header[style*="color"],
+.dark-mode .preview-data-cell[style*="color"],
+.dark-mode .preview-title-text[style*="color"] {
+    color: unset !important;
 }
 
 /* Navigation in preview should also be light */

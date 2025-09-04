@@ -617,23 +617,23 @@
                 const container = document.querySelector('.published-menu-container');
                 if (!container) return;
                 
-                // Apply specific element colors
+                // Apply specific element colors with important priority to override dark mode
                 const primaryTextElements = container.querySelectorAll('.preview-item-title .preview-title-text, .preview-menu-title');
-                primaryTextElements.forEach(el => el.style.color = palette.primaryText);
+                primaryTextElements.forEach(el => el.style.setProperty('color', palette.primaryText, 'important'));
                 
                 const secondaryTextElements = container.querySelectorAll('.preview-item-description, .preview-menu-subtitle');
-                secondaryTextElements.forEach(el => el.style.color = palette.secondaryText);
+                secondaryTextElements.forEach(el => el.style.setProperty('color', palette.secondaryText, 'important'));
                 
                 const headerElements = container.querySelectorAll('.preview-section h2');
                 headerElements.forEach(el => {
-                    el.style.color = palette.headers;
+                    el.style.setProperty('color', palette.headers, 'important');
                     // Add colored divider line using accent color
-                    el.style.borderBottomColor = palette.accent;
+                    el.style.setProperty('border-bottom-color', palette.accent, 'important');
                 });
                 
                 const accentElements = container.querySelectorAll('.preview-price-cell, .preview-title-price');
                 accentElements.forEach(el => {
-                    el.style.color = palette.accent;
+                    el.style.setProperty('color', palette.accent, 'important');
                     // Ensure price alignment is maintained after color application
                     if (el.classList.contains('preview-price-cell')) {
                         el.style.textAlign = 'right';

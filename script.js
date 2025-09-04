@@ -3975,26 +3975,26 @@ class MenuEditor {
         container.style.setProperty('--background-color', palette.background);
         container.style.setProperty('--muted-color', palette.muted);
         
-        // Apply specific element colors
+        // Apply specific element colors with important priority to override dark mode
         const primaryTextElements = container.querySelectorAll('.preview-item-title .preview-title-text, .preview-menu-title');
-        primaryTextElements.forEach(el => el.style.color = palette.primaryText);
+        primaryTextElements.forEach(el => el.style.setProperty('color', palette.primaryText, 'important'));
         
         const secondaryTextElements = container.querySelectorAll('.preview-item-description, .preview-menu-subtitle');
-        secondaryTextElements.forEach(el => el.style.color = palette.secondaryText);
+        secondaryTextElements.forEach(el => el.style.setProperty('color', palette.secondaryText, 'important'));
         
         const headerElements = container.querySelectorAll('.preview-section h2, .preview-column-header');
         headerElements.forEach(el => {
-            el.style.color = palette.headers;
+            el.style.setProperty('color', palette.headers, 'important');
             // Add colored divider line using accent color
-            el.style.borderBottomColor = palette.accent;
+            el.style.setProperty('border-bottom-color', palette.accent, 'important');
         });
         
         const accentElements = container.querySelectorAll('.preview-price-cell, .preview-title-price');
-        accentElements.forEach(el => el.style.color = palette.accent);
+        accentElements.forEach(el => el.style.setProperty('color', palette.accent, 'important'));
         
         // Apply secondary text color to all non-price data cells
         const dataElements = container.querySelectorAll('.preview-data-cell:not(.preview-price-cell)');
-        dataElements.forEach(el => el.style.color = palette.secondaryText);
+        dataElements.forEach(el => el.style.setProperty('color', palette.secondaryText, 'important'));
     }
     
     updateColorSelection() {
