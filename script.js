@@ -189,42 +189,42 @@ class MenuEditor {
             cream: {
                 name: 'Cream',
                 description: 'Warm ivory & gold tones',
-                primaryText: '#f4e5d3',      // Light warm cream for main text
-                secondaryText: '#e6d0b5',    // Medium cream for descriptions
-                headers: '#f5e6d3',          // Light cream for headers
-                accent: '#ffd700',           // Bright gold for prices/accents
+                primaryText: '#fffacd',      // Bright lemon chiffon for main text
+                secondaryText: '#ffefd5',    // Papaya whip for descriptions
+                headers: '#fff8dc',          // Cornsilk for headers
+                accent: '#ffdf00',           // Vivid golden yellow for prices/accents
                 background: '#2d1810',       // Dark brown for backgrounds
-                muted: '#d4c4a8'            // Muted cream for muted elements
+                muted: '#f0e68c'            // Bright khaki for muted elements
             },
             pearl: {
                 name: 'Pearl',
                 description: 'Clean silver & whites',
-                primaryText: '#f8f8ff',      // Ghost white for main text
-                secondaryText: '#e6e6fa',    // Lavender for descriptions
-                headers: '#ffffff',          // Pure white for headers
-                accent: '#87ceeb',           // Sky blue for prices/accents
+                primaryText: '#ffffff',      // Pure white for main text
+                secondaryText: '#f0f8ff',    // Alice blue for descriptions
+                headers: '#f8f8ff',          // Ghost white for headers
+                accent: '#00bfff',           // Deep sky blue for prices/accents
                 background: '#2c2c2c',       // Dark gray for backgrounds
-                muted: '#d3d3d3'            // Light gray for muted elements
+                muted: '#e6e6fa'            // Lavender for muted elements
             },
             mint: {
                 name: 'Mint',
                 description: 'Fresh light greens',
-                primaryText: '#f0fff0',      // Honeydew for main text
-                secondaryText: '#e0ffe0',    // Light green for descriptions
+                primaryText: '#f0ffff',      // Azure for main text
+                secondaryText: '#e0ffff',    // Light cyan for descriptions
                 headers: '#f5fffa',          // Mint cream for headers
-                accent: '#00ff7f',           // Spring green for prices/accents
+                accent: '#00ff00',           // Pure lime green for prices/accents
                 background: '#064e3b',       // Dark emerald for backgrounds
-                muted: '#b3ffcc'            // Light mint for muted elements
+                muted: '#98fb98'            // Pale green for muted elements
             },
             blush: {
                 name: 'Blush',
                 description: 'Soft pink & coral tones',
-                primaryText: '#ffe4e1',      // Misty rose for main text
-                secondaryText: '#ffb6c1',    // Light pink for descriptions
-                headers: '#ffeee6',          // Seashell for headers
-                accent: '#ff69b4',           // Hot pink for prices/accents
+                primaryText: '#fff0f5',      // Lavender blush for main text
+                secondaryText: '#ffe4e1',    // Misty rose for descriptions
+                headers: '#ffeef0',          // Light pink for headers
+                accent: '#ff1493',           // Deep pink for prices/accents
                 background: '#4a1a1a',       // Dark maroon for backgrounds
-                muted: '#ffcccb'            // Light coral for muted elements
+                muted: '#ffb6c1'            // Light pink for muted elements
             }
         };
         
