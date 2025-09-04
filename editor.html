@@ -983,31 +983,40 @@
         }
         
         async function initializeGoogle() {
+            console.log('🚀 initializeGoogle called - Current state:', { 
+                GOOGLE_CLIENT_ID: GOOGLE_CLIENT_ID ? 'loaded' : 'null',
+                googleInitialized,
+                googleAvailable: typeof google !== 'undefined'
+            });
+            
             // Load config if not already loaded
             if (!GOOGLE_CLIENT_ID) {
+                console.log('📥 Loading Google config...');
                 const configLoaded = await loadGoogleConfig();
                 if (!configLoaded) {
+                    console.log('❌ Config loading failed - retrying in 2 seconds');
                     setTimeout(initializeGoogle, 2000);
                     return;
                 }
+                console.log('✅ Google client ID loaded:', GOOGLE_CLIENT_ID);
             }
             
             if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
                 try {
+                    console.log('🔧 Attempting to initialize Google with client_id:', GOOGLE_CLIENT_ID);
                     google.accounts.id.initialize({
                         client_id: GOOGLE_CLIENT_ID,
                         callback: handleGoogleCredentialResponse,
                         auto_select: false,
-                        cancel_on_tap_outside: true,
-                        use_fedcm_for_prompt: false  // Disable FedCM to avoid deprecation warnings
+                        cancel_on_tap_outside: true
                     });
                     googleInitialized = true;
-                    console.log('Google Sign-In initialized successfully');
+                    console.log('✅ Google Sign-In initialized successfully');
                 } catch (error) {
-                    console.error('Error initializing Google Sign-In:', error);
+                    console.error('❌ Error initializing Google Sign-In:', error);
                 }
             } else {
-                console.error('Google Identity Services not loaded yet');
+                console.error('⏳ Google Identity Services not loaded yet - retrying in 1 second');
                 // Retry initialization after a delay
                 setTimeout(initializeGoogle, 1000);
             }
@@ -1045,18 +1054,27 @@
         }
         
         function triggerGoogleSignIn() {
-            if (!googleInitialized) {
-                console.error('Google Sign-In not initialized yet');
+            console.log('triggerGoogleSignIn called - googleInitialized:', googleInitialized, 'GOOGLE_CLIENT_ID:', GOOGLE_CLIENT_ID);
+            
+            if (!googleInitialized || !GOOGLE_CLIENT_ID) {
+                console.error('Google Sign-In not ready - reinitializing...');
                 // Try to initialize again
                 initializeGoogle();
                 return;
             }
             
+            if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+                console.error('Google Identity Services not available');
+                return;
+            }
+            
             try {
-                // Use the modern prompt method instead of deprecated renderButton approach
+                console.log('Triggering Google Sign-In prompt...');
+                // Use the modern prompt method
                 google.accounts.id.prompt((notification) => {
+                    console.log('Google prompt notification:', notification);
                     if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                        console.log('Google Sign-In prompt was not displayed or was skipped');
+                        console.log('Google Sign-In prompt was not displayed or was skipped - trying renderButton fallback');
                         // Fallback to renderButton if prompt fails
                         const buttonContainer = document.createElement('div');
                         buttonContainer.style.display = 'none';
