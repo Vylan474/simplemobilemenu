@@ -108,13 +108,14 @@ body::before {
     top: 100%;
     left: 0;
     z-index: 1000;
-    background: rgba(245, 247, 250, 0.9);  /* More opaque for better readability */
+    background: rgba(245, 247, 250, 0.95);  /* More opaque for better readability */
     backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(245, 247, 250, 0.4);
+    border: 1px solid rgba(10, 26, 47, 0.2);
     border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.5), inset 0 0 0 1px rgba(245, 247, 250, 0.3);
+    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
     padding: 15px;
     margin-top: 5px;
+    color: #0A1A2F;  /* Dark text for light backgrounds */
 }
 
 /* Dark mode for dropdowns */
@@ -127,12 +128,12 @@ body::before {
 /* Base dropdown option class - shared by all dropdown items */
 .dropdown-option {
     cursor: pointer;
-    border: 2px solid rgba(245, 247, 250, 0.3);
+    border: 2px solid rgba(10, 26, 47, 0.15);
     border-radius: 8px;
     padding: 10px;
     text-align: center;
     transition: all 0.2s ease;
-    background: rgba(245, 247, 250, 0.05);
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
     color: #0A1A2F;  /* Dark text for light background */
 }
@@ -150,6 +151,11 @@ body::before {
     transform: translateY(-1px);
 }
 
+.dropdown-option:hover span,
+.dropdown-option:hover small {
+    color: #0A1A2F;  /* Keep text dark on hover */
+}
+
 .dropdown-option.selected,
 .dropdown-option.active {
     border-color: #FF4C29;
@@ -163,13 +169,23 @@ body::before {
     display: block;
     font-size: 14px;
     font-weight: 500;
-    color: inherit;
+    color: #0A1A2F;
 }
 
 .dropdown-option small {
     font-size: 11px;
-    opacity: 0.8;
-    color: inherit;
+    opacity: 0.7;
+    color: #2A3B52;
+}
+
+/* Dark mode text colors */
+.dark-mode .dropdown-option span,
+.dark-mode .dropdown-option label {
+    color: #F5F7FA;
+}
+
+.dark-mode .dropdown-option small {
+    color: rgba(245, 247, 250, 0.7);
 }
 
 /* =============================================
@@ -199,7 +215,7 @@ body::before {
 .background-section label {
     font-weight: 600;
     font-size: 12px;
-    color: #555;
+    color: #0A1A2F;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 8px;
@@ -245,8 +261,9 @@ body::before {
 
 .background-option span {
     font-size: 11px;
-    color: #F5F7FA;
+    color: #0A1A2F;
     display: block;
+    font-weight: 500;
 }
 
 /* Recent Backgrounds Grid */
@@ -3042,7 +3059,7 @@ body .preview-navigation {
 .logo-section label {
     font-weight: 600;
     font-size: 12px;
-    color: #555;
+    color: #0A1A2F;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 8px;
@@ -3113,20 +3130,21 @@ body .preview-navigation {
 
 .size-option i {
     font-size: 16px;
-    color: #F5F7FA;
+    color: #0A1A2F;
     margin-bottom: 4px;
 }
 
 .size-option span {
     font-size: 12px;
     font-weight: 600;
-    color: #F5F7FA;
+    color: #0A1A2F;
     margin-bottom: 2px;
 }
 
 .size-option small {
     font-size: 10px;
-    color: rgba(245, 247, 250, 0.7);
+    color: #2A3B52;
+    opacity: 0.7;
 }
 
 .logo-preview {
@@ -3272,7 +3290,7 @@ body .preview-navigation {
 .font-section label {
     display: block;
     font-weight: 600;
-    color: #2c3e50;
+    color: #0A1A2F;
     margin-bottom: 10px;
     font-size: 14px;
 }
@@ -3296,7 +3314,7 @@ body .preview-navigation {
     display: block;
     font-size: 16px;
     font-weight: 500;
-    color: #F5F7FA;
+    color: #0A1A2F;
     margin-bottom: 2px;
 }
 
@@ -3320,7 +3338,7 @@ body .preview-navigation {
 .color-section label {
     display: block;
     font-weight: 600;
-    color: #2c3e50;
+    color: #0A1A2F;
     margin-bottom: 12px;
     font-size: 14px;
 }
@@ -3627,9 +3645,20 @@ body.dark-mode {
 }
 
 .dark-mode .palette-name,
-.dark-mode .theme-name,
-.dark-mode .font-option span {
+.dark-mode .theme-name {
     color: #f0f0f0 !important;
+}
+
+/* Dark mode text colors for specific option types */
+.dark-mode .size-option span,
+.dark-mode .size-option i,
+.dark-mode .font-option span,
+.dark-mode .background-option span {
+    color: #F5F7FA;
+}
+
+.dark-mode .size-option small {
+    color: rgba(245, 247, 250, 0.7);
 }
 
 .dark-mode .palette-option small,
