@@ -110,10 +110,11 @@ body::before {
     top: 100%;
     left: 0;
     z-index: 1000;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(245, 247, 250, 0.25);
+    backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(245, 247, 250, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.4), inset 0 0 0 1px rgba(245, 247, 250, 0.2);
     padding: 15px;
     min-width: 300px;
     margin-top: 5px;
@@ -146,22 +147,25 @@ body::before {
 
 .background-option {
     cursor: pointer;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
+    border: 2px solid rgba(245, 247, 250, 0.3);
+    border-radius: 8px;
     padding: 8px;
     text-align: center;
     transition: all 0.2s ease;
-    background: white;
+    background: rgba(245, 247, 250, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .background-option:hover {
-    border-color: #007bff;
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+    border-color: #FF4C29;
+    box-shadow: 0 2px 8px rgba(255, 76, 41, 0.3);
+    background: rgba(255, 76, 41, 0.1);
 }
 
 .background-option.selected {
-    border-color: #007bff;
-    background: #f0f8ff;
+    border-color: #FF4C29;
+    background: rgba(255, 76, 41, 0.15);
+    box-shadow: 0 0 0 1px rgba(255, 76, 41, 0.4);
 }
 
 .background-option img {
@@ -187,7 +191,7 @@ body::before {
 
 .background-option span {
     font-size: 11px;
-    color: #666;
+    color: #F5F7FA;
     display: block;
 }
 
@@ -2973,10 +2977,11 @@ body .preview-navigation {
     top: 100%;
     left: 0;
     z-index: 1000;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(245, 247, 250, 0.25);
+    backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(245, 247, 250, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.4), inset 0 0 0 1px rgba(245, 247, 250, 0.2);
     padding: 15px;
     min-width: 300px;
     margin-top: 5px;
@@ -3055,39 +3060,42 @@ body .preview-navigation {
     flex-direction: column;
     align-items: center;
     padding: 10px 8px;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-    background: white;
+    border: 2px solid rgba(245, 247, 250, 0.3);
+    border-radius: 8px;
+    background: rgba(245, 247, 250, 0.1);
+    backdrop-filter: blur(10px);
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .size-option:hover {
-    border-color: #007bff;
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+    border-color: #FF4C29;
+    box-shadow: 0 2px 8px rgba(255, 76, 41, 0.3);
+    background: rgba(255, 76, 41, 0.1);
 }
 
 .size-option.active {
-    border-color: #007bff;
-    background: #f0f8ff;
+    border-color: #FF4C29;
+    background: rgba(255, 76, 41, 0.15);
+    box-shadow: 0 0 0 1px rgba(255, 76, 41, 0.4);
 }
 
 .size-option i {
     font-size: 16px;
-    color: #666;
+    color: #F5F7FA;
     margin-bottom: 4px;
 }
 
 .size-option span {
     font-size: 12px;
     font-weight: 600;
-    color: #333;
+    color: #F5F7FA;
     margin-bottom: 2px;
 }
 
 .size-option small {
     font-size: 10px;
-    color: #999;
+    color: rgba(245, 247, 250, 0.7);
 }
 
 .logo-preview {
@@ -3230,10 +3238,11 @@ body .preview-navigation {
     top: 100%;
     left: 0;
     z-index: 1000;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(245, 247, 250, 0.25);
+    backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(245, 247, 250, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.4), inset 0 0 0 1px rgba(245, 247, 250, 0.2);
     min-width: 280px;
     padding: 15px;
     margin-top: 5px;
@@ -3255,31 +3264,32 @@ body .preview-navigation {
 
 .font-option {
     padding: 12px 15px;
-    border: 2px solid #e9ecef;
+    border: 2px solid rgba(245, 247, 250, 0.3);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
-    background: white;
+    background: rgba(245, 247, 250, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .font-option:hover {
-    border-color: #3498db;
-    background: #f8f9fa;
+    border-color: #FF4C29;
+    background: rgba(255, 76, 41, 0.1);
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
+    box-shadow: 0 2px 8px rgba(255, 76, 41, 0.3);
 }
 
 .font-option.selected {
-    border-color: #3498db;
-    background: #e3f2fd;
-    box-shadow: 0 0 0 1px rgba(52, 152, 219, 0.2);
+    border-color: #FF4C29;
+    background: rgba(255, 76, 41, 0.15);
+    box-shadow: 0 0 0 1px rgba(255, 76, 41, 0.4);
 }
 
 .font-option span {
     display: block;
     font-size: 16px;
     font-weight: 500;
-    color: #2c3e50;
+    color: #F5F7FA;
     margin-bottom: 2px;
 }
 
@@ -3300,10 +3310,11 @@ body .preview-navigation {
     top: 100%;
     left: 0;
     z-index: 1000;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(245, 247, 250, 0.25);
+    backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(245, 247, 250, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.4), inset 0 0 0 1px rgba(245, 247, 250, 0.2);
     min-width: 320px;
     padding: 15px;
     margin-top: 5px;
@@ -4042,10 +4053,11 @@ body.dark-mode {
     top: 100%;
     left: 0;
     min-width: 320px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(245, 247, 250, 0.25);
+    backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(245, 247, 250, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.4), inset 0 0 0 1px rgba(245, 247, 250, 0.2);
     z-index: 1000;
     padding: 15px;
     margin-top: 5px;
