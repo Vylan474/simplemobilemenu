@@ -98,6 +98,84 @@ body::before {
     align-items: center;
 }
 
+/* =============================================
+   SHARED DROPDOWN STYLES
+   ============================================= */
+
+/* Base dropdown container class - shared by all dropdowns */
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    background: rgba(245, 247, 250, 0.9);  /* More opaque for better readability */
+    backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(245, 247, 250, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.5), inset 0 0 0 1px rgba(245, 247, 250, 0.3);
+    padding: 15px;
+    margin-top: 5px;
+}
+
+/* Dark mode for dropdowns */
+.dark-mode .dropdown {
+    background: rgba(30, 40, 55, 0.95);  /* Dark background with high opacity */
+    border: 1px solid rgba(245, 247, 250, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(245, 247, 250, 0.1);
+}
+
+/* Base dropdown option class - shared by all dropdown items */
+.dropdown-option {
+    cursor: pointer;
+    border: 2px solid rgba(245, 247, 250, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    transition: all 0.2s ease;
+    background: rgba(245, 247, 250, 0.05);
+    backdrop-filter: blur(10px);
+    color: #0A1A2F;  /* Dark text for light background */
+}
+
+.dark-mode .dropdown-option {
+    background: rgba(245, 247, 250, 0.08);
+    border: 2px solid rgba(245, 247, 250, 0.2);
+    color: #F5F7FA;  /* Light text for dark background */
+}
+
+.dropdown-option:hover {
+    border-color: #FF4C29;
+    box-shadow: 0 2px 8px rgba(255, 76, 41, 0.3);
+    background: rgba(255, 76, 41, 0.1);
+    transform: translateY(-1px);
+}
+
+.dropdown-option.selected,
+.dropdown-option.active {
+    border-color: #FF4C29;
+    background: rgba(255, 76, 41, 0.15);
+    box-shadow: 0 0 0 2px rgba(255, 76, 41, 0.3);
+}
+
+/* Text styles for dropdown options */
+.dropdown-option span,
+.dropdown-option label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: inherit;
+}
+
+.dropdown-option small {
+    font-size: 11px;
+    opacity: 0.8;
+    color: inherit;
+}
+
+/* =============================================
+   SPECIFIC DROPDOWN STYLES
+   ============================================= */
+
 .background-controls {
     position: relative;
     display: flex;
@@ -106,18 +184,8 @@ body::before {
 }
 
 .background-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    background: rgba(245, 247, 250, 0.25);
-    backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(245, 247, 250, 0.3);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.4), inset 0 0 0 1px rgba(245, 247, 250, 0.2);
-    padding: 15px;
+    /* Extends .dropdown base class */
     min-width: 300px;
-    margin-top: 5px;
 }
 
 .background-section {
@@ -146,27 +214,13 @@ body::before {
 }
 
 .background-option {
-    cursor: pointer;
-    border: 2px solid rgba(245, 247, 250, 0.3);
-    border-radius: 8px;
+    /* Extends .dropdown-option base class */
     padding: 8px;
-    text-align: center;
-    transition: all 0.2s ease;
-    background: rgba(245, 247, 250, 0.1);
-    backdrop-filter: blur(10px);
 }
 
-.background-option:hover {
-    border-color: #FF4C29;
-    box-shadow: 0 2px 8px rgba(255, 76, 41, 0.3);
-    background: rgba(255, 76, 41, 0.1);
-}
+/* Hover state handled by .dropdown-option:hover */
 
-.background-option.selected {
-    border-color: #FF4C29;
-    background: rgba(255, 76, 41, 0.15);
-    box-shadow: 0 0 0 1px rgba(255, 76, 41, 0.4);
-}
+/* Selected state handled by .dropdown-option.selected */
 
 .background-option img {
     width: 100%;
@@ -2973,18 +3027,8 @@ body .preview-navigation {
 }
 
 .logo-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    background: rgba(245, 247, 250, 0.25);
-    backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(245, 247, 250, 0.3);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.4), inset 0 0 0 1px rgba(245, 247, 250, 0.2);
-    padding: 15px;
+    /* Extends .dropdown base class */
     min-width: 300px;
-    margin-top: 5px;
 }
 
 .logo-section {
@@ -3056,29 +3100,16 @@ body .preview-navigation {
 }
 
 .size-option {
+    /* Extends .dropdown-option base class */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 10px 8px;
-    border: 2px solid rgba(245, 247, 250, 0.3);
-    border-radius: 8px;
-    background: rgba(245, 247, 250, 0.1);
-    backdrop-filter: blur(10px);
-    cursor: pointer;
-    transition: all 0.2s ease;
 }
 
-.size-option:hover {
-    border-color: #FF4C29;
-    box-shadow: 0 2px 8px rgba(255, 76, 41, 0.3);
-    background: rgba(255, 76, 41, 0.1);
-}
+/* Hover state handled by .dropdown-option:hover */
 
-.size-option.active {
-    border-color: #FF4C29;
-    background: rgba(255, 76, 41, 0.15);
-    box-shadow: 0 0 0 1px rgba(255, 76, 41, 0.4);
-}
+/* Active state handled by .dropdown-option.active */
 
 .size-option i {
     font-size: 16px;
@@ -3234,18 +3265,8 @@ body .preview-navigation {
 }
 
 .font-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    background: rgba(245, 247, 250, 0.25);
-    backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(245, 247, 250, 0.3);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.4), inset 0 0 0 1px rgba(245, 247, 250, 0.2);
+    /* Extends .dropdown base class */
     min-width: 280px;
-    padding: 15px;
-    margin-top: 5px;
 }
 
 .font-section label {
@@ -3263,27 +3284,13 @@ body .preview-navigation {
 }
 
 .font-option {
+    /* Extends .dropdown-option base class */
     padding: 12px 15px;
-    border: 2px solid rgba(245, 247, 250, 0.3);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: rgba(245, 247, 250, 0.1);
-    backdrop-filter: blur(10px);
 }
 
-.font-option:hover {
-    border-color: #FF4C29;
-    background: rgba(255, 76, 41, 0.1);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(255, 76, 41, 0.3);
-}
+/* Hover state handled by .dropdown-option:hover */
 
-.font-option.selected {
-    border-color: #FF4C29;
-    background: rgba(255, 76, 41, 0.15);
-    box-shadow: 0 0 0 1px rgba(255, 76, 41, 0.4);
-}
+/* Selected state handled by .dropdown-option.selected */
 
 .font-option span {
     display: block;
@@ -3306,18 +3313,8 @@ body .preview-navigation {
 }
 
 .color-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    background: rgba(245, 247, 250, 0.25);
-    backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(245, 247, 250, 0.3);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.4), inset 0 0 0 1px rgba(245, 247, 250, 0.2);
+    /* Extends .dropdown base class */
     min-width: 320px;
-    padding: 15px;
-    margin-top: 5px;
 }
 
 .color-section label {
@@ -3604,32 +3601,21 @@ body.dark-mode {
     background: #454545;
 }
 
-.dark-mode .logo-dropdown,
-.dark-mode .background-dropdown,
-.dark-mode .font-dropdown,
-.dark-mode .color-dropdown,
-.dark-mode .navigation-dropdown {
-    background: #2d2d2d;
-    border: 1px solid #555;
-    color: #e0e0e0;
-}
+/* Dark mode for dropdowns now handled by .dark-mode .dropdown */
 
-.dark-mode .size-option,
-.dark-mode .background-option,
-.dark-mode .font-option,
+/* Dark mode for options now handled by .dark-mode .dropdown-option */
 .dark-mode .palette-option,
 .dark-mode .theme-option {
-    background: #2d2d2d;
-    border: 2px solid #404040;
+    background: rgba(245, 247, 250, 0.08);
+    border: 2px solid rgba(245, 247, 250, 0.2);
+    color: #F5F7FA;
 }
 
-.dark-mode .size-option:hover,
-.dark-mode .background-option:hover,
-.dark-mode .font-option:hover,
+/* Hover states now handled by .dropdown-option:hover */
 .dark-mode .palette-option:hover,
 .dark-mode .theme-option:hover {
-    border-color: #3498db;
-    background: #353535;
+    border-color: #FF4C29;
+    background: rgba(255, 76, 41, 0.1);
 }
 
 .dark-mode .logo-section label,
@@ -3745,14 +3731,12 @@ body.dark-mode {
 }
 
 /* Dark mode selected states for all dropdown options */
-.dark-mode .size-option.active,
-.dark-mode .background-option.selected,
-.dark-mode .font-option.selected,
+/* Selected states now handled by .dropdown-option.selected */
 .dark-mode .palette-option.selected,
 .dark-mode .theme-option.selected {
-    border-color: #3498db;
-    background: #3a3a3a;
-    box-shadow: 0 0 0 1px rgba(52, 152, 219, 0.4);
+    border-color: #FF4C29;
+    background: rgba(255, 76, 41, 0.15);
+    box-shadow: 0 0 0 2px rgba(255, 76, 41, 0.3);
 }
 
 .dark-mode .theme-option.selected .theme-preview {
@@ -4049,18 +4033,8 @@ body.dark-mode {
 }
 
 .navigation-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
+    /* Extends .dropdown base class */
     min-width: 320px;
-    background: rgba(245, 247, 250, 0.25);
-    backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(245, 247, 250, 0.3);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(10, 26, 47, 0.4), inset 0 0 0 1px rgba(245, 247, 250, 0.2);
-    z-index: 1000;
-    padding: 15px;
-    margin-top: 5px;
 }
 
 .navigation-section {
