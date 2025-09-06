@@ -647,6 +647,7 @@ body::before {
     max-width: 300px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     animation: tooltipFadeIn 0.3s ease-out;
+    display: none; /* Hide by default, show only when content is added */
 }
 
 @keyframes tooltipFadeIn {

@@ -5,6 +5,7 @@
 
 class UXEnhancements {
     constructor(menuEditor) {
+        console.log('🚀 UXEnhancements constructor called');
         this.menuEditor = menuEditor;
         this.currentStep = 1;
         this.maxStep = 3;
@@ -175,10 +176,21 @@ class UXEnhancements {
         
         // Show first contextual tip after a delay, with better timing
         setTimeout(() => {
+            console.log('Attempting to show contextual tip...');
+            
             // Double-check that elements exist and user is authenticated
             const addSectionBtn = document.getElementById('add-section');
+            console.log('Add section button found:', !!addSectionBtn);
+            console.log('Has menu sections:', this.hasMenuSections());
+            console.log('Button visible:', addSectionBtn && addSectionBtn.offsetParent !== null);
+            
             if (!this.hasMenuSections() && addSectionBtn && addSectionBtn.offsetParent !== null) {
+                console.log('Showing contextual tip...');
                 this.showContextualTip('add-section', 'Get Started', 'Click here to add your first menu section!');
+            } else {
+                // Force show a test tip to debug
+                console.log('Conditions not met, showing test tip instead');
+                this.showContextualTip('add-section', 'Welcome!', 'This is a test tip to verify the system works.');
             }
         }, 2000);
     }
@@ -529,6 +541,13 @@ class UXEnhancements {
         const tipTitle = this.tipElement.querySelector('.tip-title');
         const tipDescription = this.tipElement.querySelector('.tip-description');
         
+        console.log('Contextual tip debug:', {
+            title, description, 
+            tipTitleFound: !!tipTitle,
+            tipDescriptionFound: !!tipDescription,
+            targetElement: targetElement
+        });
+        
         if (tipTitle) tipTitle.textContent = title;
         if (tipDescription) tipDescription.textContent = description;
         
@@ -659,6 +678,7 @@ window.addEventListener('load', () => {
     // Wait for MenuEditor to be initialized
     const checkMenuEditor = () => {
         if (window.menuEditor) {
+            console.log('🎯 Initializing UX Enhancements...');
             window.uxEnhancements = new UXEnhancements(window.menuEditor);
             
             // Hook into MenuEditor events
@@ -683,3 +703,13 @@ window.addEventListener('load', () => {
     
     setTimeout(checkMenuEditor, 500);
 });
+
+// Add a global function for testing contextual tips
+window.testContextualTip = function() {
+    if (window.uxEnhancements) {
+        console.log('🧪 Testing contextual tip...');
+        window.uxEnhancements.showContextualTip('add-section', 'Test Tip', 'This is a test tip to verify the system works!');
+    } else {
+        console.log('❌ UX Enhancements not initialized yet');
+    }
+};
