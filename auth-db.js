@@ -65,6 +65,18 @@ class DatabaseAuthManager {
             const data = await response.json();
 
             if (response.ok) {
+                // Store session data if provided (auto-login after registration)
+                if (data.sessionId) {
+                    this.currentUser = data.user;
+                    this.sessionId = data.sessionId;
+                    localStorage.setItem('sessionId', data.sessionId);
+                    
+                    // Broadcast auth state change
+                    document.dispatchEvent(new CustomEvent('authStateChanged', {
+                        detail: { user: data.user }
+                    }));
+                }
+                
                 return { success: true, user: data.user };
             } else {
                 return { success: false, error: data.error };

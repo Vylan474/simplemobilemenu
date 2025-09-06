@@ -5279,15 +5279,24 @@ async function handleRegister() {
         const userData = { name, email, password, restaurant: restaurant || null };
         const result = await window.authManager.register(userData);
         if (result.success) {
-            // Auto-login after registration
-            const loginResult = await window.authManager.signIn(email, password);
-            if (loginResult.success) {
-                document.getElementById('auth-modal').style.display = 'none';
-                location.reload();
+            // Check if registration auto-logged us in (if sessionId was returned)
+            if (window.authManager.isSignedIn()) {
+                // Already signed in, hide modal
+                const authModal = document.getElementById('auth-modal');
+                authModal.style.display = 'none';
+                authModal.classList.remove('show');
             } else {
-                showLoginForm();
-                document.getElementById('login-email').value = email;
-                document.getElementById('login-error').textContent = 'Account created! Please sign in.';
+                // Need to sign in manually
+                const loginResult = await window.authManager.signIn(email, password);
+                if (loginResult.success) {
+                    const authModal = document.getElementById('auth-modal');
+                    authModal.style.display = 'none';
+                    authModal.classList.remove('show');
+                } else {
+                    showLoginForm();
+                    document.getElementById('login-email').value = email;
+                    document.getElementById('login-error').textContent = 'Account created! Please sign in.';
+                }
             }
         } else {
             errorDiv.textContent = result.error || 'Registration failed';
