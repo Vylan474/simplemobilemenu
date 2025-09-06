@@ -1683,19 +1683,39 @@ class MenuEditor {
         // Close dropdowns when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.logo-controls') && this.logoDropdownOpen) {
-                this.closeOtherDropdowns('logo');
+                this.logoDropdownOpen = false;
+                const dropdown = document.getElementById('logo-dropdown');
+                const button = document.getElementById('logo-options');
+                if (dropdown) dropdown.classList.remove('show');
+                if (button) button.classList.remove('active');
             }
             if (!e.target.closest('.background-controls') && this.backgroundDropdownOpen) {
-                this.closeOtherDropdowns('background');
+                this.backgroundDropdownOpen = false;
+                const dropdown = document.getElementById('background-dropdown');
+                const button = document.getElementById('background-options');
+                if (dropdown) dropdown.classList.remove('show');
+                if (button) button.classList.remove('active');
             }
             if (!e.target.closest('.font-controls') && this.fontDropdownOpen) {
-                this.closeOtherDropdowns('font');
+                this.fontDropdownOpen = false;
+                const dropdown = document.getElementById('font-dropdown');
+                const button = document.getElementById('font-options');
+                if (dropdown) dropdown.classList.remove('show');
+                if (button) button.classList.remove('active');
             }
             if (!e.target.closest('.color-controls') && this.colorDropdownOpen) {
-                this.closeOtherDropdowns('color');
+                this.colorDropdownOpen = false;
+                const dropdown = document.getElementById('color-dropdown');
+                const button = document.getElementById('color-options');
+                if (dropdown) dropdown.classList.remove('show');
+                if (button) button.classList.remove('active');
             }
             if (!e.target.closest('.navigation-controls') && this.navigationDropdownOpen) {
-                this.closeOtherDropdowns('navigation');
+                this.navigationDropdownOpen = false;
+                const dropdown = document.getElementById('navigation-dropdown');
+                const button = document.getElementById('navigation-options');
+                if (dropdown) dropdown.classList.remove('show');
+                if (button) button.classList.remove('active');
             }
         });
     }
@@ -3529,7 +3549,13 @@ class MenuEditor {
         
         const dropdown = document.getElementById('logo-dropdown');
         this.logoDropdownOpen = !this.logoDropdownOpen;
-        dropdown.style.display = this.logoDropdownOpen ? 'block' : 'none';
+        
+        // Use .show class for proper animations and z-index handling
+        if (this.logoDropdownOpen) {
+            dropdown.classList.add('show');
+        } else {
+            dropdown.classList.remove('show');
+        }
         
         // Update button state
         const button = document.getElementById('logo-options');
@@ -3653,7 +3679,7 @@ class MenuEditor {
             this.logoDropdownOpen = false;
             const logoDropdown = document.getElementById('logo-dropdown');
             const logoButton = document.getElementById('logo-options');
-            if (logoDropdown) logoDropdown.style.display = 'none';
+            if (logoDropdown) logoDropdown.classList.remove('show');
             if (logoButton) logoButton.classList.remove('active');
         }
         
@@ -3662,7 +3688,7 @@ class MenuEditor {
             this.backgroundDropdownOpen = false;
             const bgDropdown = document.getElementById('background-dropdown');
             const bgButton = document.getElementById('background-options');
-            if (bgDropdown) bgDropdown.style.display = 'none';
+            if (bgDropdown) bgDropdown.classList.remove('show');
             if (bgButton) bgButton.classList.remove('active');
         }
         
@@ -3671,7 +3697,7 @@ class MenuEditor {
             this.fontDropdownOpen = false;
             const fontDropdown = document.getElementById('font-dropdown');
             const fontButton = document.getElementById('font-options');
-            if (fontDropdown) fontDropdown.style.display = 'none';
+            if (fontDropdown) fontDropdown.classList.remove('show');
             if (fontButton) fontButton.classList.remove('active');
         }
         
@@ -3680,7 +3706,7 @@ class MenuEditor {
             this.colorDropdownOpen = false;
             const colorDropdown = document.getElementById('color-dropdown');
             const colorButton = document.getElementById('color-options');
-            if (colorDropdown) colorDropdown.style.display = 'none';
+            if (colorDropdown) colorDropdown.classList.remove('show');
             if (colorButton) colorButton.classList.remove('active');
         }
         
@@ -3689,7 +3715,7 @@ class MenuEditor {
             this.navigationDropdownOpen = false;
             const navigationDropdown = document.getElementById('navigation-dropdown');
             const navigationButton = document.getElementById('navigation-options');
-            if (navigationDropdown) navigationDropdown.style.display = 'none';
+            if (navigationDropdown) navigationDropdown.classList.remove('show');
             if (navigationButton) navigationButton.classList.remove('active');
         }
     }
@@ -3700,7 +3726,13 @@ class MenuEditor {
         
         const dropdown = document.getElementById('background-dropdown');
         this.backgroundDropdownOpen = !this.backgroundDropdownOpen;
-        dropdown.style.display = this.backgroundDropdownOpen ? 'block' : 'none';
+        
+        // Use .show class for proper animations and z-index handling
+        if (this.backgroundDropdownOpen) {
+            dropdown.classList.add('show');
+        } else {
+            dropdown.classList.remove('show');
+        }
         
         // Update button state
         const button = document.getElementById('background-options');
@@ -3727,7 +3759,7 @@ class MenuEditor {
         
         // Close dropdown
         this.backgroundDropdownOpen = false;
-        document.getElementById('background-dropdown').style.display = 'none';
+        document.getElementById('background-dropdown').classList.remove('show');
         document.getElementById('background-options').classList.remove('active');
     }
     
@@ -3746,7 +3778,7 @@ class MenuEditor {
         
         // Close dropdown
         this.backgroundDropdownOpen = false;
-        document.getElementById('background-dropdown').style.display = 'none';
+        document.getElementById('background-dropdown').classList.remove('show');
         document.getElementById('background-options').classList.remove('active');
     }
     
@@ -4031,7 +4063,7 @@ class MenuEditor {
         
         // Close dropdown
         this.backgroundDropdownOpen = false;
-        document.getElementById('background-dropdown').style.display = 'none';
+        document.getElementById('background-dropdown').classList.remove('show');
         document.getElementById('background-options').classList.remove('active');
     }
     
@@ -4050,7 +4082,7 @@ class MenuEditor {
         
         // Close dropdown
         this.backgroundDropdownOpen = false;
-        document.getElementById('background-dropdown').style.display = 'none';
+        document.getElementById('background-dropdown').classList.remove('show');
         document.getElementById('background-options').classList.remove('active');
     }
     
@@ -4157,7 +4189,13 @@ class MenuEditor {
         
         const dropdown = document.getElementById('font-dropdown');
         this.fontDropdownOpen = !this.fontDropdownOpen;
-        dropdown.style.display = this.fontDropdownOpen ? 'block' : 'none';
+        
+        // Use .show class for proper animations and z-index handling
+        if (this.fontDropdownOpen) {
+            dropdown.classList.add('show');
+        } else {
+            dropdown.classList.remove('show');
+        }
         
         // Update button state
         const button = document.getElementById('font-options');
@@ -4195,7 +4233,7 @@ class MenuEditor {
         // Close dropdown with a delay to show selection feedback
         setTimeout(() => {
             this.fontDropdownOpen = false;
-            document.getElementById('font-dropdown').style.display = 'none';
+            document.getElementById('font-dropdown').classList.remove('show');
             document.getElementById('font-options').classList.remove('active');
         }, 400);
     }
@@ -4244,7 +4282,13 @@ class MenuEditor {
         
         const dropdown = document.getElementById('color-dropdown');
         this.colorDropdownOpen = !this.colorDropdownOpen;
-        dropdown.style.display = this.colorDropdownOpen ? 'block' : 'none';
+        
+        // Use .show class for proper animations and z-index handling
+        if (this.colorDropdownOpen) {
+            dropdown.classList.add('show');
+        } else {
+            dropdown.classList.remove('show');
+        }
         
         // Update button state
         const button = document.getElementById('color-options');
@@ -4284,7 +4328,7 @@ class MenuEditor {
         // Close dropdown with a delay to show selection feedback
         setTimeout(() => {
             this.colorDropdownOpen = false;
-            document.getElementById('color-dropdown').style.display = 'none';
+            document.getElementById('color-dropdown').classList.remove('show');
             document.getElementById('color-options').classList.remove('active');
         }, 400);
     }
@@ -4363,7 +4407,13 @@ class MenuEditor {
         
         const dropdown = document.getElementById('navigation-dropdown');
         this.navigationDropdownOpen = !this.navigationDropdownOpen;
-        dropdown.style.display = this.navigationDropdownOpen ? 'block' : 'none';
+        
+        // Use .show class for proper animations and z-index handling
+        if (this.navigationDropdownOpen) {
+            dropdown.classList.add('show');
+        } else {
+            dropdown.classList.remove('show');
+        }
         
         const button = document.getElementById('navigation-options');
         button.classList.toggle('active', this.navigationDropdownOpen);
@@ -4400,7 +4450,7 @@ class MenuEditor {
         // Close dropdown with a delay to show selection feedback
         setTimeout(() => {
             this.navigationDropdownOpen = false;
-            document.getElementById('navigation-dropdown').style.display = 'none';
+            document.getElementById('navigation-dropdown').classList.remove('show');
             document.getElementById('navigation-options').classList.remove('active');
         }, 400);
     }
@@ -5311,53 +5361,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', (e) => {
-        const backgroundControls = document.querySelector('.background-controls');
-        const fontControls = document.querySelector('.font-controls');
-        const colorControls = document.querySelector('.color-controls');
-        const navigationControls = document.querySelector('.navigation-controls');
-        
-        // Close background dropdown
-        if (backgroundControls && !backgroundControls.contains(e.target)) {
-            const dropdown = document.getElementById('background-dropdown');
-            if (dropdown && dropdown.style.display !== 'none') {
-                menuEditor.backgroundDropdownOpen = false;
-                dropdown.style.display = 'none';
-                document.getElementById('background-options').classList.remove('active');
-            }
-        }
-        
-        // Close font dropdown
-        if (fontControls && !fontControls.contains(e.target)) {
-            const dropdown = document.getElementById('font-dropdown');
-            if (dropdown && dropdown.style.display !== 'none') {
-                menuEditor.fontDropdownOpen = false;
-                dropdown.style.display = 'none';
-                document.getElementById('font-options').classList.remove('active');
-            }
-        }
-        
-        // Close color dropdown
-        if (colorControls && !colorControls.contains(e.target)) {
-            const dropdown = document.getElementById('color-dropdown');
-            if (dropdown && dropdown.style.display !== 'none') {
-                menuEditor.colorDropdownOpen = false;
-                dropdown.style.display = 'none';
-                document.getElementById('color-options').classList.remove('active');
-            }
-        }
-        
-        // Close navigation dropdown
-        if (navigationControls && !navigationControls.contains(e.target)) {
-            const dropdown = document.getElementById('navigation-dropdown');
-            if (dropdown && dropdown.style.display !== 'none') {
-                menuEditor.navigationDropdownOpen = false;
-                dropdown.style.display = 'none';
-                document.getElementById('navigation-options').classList.remove('active');
-            }
-        }
-    });
+    // This duplicate outside click handler is removed - the main one inside the MenuEditor class handles this properly
 
     // Discard functionality event listeners
     // Discard changes button
