@@ -516,26 +516,31 @@ tbody tr:nth-child(even) {
  * FORM ACCESSIBILITY ENHANCEMENTS
  * ============================================= */
 
-/* Enhanced form styling for better accessibility */
+/* Enhanced form styling for better accessibility - FIXED */
 .auth-form .form-group input:hover {
     border-color: rgba(52, 152, 219, 0.2) !important;
     box-shadow: 0 2px 6px rgba(10, 26, 47, 0.08) !important;
     transition: all 0.2s ease !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #2c3e50 !important;
 }
 
 .auth-form .form-group input:focus {
     border-color: rgba(52, 152, 219, 0.4) !important;
-    background: rgba(255, 255, 255, 0.15) !important;
+    background: rgba(255, 255, 255, 0.98) !important;
     box-shadow: 0 2px 12px rgba(52, 152, 219, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
     transform: translateY(-1px) !important;
     transition: all 0.2s ease !important;
+    color: #2c3e50 !important;
 }
 
-/* Enhanced select styling */
+/* Enhanced select styling - FIXED */
 .enhanced-form select:hover {
     border-color: rgba(52, 152, 219, 0.2) !important;
     box-shadow: 0 2px 6px rgba(10, 26, 47, 0.08) !important;
     transition: all 0.2s ease !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #2c3e50 !important;
 }
 
 /* Better checkbox styling */

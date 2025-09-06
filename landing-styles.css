@@ -760,8 +760,9 @@ p {
 }
 
 .auth-modal.enhanced-signup {
-    max-width: 600px;
+    max-width: 650px;
     margin: 20px auto;
+    width: calc(100% - 40px);
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -825,17 +826,17 @@ p {
 }
 
 .form-group label {
-    color: rgba(245, 247, 250, 0.9);
+    color: #2c3e50 !important;
     font-weight: 600;
     font-size: 14px;
     margin-bottom: 6px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    text-shadow: none;
 }
 
 .form-group input {
     padding: 14px 16px;
-    border: 1px solid rgba(245, 247, 250, 0.3);
-    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 12px;
@@ -877,7 +878,7 @@ p {
     align-items: center;
     gap: 12px;
     cursor: pointer;
-    color: rgba(245, 247, 250, 0.8);
+    color: #2c3e50 !important;
     font-size: 14px;
     line-height: 1.5;
 }
@@ -909,9 +910,9 @@ p {
     margin-top: 30px;
     text-align: center;
     font-size: 14px;
-    color: rgba(245, 247, 250, 0.7);
+    color: #2c3e50 !important;
     padding-top: 20px;
-    border-top: 1px solid rgba(245, 247, 250, 0.2);
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .auth-footer a {
@@ -1106,14 +1107,14 @@ input:focus {
 }
 
 .enhanced-form .form-section h3 {
-    color: #F5F7FA;
+    color: #2c3e50 !important;
     font-size: 1.1rem;
     margin-bottom: 16px;
     font-weight: 600;
     display: flex;
     align-items: center;
     gap: 8px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: none;
 }
 
 .enhanced-form .form-section h3::before {
@@ -1142,8 +1143,8 @@ input:focus {
 .enhanced-form select {
     width: 100%;
     padding: 14px 16px;
-    border: 1px solid rgba(245, 247, 250, 0.3);
-    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 12px;
@@ -1172,7 +1173,7 @@ input:focus {
 }
 
 .password-requirements small {
-    color: rgba(245, 247, 250, 0.7);
+    color: #2c3e50 !important;
     font-size: 12px;
     font-weight: 500;
 }
@@ -1198,6 +1199,56 @@ input:focus {
 
 .enhanced-form .checkbox-label:last-child {
     margin-bottom: 0;
+}
+
+/* URGENT FIX: Override accessibility-fixes.css issues */
+.auth-form .form-group label,
+.enhanced-form .form-group label {
+    color: #2c3e50 !important;
+    text-shadow: none !important;
+    background: none !important;
+    opacity: 1 !important;
+}
+
+.auth-form .form-group input,
+.enhanced-form .form-group input,
+.auth-form select,
+.enhanced-form select {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #2c3e50 !important;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    opacity: 1 !important;
+}
+
+.auth-form .checkbox-label,
+.enhanced-form .checkbox-label {
+    color: #2c3e50 !important;
+    opacity: 1 !important;
+}
+
+.auth-form .enhanced-form .form-section h3 {
+    color: #2c3e50 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+}
+
+.auth-form .password-requirements small {
+    color: #2c3e50 !important;
+    opacity: 1 !important;
+}
+
+.auth-footer p,
+.auth-footer {
+    color: #2c3e50 !important;
+    opacity: 1 !important;
+}
+
+.modal-content {
+    overflow: visible !important;
+}
+
+.modal-body {
+    overflow: visible !important;
 }
 
 /* Mobile responsiveness for enhanced form */
