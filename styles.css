@@ -201,7 +201,15 @@ body::before {
 
 .background-dropdown {
     /* Extends .dropdown base class */
-    min-width: 300px;
+    min-width: 450px;
+    max-width: 550px;
+}
+
+.background-image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
 }
 
 .background-section {
