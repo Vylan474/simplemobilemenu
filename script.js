@@ -2933,7 +2933,7 @@ class MenuEditor {
         }
         
         try {
-            await window.authManager.deleteUserMenu(menuId);
+            window.authManager.deleteUserMenu(menuId);
             
             // If we deleted the current menu, load another or create new
             if (menuId === this.currentMenuId) {
@@ -4868,7 +4868,7 @@ MenuEditor.prototype.deleteMenu = async function(menuId) {
     if (!this.currentUser) return;
     
     if (confirm('Are you sure you want to delete this menu? This action cannot be undone.')) {
-        await window.authManager.deleteUserMenu(menuId);
+        window.authManager.deleteUserMenu(menuId);
         
         // If we deleted the current menu, load another or create new
         if (menuId === this.currentMenuId) {
