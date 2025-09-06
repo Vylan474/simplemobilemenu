@@ -9,10 +9,30 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { email, password, name, restaurant } = req.body;
+    const { 
+      email, 
+      password, 
+      name, 
+      firstName,
+      lastName,
+      phone,
+      businessName,
+      businessType,
+      address,
+      city,
+      state,
+      zip,
+      marketingOptIn,
+      // Legacy support
+      restaurant
+    } = req.body;
 
-    // Validate input
-    if (!email || !password || !name) {
+    // Validate input - support both new and legacy formats
+    const userEmail = email?.toLowerCase()?.trim();
+    const userName = name || (firstName && lastName ? `${firstName} ${lastName}`.trim() : '');
+    const userBusinessName = businessName || restaurant;
+    
+    if (!userEmail || !password || !userName) {
       return res.status(400).json({ error: 'Email, password, and name are required' });
     }
 
@@ -21,7 +41,7 @@ module.exports = async function handler(req, res) {
     }
 
     // Check if user already exists
-    const existingUserResult = await getUserByEmail(email);
+    const existingUserResult = await getUserByEmail(userEmail);
     if (!existingUserResult.success) {
       return res.status(500).json({ error: 'Database error' });
     }
@@ -37,12 +57,23 @@ module.exports = async function handler(req, res) {
     const userId = uuidv4();
     const userData = {
       id: userId,
-      email: email.toLowerCase(),
+      email: userEmail,
       passwordHash,
-      name,
-      restaurant,
+      name: userName,
+      firstName: firstName || userName.split(' ')[0] || '',
+      lastName: lastName || userName.split(' ').slice(1).join(' ') || '',
+      phone: phone || null,
+      businessName: userBusinessName || '',
+      businessType: businessType || 'restaurant',
+      address: address || null,
+      city: city || null,
+      state: state || null,
+      zip: zip || null,
+      marketingOptIn: marketingOptIn || false,
       plan: 'free',
-      maxMenus: 5
+      maxMenus: 5,
+      // Legacy field for backward compatibility
+      restaurant: userBusinessName
     };
 
     const createResult = await createUser(userData);

@@ -125,6 +125,50 @@ class LandingPage {
                 e.preventDefault();
                 this.handleSignUp(new FormData(signUpForm));
             });
+            
+            // Add real-time validation
+            this.setupFormValidation(signUpForm);
+        }
+    }
+    
+    setupFormValidation(form) {
+        const passwordInput = form.querySelector('#signup-password');
+        const confirmPasswordInput = form.querySelector('#signup-confirm-password');
+        
+        if (passwordInput && confirmPasswordInput) {
+            confirmPasswordInput.addEventListener('input', () => {
+                this.validatePasswordMatch(passwordInput, confirmPasswordInput);
+            });
+            
+            passwordInput.addEventListener('input', () => {
+                this.validatePasswordStrength(passwordInput);
+                if (confirmPasswordInput.value) {
+                    this.validatePasswordMatch(passwordInput, confirmPasswordInput);
+                }
+            });
+        }
+    }
+    
+    validatePasswordStrength(passwordInput) {
+        const password = passwordInput.value;
+        const requirements = passwordInput.parentNode.querySelector('.password-requirements');
+        
+        if (password.length >= 8) {
+            requirements.style.color = '#27ae60';
+            requirements.innerHTML = '<small><i class="fas fa-check"></i> Password strength: Good</small>';
+        } else {
+            requirements.style.color = '#e74c3c';
+            requirements.innerHTML = '<small>Must be at least 8 characters long</small>';
+        }
+    }
+    
+    validatePasswordMatch(passwordInput, confirmPasswordInput) {
+        if (passwordInput.value !== confirmPasswordInput.value) {
+            confirmPasswordInput.setCustomValidity('Passwords do not match');
+            confirmPasswordInput.style.borderColor = '#e74c3c';
+        } else {
+            confirmPasswordInput.setCustomValidity('');
+            confirmPasswordInput.style.borderColor = '#27ae60';
         }
     }
     
@@ -233,11 +277,37 @@ class LandingPage {
     async handleSignUp(formData) {
         console.log('handleSignUp called');
         
+        // Validate passwords match
+        const password = formData.get('password');
+        const confirmPassword = formData.get('confirmPassword');
+        
+        if (password !== confirmPassword) {
+            this.showError('sign-up-form', 'Passwords do not match');
+            return;
+        }
+        
+        // Build comprehensive user data object
         const userData = {
-            name: formData.get('name'),
+            // Personal Information
+            firstName: formData.get('firstName'),
+            lastName: formData.get('lastName'),
+            name: `${formData.get('firstName')} ${formData.get('lastName')}`.trim(),
             email: formData.get('email'),
-            restaurant: formData.get('restaurant'),
-            password: formData.get('password')
+            phone: formData.get('phone'),
+            
+            // Business Information  
+            businessName: formData.get('businessName'),
+            businessType: formData.get('businessType'),
+            address: formData.get('address'),
+            city: formData.get('city'),
+            state: formData.get('state'),
+            zip: formData.get('zip'),
+            
+            // Account
+            password: password,
+            
+            // Marketing preferences
+            marketingOptIn: formData.get('marketing') === 'on'
         };
         
         console.log('User data:', userData);
@@ -255,8 +325,13 @@ class LandingPage {
             }
             console.log('User created:', result.user);
             
-            // Redirect to menu editor (demo menu creation will happen in editor)
-            window.location.href = 'editor.html';
+            // Show success message briefly before redirecting
+            this.showSuccess('sign-up-form', 'Account created successfully! Redirecting to your menu editor...');
+            
+            // Redirect to menu editor after brief delay for better UX
+            setTimeout(() => {
+                window.location.href = 'editor.html';
+            }, 2000);
         } catch (error) {
             console.error('Sign up error:', error);
             this.showError('sign-up-form', error.message);
@@ -432,6 +507,29 @@ class LandingPage {
                 errorDiv.parentNode.removeChild(errorDiv);
             }
         }, 5000);
+    }
+    
+    showSuccess(formId, message) {
+        const form = document.getElementById(formId);
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        // Update button text
+        if (submitBtn) {
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Success!';
+            submitBtn.disabled = true;
+            submitBtn.style.background = '#27ae60';
+        }
+        
+        // Show success message
+        let successDiv = form.querySelector('.success-message');
+        if (!successDiv) {
+            successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.style.cssText = 'color: #27ae60; background: #f2fdf2; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 14px; text-align: center; border: 1px solid #d4edda;';
+            form.appendChild(successDiv);
+        }
+        
+        successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
     }
     
     initializeScrollEffects() {

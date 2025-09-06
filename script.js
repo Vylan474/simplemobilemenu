@@ -54,6 +54,7 @@ class MenuEditor {
         this.currentUser = null;
         this.currentMenuId = null;
         this.sidebarOpen = false;
+        this.authInitialized = false;
         
         // Dark mode
         this.darkMode = localStorage.getItem('darkMode') === 'true';
@@ -247,9 +248,6 @@ class MenuEditor {
         // Initialize authentication and user data
         this.initializeAuth();
         
-        // Initialize user and load menu from server
-        this.initializeUser();
-        
         // Initialize dark mode
         this.initializeDarkMode();
         
@@ -292,8 +290,6 @@ class MenuEditor {
         console.log('🔄 handleAuthChange called with user:', user);
         
         if (user && user.id) {
-            this.currentUser = user;
-            
             // IMPORTANT: Hide the auth modal when user is authenticated
             const authModal = document.getElementById('auth-modal');
             if (authModal) {
@@ -306,8 +302,11 @@ class MenuEditor {
             const userKey = `menuEditor_user_${user.id}`;
             localStorage.setItem(userKey, JSON.stringify(user));
             
-            await this.updateUserInterface(user);
-            await this.loadUserData();
+            // Initialize user properly - this replaces the old demo user approach
+            await this.initializeUser(user);
+            
+            // Check if this is a new user and show welcome message
+            this.checkForNewUserOnboarding(user);
             
             // Re-initialize events after authentication to ensure all elements exist
             setTimeout(() => {
@@ -317,6 +316,8 @@ class MenuEditor {
         } else {
             // No user signed in or invalid user data, show auth modal
             console.log('No valid user data:', user);
+            this.currentUser = null;
+            this.authInitialized = false;
             this.showAuthModal();
         }
     }
@@ -2757,19 +2758,24 @@ class MenuEditor {
         }
     }
     
-    initializeUser() {
-        // Initialize with dummy user for now
-        this.currentUser = {
-            id: 'demo-user-001',
-            name: 'Demo User',
-            email: 'demo@example.com',
-            plan: 'free', // free, premium, etc.
-            maxMenus: 5,
-            createdAt: new Date().toISOString()
-        };
+    async initializeUser(user) {
+        // Only initialize if we have a valid authenticated user
+        if (!user || !user.id) {
+            console.log('❌ Cannot initialize user: no valid user provided');
+            return;
+        }
         
-        // Create default menu if none exists
-        this.initializeDefaultMenu();  // This is now async but we don't await here since initializeUser isn't async
+        console.log('✅ Initializing user:', user.name, user.email);
+        this.currentUser = user;
+        this.authInitialized = true;
+        
+        // Update UI with user information
+        this.updateUserInterface(user);
+        
+        // Create default menu if none exists  
+        await this.initializeDefaultMenu();
+        
+        // Load user's menus
         this.loadUserMenus();
         this.updateCurrentMenuDisplay();
         
@@ -2781,6 +2787,192 @@ class MenuEditor {
         
         // Initialize background display
         this.updateBackgroundSelection();
+    }
+    
+    checkForNewUserOnboarding(user) {
+        // Check if user was recently created (within last 5 minutes)
+        const userCreatedTime = user.created_at || user.createdAt;
+        if (!userCreatedTime) return;
+        
+        const createdTime = new Date(userCreatedTime);
+        const now = new Date();
+        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+        
+        // Show welcome message for new users
+        if (createdTime > fiveMinutesAgo) {
+            setTimeout(() => {
+                this.showWelcomeMessage(user);
+            }, 1000); // Delay to allow UI to load
+        }
+    }
+    
+    showWelcomeMessage(user) {
+        // Create welcome modal
+        const modal = document.createElement('div');
+        modal.className = 'welcome-modal';
+        modal.innerHTML = `
+            <div class="welcome-content">
+                <div class="welcome-header">
+                    <h2><i class="fas fa-star"></i> Welcome to MyMobileMenu!</h2>
+                </div>
+                <div class="welcome-body">
+                    <p>Hi <strong>${user.name}</strong>! We're excited to help you create beautiful menus for ${user.businessName || 'your business'}.</p>
+                    <div class="welcome-steps">
+                        <div class="welcome-step">
+                            <div class="step-icon"><i class="fas fa-plus"></i></div>
+                            <div class="step-text">
+                                <h4>Add Menu Sections</h4>
+                                <p>Start by adding sections like "Appetizers", "Main Courses", or "Drinks"</p>
+                            </div>
+                        </div>
+                        <div class="welcome-step">
+                            <div class="step-icon"><i class="fas fa-edit"></i></div>
+                            <div class="step-text">
+                                <h4>Customize Your Items</h4>
+                                <p>Add your delicious items with descriptions and prices</p>
+                            </div>
+                        </div>
+                        <div class="welcome-step">
+                            <div class="step-icon"><i class="fas fa-palette"></i></div>
+                            <div class="step-text">
+                                <h4>Style Your Menu</h4>
+                                <p>Choose colors, fonts, and themes that match your brand</p>
+                            </div>
+                        </div>
+                        <div class="welcome-step">
+                            <div class="step-icon"><i class="fas fa-share"></i></div>
+                            <div class="step-text">
+                                <h4>Publish & Share</h4>
+                                <p>Get a custom URL and QR code to share with your customers</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="welcome-footer">
+                    <button class="btn btn-primary btn-large" onclick="this.closest('.welcome-modal').remove()">
+                        <i class="fas fa-rocket"></i> Let's Get Started!
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Add styles
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Add welcome modal styles to head if not already present
+        if (!document.getElementById('welcome-modal-styles')) {
+            const styles = document.createElement('style');
+            styles.id = 'welcome-modal-styles';
+            styles.textContent = `
+                .welcome-content {
+                    background: rgba(245, 247, 250, 0.95);
+                    backdrop-filter: blur(20px);
+                    border-radius: 20px;
+                    max-width: 600px;
+                    width: 100%;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                    border: 1px solid rgba(245, 247, 250, 0.3);
+                    overflow: hidden;
+                }
+                
+                .welcome-header {
+                    background: linear-gradient(135deg, #2c3e50, #34495e);
+                    color: white;
+                    padding: 30px;
+                    text-align: center;
+                }
+                
+                .welcome-header h2 {
+                    margin: 0;
+                    font-size: 1.5rem;
+                }
+                
+                .welcome-body {
+                    padding: 30px;
+                    color: #2c3e50;
+                }
+                
+                .welcome-body p {
+                    font-size: 1.1rem;
+                    margin-bottom: 30px;
+                    text-align: center;
+                    color: #2c3e50;
+                }
+                
+                .welcome-steps {
+                    display: grid;
+                    gap: 20px;
+                }
+                
+                .welcome-step {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 15px;
+                    padding: 15px;
+                    background: rgba(52, 152, 219, 0.1);
+                    border-radius: 10px;
+                    border-left: 4px solid #3498db;
+                }
+                
+                .step-icon {
+                    width: 40px;
+                    height: 40px;
+                    background: linear-gradient(135deg, #3498db, #2980b9);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    flex-shrink: 0;
+                    margin-top: 2px;
+                }
+                
+                .step-text h4 {
+                    margin: 0 0 5px 0;
+                    color: #2c3e50;
+                    font-size: 1rem;
+                }
+                
+                .step-text p {
+                    margin: 0;
+                    color: #7f8c8d;
+                    font-size: 0.9rem;
+                    text-align: left;
+                }
+                
+                .welcome-footer {
+                    padding: 30px;
+                    text-align: center;
+                    background: rgba(245, 247, 250, 0.5);
+                }
+                
+                @media (max-width: 768px) {
+                    .welcome-content {
+                        margin: 10px;
+                        max-width: none;
+                    }
+                    
+                    .welcome-header, .welcome-body, .welcome-footer {
+                        padding: 20px;
+                    }
+                }
+            `;
+            document.head.appendChild(styles);
+        }
         
         // Initialize font display
         this.updateFontSelection();
