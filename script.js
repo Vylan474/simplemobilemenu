@@ -637,9 +637,24 @@ class MenuEditor {
         addEventListenerSafely('check-availability', 'click', () => this.checkPathAvailability());
         addEventListenerSafely('publish-menu-confirm', 'click', () => this.publishMenu());
         addEventListenerSafely('cancel-publish', 'click', () => this.closePublishModal());
-        addEventListenerSafely('menu-url-path', 'input', (e) => this.updatePreviewUrl(e));
-        addEventListenerSafely('menu-title-publish', 'input', () => this.updatePublishPreview());
-        addEventListenerSafely('menu-subtitle-publish', 'input', () => this.updatePublishPreview());
+        // Add debounced handlers for frequently triggered inputs
+        if (window.performanceOptimizer) {
+            const debouncedUpdatePreviewUrl = window.performanceOptimizer.debounce(
+                (e) => this.updatePreviewUrl(e), 250, 'preview-url'
+            );
+            const debouncedUpdatePublishPreview = window.performanceOptimizer.debounce(
+                () => this.updatePublishPreview(), 250, 'publish-preview'
+            );
+            
+            addEventListenerSafely('menu-url-path', 'input', debouncedUpdatePreviewUrl);
+            addEventListenerSafely('menu-title-publish', 'input', debouncedUpdatePublishPreview);
+            addEventListenerSafely('menu-subtitle-publish', 'input', debouncedUpdatePublishPreview);
+        } else {
+            // Fallback without debouncing
+            addEventListenerSafely('menu-url-path', 'input', (e) => this.updatePreviewUrl(e));
+            addEventListenerSafely('menu-title-publish', 'input', () => this.updatePublishPreview());
+            addEventListenerSafely('menu-subtitle-publish', 'input', () => this.updatePublishPreview());
+        }
         
         // Sidebar event listeners
         addEventListenerSafely('toggle-sidebar', 'click', () => this.toggleSidebar());
@@ -827,7 +842,15 @@ class MenuEditor {
         
         // Add event listener for column name changes
         const input = columnItem.querySelector('.column-name-input');
-        input.addEventListener('input', () => this.updateCustomTitleColumns());
+        // Add debounced input handler for better performance
+        if (window.performanceOptimizer) {
+            const debouncedUpdateColumns = window.performanceOptimizer.debounce(
+                () => this.updateCustomTitleColumns(), 300, `custom-column-${Date.now()}`
+            );
+            input.addEventListener('input', debouncedUpdateColumns);
+        } else {
+            input.addEventListener('input', () => this.updateCustomTitleColumns());
+        }
         
         columnBuilder.appendChild(columnItem);
         
@@ -1215,6 +1238,10 @@ class MenuEditor {
     }
     
     renderMenu() {
+        if (window.performanceMonitor) {
+            window.performanceMonitor.startMeasurement('renderMenu');
+        }
+        
         const container = document.getElementById('menu-container');
         
         if (this.sections.length === 0) {
@@ -1225,112 +1252,262 @@ class MenuEditor {
                     <p>Add your first menu section to get started</p>
                 </div>
             `;
+            if (window.performanceMonitor) {
+                window.performanceMonitor.endMeasurement('renderMenu');
+            }
             return;
         }
         
-        container.innerHTML = this.sections.map(section => this.renderSection(section)).join('');
-        this.initializeSortable();
+        // Use DocumentFragment for efficient DOM manipulation
+        const fragment = document.createDocumentFragment();
+        
+        // Batch render sections
+        this.sections.forEach(section => {
+            const sectionElement = this.createSectionElement(section);
+            fragment.appendChild(sectionElement);
+        });
+        
+        // Single DOM update
+        container.innerHTML = '';
+        container.appendChild(fragment);
+        
+        // Initialize sortable with RAF for better performance
+        if (window.performanceOptimizer) {
+            window.performanceOptimizer.batchRAF(() => this.initializeSortable(), 'sortable-init');
+        } else {
+            this.initializeSortable();
+        }
+        
+        if (window.performanceMonitor) {
+            window.performanceMonitor.endMeasurement('renderMenu');
+        }
     }
     
+    // Optimized section rendering using DocumentFragment
+    createSectionElement(section) {
+        const gridClass = `grid-${Math.min(section.columns.length, 5)}`;
+        
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'menu-section';
+        sectionDiv.setAttribute('data-section-id', section.id);
+        
+        // Create section header
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'section-header';
+        headerDiv.innerHTML = `
+            <div>
+                <span class="section-title">${section.name}</span>
+                <span class="section-type-badge">${section.type}</span>
+            </div>
+            <div class="section-controls">
+                <button class="edit-section-btn" data-section-id="${section.id}" title="Edit Section">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="delete-section-btn" data-section-id="${section.id}" title="Delete Section">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+        
+        // Create section content
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'section-content';
+        
+        // Create column headers efficiently
+        const columnHeadersDiv = document.createElement('div');
+        columnHeadersDiv.className = `column-headers ${gridClass}`;
+        columnHeadersDiv.setAttribute('data-section-id', section.id);
+        
+        section.columns.forEach(column => {
+            const columnHeaderDiv = document.createElement('div');
+            columnHeaderDiv.className = 'column-header';
+            columnHeaderDiv.setAttribute('data-column', column);
+            columnHeaderDiv.innerHTML = `
+                <span class="column-name edit-column-btn" data-section-id="${section.id}" data-column="${column}">${column}</span>
+                <div class="column-controls">
+                    <i class="fas fa-edit column-edit edit-column-btn" data-section-id="${section.id}" data-column="${column}" title="Rename Column"></i>
+                    ${section.columns.length > 1 ? `<i class="fas fa-trash column-delete delete-column-btn" data-section-id="${section.id}" data-column="${column}" title="Delete Column"></i>` : ''}
+                    <i class="fas fa-grip-vertical drag-handle" title="Drag to Reorder"></i>
+                </div>
+            `;
+            columnHeadersDiv.appendChild(columnHeaderDiv);
+        });
+        
+        // Add column button
+        const addColumnDiv = document.createElement('div');
+        addColumnDiv.className = 'add-column-header';
+        addColumnDiv.innerHTML = `
+            <button class="add-column-btn" data-section-id="${section.id}" title="Add Column">
+                <i class="fas fa-plus"></i> Add Column
+            </button>
+        `;
+        columnHeadersDiv.appendChild(addColumnDiv);
+        
+        // Create menu items container with virtual scrolling for large lists
+        const menuItemsDiv = document.createElement('div');
+        menuItemsDiv.className = 'menu-items';
+        
+        // Use virtual scrolling for sections with many items (>50)
+        if (section.items.length > 50 && window.performanceOptimizer) {
+            this.createVirtualMenuItems(menuItemsDiv, section);
+        } else {
+            // Regular rendering for small lists
+            section.items.forEach((item, index) => {
+                const itemElement = this.createMenuItemElement(section, item, index);
+                menuItemsDiv.appendChild(itemElement);
+            });
+        }
+        
+        // Add item button
+        const addItemBtn = document.createElement('button');
+        addItemBtn.className = 'add-item-btn';
+        addItemBtn.setAttribute('data-section-id', section.id);
+        addItemBtn.innerHTML = '<i class="fas fa-plus"></i> Add Menu Item';
+        
+        // Assemble section
+        contentDiv.appendChild(columnHeadersDiv);
+        contentDiv.appendChild(menuItemsDiv);
+        contentDiv.appendChild(addItemBtn);
+        
+        sectionDiv.appendChild(headerDiv);
+        sectionDiv.appendChild(contentDiv);
+        
+        return sectionDiv;
+    }
+    
+    // Keep legacy method for compatibility
     renderSection(section) {
-        console.log('Rendering section:', section.name, 'with ID:', section.id);
-        const gridClass = `grid-${Math.min(section.columns.length, 5)}`;
-        
-        return `
-            <div class="menu-section" data-section-id="${section.id}">
-                <div class="section-header">
-                    <div>
-                        <span class="section-title">${section.name}</span>
-                        <span class="section-type-badge">${section.type}</span>
-                    </div>
-                    <div class="section-controls">
-                        <button class="edit-section-btn" data-section-id="${section.id}" title="Edit Section">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="delete-section-btn" data-section-id="${section.id}" title="Delete Section">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="section-content">
-                    <div class="column-headers ${gridClass}" data-section-id="${section.id}">
-                        ${section.columns.map(column => `
-                            <div class="column-header" data-column="${column}">
-                                <span class="column-name edit-column-btn" data-section-id="${section.id}" data-column="${column}">${column}</span>
-                                <div class="column-controls">
-                                    <i class="fas fa-edit column-edit edit-column-btn" data-section-id="${section.id}" data-column="${column}" title="Rename Column"></i>
-                                    ${section.columns.length > 1 ? `<i class="fas fa-trash column-delete delete-column-btn" data-section-id="${section.id}" data-column="${column}" title="Delete Column"></i>` : ''}
-                                    <i class="fas fa-grip-vertical drag-handle" title="Drag to Reorder"></i>
-                                </div>
-                            </div>
-                        `).join('')}
-                        <div class="add-column-header">
-                            <button class="add-column-btn" data-section-id="${section.id}" title="Add Column">
-                                <i class="fas fa-plus"></i> Add Column
-                            </button>
-                        </div>
-                    </div>
-                    <div class="menu-items">
-                        ${section.items.map((item, index) => this.renderMenuItem(section, item, index)).join('')}
-                    </div>
-                    <button class="add-item-btn" data-section-id="${section.id}">
-                        <i class="fas fa-plus"></i> Add Menu Item
-                    </button>
-                </div>
-            </div>
-        `;
+        const element = this.createSectionElement(section);
+        return element.outerHTML;
     }
     
-    renderMenuItem(section, item, index) {
+    // Optimized menu item creation using DOM elements instead of innerHTML
+    createMenuItemElement(section, item, index) {
         const gridClass = `grid-${Math.min(section.columns.length, 5)}`;
         
-        return `
-            <div class="menu-item ${gridClass}">
-                ${section.columns.map(column => `
-                    <input 
-                        type="text" 
-                        placeholder="${column}"
-                        value="${item[column] || ''}"
-                        class="menu-item-input"
-                        data-section-id="${section.id}"
-                        data-item-index="${index}"
-                        data-column="${column}"
-                    >
-                `).join('')}
-                <div class="item-controls">
-                    <button class="btn btn-secondary btn-small duplicate-item-btn" data-section-id="${section.id}" data-item-index="${index}" title="Duplicate Item">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                    <button class="btn btn-danger btn-small delete-item-btn" data-section-id="${section.id}" data-item-index="${index}" title="Delete Item">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
+        const itemDiv = document.createElement('div');
+        itemDiv.className = `menu-item ${gridClass}`;
+        
+        // Create inputs efficiently
+        const fragment = document.createDocumentFragment();
+        
+        section.columns.forEach(column => {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = column;
+            input.value = item[column] || '';
+            input.className = 'menu-item-input';
+            input.setAttribute('data-section-id', section.id);
+            input.setAttribute('data-item-index', index);
+            input.setAttribute('data-column', column);
+            fragment.appendChild(input);
+        });
+        
+        // Create controls
+        const controlsDiv = document.createElement('div');
+        controlsDiv.className = 'item-controls';
+        controlsDiv.innerHTML = `
+            <button class="btn btn-secondary btn-small duplicate-item-btn" data-section-id="${section.id}" data-item-index="${index}" title="Duplicate Item">
+                <i class="fas fa-copy"></i>
+            </button>
+            <button class="btn btn-danger btn-small delete-item-btn" data-section-id="${section.id}" data-item-index="${index}" title="Delete Item">
+                <i class="fas fa-trash"></i>
+            </button>
         `;
+        
+        itemDiv.appendChild(fragment);
+        itemDiv.appendChild(controlsDiv);
+        
+        return itemDiv;
+    }
+    
+    // Virtual scrolling for large menu item lists
+    createVirtualMenuItems(container, section) {
+        if (!window.performanceOptimizer) {
+            // Fallback to regular rendering
+            section.items.forEach((item, index) => {
+                const itemElement = this.createMenuItemElement(section, item, index);
+                container.appendChild(itemElement);
+            });
+            return;
+        }
+        
+        const virtualScroll = window.performanceOptimizer.createVirtualScrollContainer({
+            container: container,
+            items: section.items,
+            itemHeight: 60, // Approximate height of menu item
+            bufferSize: 10,
+            renderItem: (item, index) => {
+                const tempDiv = document.createElement('div');
+                const element = this.createMenuItemElement(section, item, index);
+                tempDiv.appendChild(element);
+                return tempDiv.innerHTML;
+            }
+        });
+        
+        // Store reference for updates
+        section._virtualScroll = virtualScroll;
+    }
+    
+    // Keep legacy method for compatibility
+    renderMenuItem(section, item, index) {
+        const element = this.createMenuItemElement(section, item, index);
+        return element.outerHTML;
     }
     
     initializeSortable() {
+        if (window.performanceMonitor) {
+            window.performanceMonitor.startMeasurement('initialize-sortable');
+        }
+        
         this.sortableInstances.forEach(instance => instance.destroy());
         this.sortableInstances = [];
         
         const menuContainer = document.getElementById('menu-container');
         if (menuContainer.children.length > 0) {
+            // Create debounced save function for better performance
+            const debouncedSave = window.performanceOptimizer ? 
+                window.performanceOptimizer.debounce(() => this.saveToStorage(), 500, 'sortable-save') :
+                () => this.saveToStorage();
+            
             const sectionsortable = new Sortable(menuContainer, {
-                animation: 150,
+                animation: 200, // Slightly longer animation for smoother feel
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
+                forceFallback: false, // Use native HTML5 DnD when possible
+                fallbackTolerance: 0, // More sensitive touch/mouse tracking
                 onStart: (evt) => {
                     evt.item.classList.add('dragging');
+                    // Reduce updates during drag
+                    if (this.sidePreviewVisible) {
+                        document.getElementById('side-preview-panel').style.pointerEvents = 'none';
+                    }
                 },
                 onEnd: (evt) => {
                     evt.item.classList.remove('dragging');
                     const oldIndex = evt.oldIndex;
                     const newIndex = evt.newIndex;
                     
+                    // Re-enable preview interactions
+                    if (this.sidePreviewVisible) {
+                        document.getElementById('side-preview-panel').style.pointerEvents = 'auto';
+                    }
+                    
                     if (oldIndex !== newIndex) {
                         const movedSection = this.sections.splice(oldIndex, 1)[0];
                         this.sections.splice(newIndex, 0, movedSection);
-                        this.saveToStorage();
+                        
+                        // Use RAF to batch DOM updates
+                        if (window.performanceOptimizer) {
+                            window.performanceOptimizer.batchRAF(() => {
+                                debouncedSave();
+                                if (this.sidePreviewVisible) {
+                                    this.updateSidePreview();
+                                }
+                            }, 'section-reorder');
+                        } else {
+                            debouncedSave();
+                        }
                     }
                 }
             });
@@ -1389,17 +1566,34 @@ class MenuEditor {
             this.sortableInstances.push(columnSortable);
         });
         
+        // Create debounced save for menu items
+        const debouncedItemSave = window.performanceOptimizer ? 
+            window.performanceOptimizer.debounce(() => {
+                this.saveToStorage();
+                this.markAsChanged();
+            }, 500, 'sortable-item-save') :
+            () => {
+                this.saveToStorage();
+                this.markAsChanged();
+            };
+        
         // Make menu items sortable within each section
         document.querySelectorAll('.menu-items').forEach(menuItems => {
             const sectionElement = menuItems.closest('.menu-section');
             const sectionId = parseInt(sectionElement.dataset.sectionId);
             
             const itemSortable = new Sortable(menuItems, {
-                animation: 150,
+                animation: 200, // Consistent with section sorting
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
+                forceFallback: false,
+                fallbackTolerance: 0,
                 onStart: (evt) => {
                     evt.item.classList.add('dragging');
+                    // Disable preview updates during drag for better performance
+                    if (this.sidePreviewVisible) {
+                        document.getElementById('side-preview-panel').style.pointerEvents = 'none';
+                    }
                 },
                 onEnd: (evt) => {
                     evt.item.classList.remove('dragging');
@@ -1407,16 +1601,35 @@ class MenuEditor {
                     const oldIndex = evt.oldIndex;
                     const newIndex = evt.newIndex;
                     
+                    // Re-enable preview interactions
+                    if (this.sidePreviewVisible) {
+                        document.getElementById('side-preview-panel').style.pointerEvents = 'auto';
+                    }
+                    
                     if (oldIndex !== newIndex && section) {
                         const movedItem = section.items.splice(oldIndex, 1)[0];
                         section.items.splice(newIndex, 0, movedItem);
-                        this.saveToStorage();
-                        this.markAsChanged();
+                        
+                        // Batch updates for better performance
+                        if (window.performanceOptimizer) {
+                            window.performanceOptimizer.batchRAF(() => {
+                                debouncedItemSave();
+                                if (this.sidePreviewVisible) {
+                                    this.updateSidePreview();
+                                }
+                            }, 'item-reorder');
+                        } else {
+                            debouncedItemSave();
+                        }
                     }
                 }
             });
             this.sortableInstances.push(itemSortable);
         });
+        
+        if (window.performanceMonitor) {
+            window.performanceMonitor.endMeasurement('initialize-sortable');
+        }
     }
     
     initializeDropdownOptions() {
@@ -1536,16 +1749,33 @@ class MenuEditor {
             }
         });
 
-        // Handle menu item input changes
-        document.addEventListener('input', (e) => {
-            if (e.target.classList.contains('menu-item-input')) {
-                const sectionId = parseInt(e.target.dataset.sectionId);
-                const itemIndex = parseInt(e.target.dataset.itemIndex);
-                const column = e.target.dataset.column;
-                const value = e.target.value;
+        // Handle menu item input changes with debouncing for better performance
+        if (window.performanceOptimizer) {
+            const debouncedUpdateMenuItem = window.performanceOptimizer.debounce((sectionId, itemIndex, column, value) => {
                 this.updateMenuItem(sectionId, itemIndex, column, value);
-            }
-        });
+            }, 300, 'menu-item-input');
+            
+            document.addEventListener('input', (e) => {
+                if (e.target.classList.contains('menu-item-input')) {
+                    const sectionId = parseInt(e.target.dataset.sectionId);
+                    const itemIndex = parseInt(e.target.dataset.itemIndex);
+                    const column = e.target.dataset.column;
+                    const value = e.target.value;
+                    debouncedUpdateMenuItem(sectionId, itemIndex, column, value);
+                }
+            });
+        } else {
+            // Fallback for when performance optimizer is not available
+            document.addEventListener('input', (e) => {
+                if (e.target.classList.contains('menu-item-input')) {
+                    const sectionId = parseInt(e.target.dataset.sectionId);
+                    const itemIndex = parseInt(e.target.dataset.itemIndex);
+                    const column = e.target.dataset.column;
+                    const value = e.target.value;
+                    this.updateMenuItem(sectionId, itemIndex, column, value);
+                }
+            });
+        }
 
         // Handle column-related buttons
         document.addEventListener('click', (e) => {
@@ -3521,12 +3751,8 @@ class MenuEditor {
     }
     
     async handleBackgroundUpload(file) {
-        // Validate file size (3MB limit - base64 encoding adds ~33% overhead)
-        const maxSize = CONFIG.MAX_FILE_SIZE;
-        if (file.size > maxSize) {
-            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-            alert(`File size (${fileSizeMB}MB) exceeds the maximum allowed size of ${CONFIG.MAX_FILE_SIZE_MB}MB.\n\nNote: Due to server limitations, images are limited to 3MB. Please compress your image before uploading.`);
-            return;
+        if (window.performanceMonitor) {
+            window.performanceMonitor.startMeasurement('background-upload');
         }
         
         // Validate file type
@@ -3536,24 +3762,57 @@ class MenuEditor {
             return;
         }
         
-        // Show filename
-        const filenameEl = document.getElementById('upload-filename');
-        filenameEl.textContent = file.name;
-        
-        // Create preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const previewEl = document.getElementById('upload-preview');
-            const imgEl = document.getElementById('upload-preview-img');
+        try {
+            let processedFile = file;
             
-            imgEl.src = e.target.result;
-            previewEl.style.display = 'flex';
+            // Auto-compress large background images
+            if (window.performanceOptimizer && file.size > CONFIG.MAX_FILE_SIZE) {
+                console.log('[PERF] Compressing background image...');
+                processedFile = await window.performanceOptimizer.compressImage(file, {
+                    maxWidth: 1200,
+                    maxHeight: 1600,
+                    quality: 0.8,
+                    format: 'image/jpeg'
+                });
+                console.log(`[PERF] Background compressed from ${(file.size / 1024 / 1024).toFixed(2)}MB to ${(processedFile.size / 1024 / 1024).toFixed(2)}MB`);
+            }
             
-            // Store the image data for later use
-            this.pendingUploadData = e.target.result;
-            this.pendingUploadFilename = file.name;
-        };
-        reader.readAsDataURL(file);
+            // Final size validation
+            if (processedFile.size > CONFIG.MAX_FILE_SIZE) {
+                const fileSizeMB = (processedFile.size / (1024 * 1024)).toFixed(2);
+                alert(`File size (${fileSizeMB}MB) exceeds the maximum allowed size of ${CONFIG.MAX_FILE_SIZE_MB}MB.\n\nImage compression failed. Please choose a smaller image.`);
+                return;
+            }
+            
+            // Show filename
+            const filenameEl = document.getElementById('upload-filename');
+            filenameEl.textContent = processedFile.name || file.name;
+            
+            // Create preview with efficient file reader
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const previewEl = document.getElementById('upload-preview');
+                const imgEl = document.getElementById('upload-preview-img');
+                
+                imgEl.src = e.target.result;
+                previewEl.style.display = 'flex';
+                
+                // Store the image data for later use
+                this.pendingUploadData = e.target.result;
+                this.pendingUploadFilename = processedFile.name || file.name;
+                
+                if (window.performanceMonitor) {
+                    window.performanceMonitor.endMeasurement('background-upload');
+                }
+            };
+            reader.readAsDataURL(processedFile);
+        } catch (error) {
+            console.error('Background upload processing failed:', error);
+            alert('Failed to process image. Please try again.');
+            if (window.performanceMonitor) {
+                window.performanceMonitor.endMeasurement('background-upload');
+            }
+        }
     }
     
     async applyUploadedBackground() {

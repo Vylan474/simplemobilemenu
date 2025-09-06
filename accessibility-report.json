@@ -1,0 +1,1759 @@
+{
+  "timestamp": "2025-09-06T02:08:59.876Z",
+  "summary": {
+    "wcagLevel": "AA",
+    "totalIssues": 173,
+    "criticalIssues": 42,
+    "warningIssues": 32,
+    "passedChecks": 0
+  },
+  "axe": null,
+  "pa11y": {
+    "documentTitle": "MyMobileMenu - Professional Restaurant Menu Creator",
+    "pageUrl": "http://localhost:3000/",
+    "issues": [
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_2.H25.2",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the title element describes the document.",
+        "context": "<title>MyMobileMenu - Professional Res...</title>",
+        "selector": "html > head > title",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_10.C32,C31,C33,C38,SCR34,G206",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element has \"position: fixed\". This may require scrolling in two dimensions, which is considered a failure of this Success Criterion.",
+        "context": "<nav class=\"navbar\">\n        <div class=\"nav-contai...</nav>",
+        "selector": "html > body > nav",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_1.1_1_1.G94.Image",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Ensure that the img element's alt text serves the same purpose and presents the same information as the image.",
+        "context": "<img src=\"Logos/logo_side_by_side.png\" alt=\"MyMobileMenu\" style=\"height: 32px;\">",
+        "selector": "html > body > nav > div > div:nth-child(1) > img",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_1.1_1_1.G73,G74",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "If this image cannot be fully described in a short text alternative, ensure a long text alternative is also available, such as in the body text or through a link.",
+        "context": "<img src=\"Logos/logo_side_by_side.png\" alt=\"MyMobileMenu\" style=\"height: 32px;\">",
+        "selector": "html > body > nav > div > div:nth-child(1) > img",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_1.H48",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "If this element contains a navigation section, it is recommended that it be marked up as a list.",
+        "context": "<div class=\"nav-links\">\n                <a href=\"#feat...</div>",
+        "selector": "html > body > nav > div > div:nth-child(2)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Alpha",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text or background contains transparency. Ensure the contrast ratio between the text and background are at least 4.5:1.",
+        "context": "<a href=\"#features\">Features</a>",
+        "selector": "html > body > nav > div > div:nth-child(2) > a:nth-child(1)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#features\">Features</a>",
+        "selector": "html > body > nav > div > div:nth-child(2) > a:nth-child(1)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Alpha",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text or background contains transparency. Ensure the contrast ratio between the text and background are at least 4.5:1.",
+        "context": "<a href=\"#pricing\">Pricing</a>",
+        "selector": "html > body > nav > div > div:nth-child(2) > a:nth-child(2)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#pricing\">Pricing</a>",
+        "selector": "html > body > nav > div > div:nth-child(2) > a:nth-child(2)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Alpha",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text or background contains transparency. Ensure the contrast ratio between the text and background are at least 4.5:1.",
+        "context": "<a href=\"#demo\">Demo</a>",
+        "selector": "html > body > nav > div > div:nth-child(2) > a:nth-child(3)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#demo\">Demo</a>",
+        "selector": "html > body > nav > div > div:nth-child(2) > a:nth-child(3)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Alpha",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text or background contains transparency. Ensure the contrast ratio between the text and background are at least 4.5:1.",
+        "context": "<button id=\"sign-in-btn\" class=\"btn btn-outline\">Sign In</button>",
+        "selector": "#sign-in-btn",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button id=\"sign-in-btn\" class=\"btn btn-outline\">Sign In</button>",
+        "selector": "#sign-in-btn",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Alpha",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text or background contains transparency. Ensure the contrast ratio between the text and background are at least 4.5:1.",
+        "context": "<button id=\"get-started-btn\" class=\"btn btn-primary\">Get Started</button>",
+        "selector": "#get-started-btn",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button id=\"get-started-btn\" class=\"btn btn-primary\">Get Started</button>",
+        "selector": "#get-started-btn",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 3:1.",
+        "context": "<h1>Create Beautiful Restaurant Men...</h1>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(1) > h1",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 4.5:1.",
+        "context": "<p class=\"hero-subtitle\">Professional menu editor with r...</p>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(1) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 4.5:1.",
+        "context": "<button class=\"btn btn-primary btn-large\">Start Free Trial</button>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button class=\"btn btn-primary btn-large\">Start Free Trial</button>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 4.5:1.",
+        "context": "<button class=\"btn btn-outline btn-large\">Watch Demo</button>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button class=\"btn btn-outline btn-large\">Watch Demo</button>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Alpha",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text or background contains transparency. Ensure the contrast ratio between the text and background are at least 4.5:1.",
+        "context": "<span>No Design Skills Required</span>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > span",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Alpha",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text or background contains transparency. Ensure the contrast ratio between the text and background are at least 4.5:1.",
+        "context": "<span>Mobile Optimized</span>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(2) > span",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Alpha",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text or background contains transparency. Ensure the contrast ratio between the text and background are at least 4.5:1.",
+        "context": "<span>Instant Publishing</span>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(3) > span",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_1_A.G141",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "The heading structure is not logically nested. This h3 element should be an h2 to be properly nested.",
+        "context": "<h3>APPETIZERS</h3>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(2) > div > div:nth-child(1) > div > div > div:nth-child(2) > div > h3",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 2.87:1. Recommendation:  change text colour to #02893b.",
+        "context": "<span class=\"price\">$12</span>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(2) > div > div:nth-child(1) > div > div > div:nth-child(2) > div > div:nth-child(2) > span:nth-child(2)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 2.87:1. Recommendation:  change text colour to #02893b.",
+        "context": "<span class=\"price\">$16</span>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(2) > div > div:nth-child(1) > div > div > div:nth-child(2) > div > div:nth-child(3) > span:nth-child(2)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 2.87:1. Recommendation:  change text colour to #02893b.",
+        "context": "<span class=\"price\">$12</span>",
+        "selector": "html > body > section:nth-child(2) > div > div > div:nth-child(2) > div > div:nth-child(2) > div > div > div > span:nth-child(2)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Powerful features designed spec...</p>",
+        "selector": "#features > div > div:nth-child(1) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Choose from professional color ...</p>",
+        "selector": "#features > div > div:nth-child(2) > div:nth-child(1) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Every menu automatically looks ...</p>",
+        "selector": "#features > div > div:nth-child(2) > div:nth-child(2) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Publish changes instantly with ...</p>",
+        "selector": "#features > div > div:nth-child(2) > div:nth-child(3) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Pre-built templates for food, b...</p>",
+        "selector": "#features > div > div:nth-child(2) > div:nth-child(4) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Intuitive drag-and-drop interfa...</p>",
+        "selector": "#features > div > div:nth-child(2) > div:nth-child(5) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Your menus are automatically sa...</p>",
+        "selector": "#features > div > div:nth-child(2) > div:nth-child(6) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 3:1.",
+        "context": "<h2>Simple, Transparent Pricing</h2>",
+        "selector": "#pricing > div > div:nth-child(1) > h2",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 4.5:1.",
+        "context": "<p>Choose the plan that fits your ...</p>",
+        "selector": "#pricing > div > div:nth-child(1) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<span class=\"period\">/month</span>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div > span:nth-child(3)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Perfect for small restaurants a...</p>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.15:1. Recommendation:  change text colour to #177bbe.",
+        "context": "<button class=\"btn btn-outline btn-full\">Start Free Trial</button>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(1) > button",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button class=\"btn btn-outline btn-full\">Start Free Trial</button>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(1) > button",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 4.5:1.",
+        "context": "<div class=\"popular-badge\">Most Popular</div>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<span class=\"period\">/month</span>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div > span:nth-child(3)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Ideal for growing restaurants a...</p>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 4.5:1.",
+        "context": "<button class=\"btn btn-primary btn-full\">Start Free Trial</button>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(2) > button",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button class=\"btn btn-primary btn-full\">Start Free Trial</button>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(2) > button",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<span class=\"period\">/month</span>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div > span:nth-child(3)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>For restaurant groups and franc...</p>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.15:1. Recommendation:  change text colour to #177bbe.",
+        "context": "<button class=\"btn btn-outline btn-full\">Contact Sales</button>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(3) > button",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button class=\"btn btn-outline btn-full\">Contact Sales</button>",
+        "selector": "#pricing > div > div:nth-child(2) > div:nth-child(3) > button",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Watch how easy it is to create ...</p>",
+        "selector": "#demo > div > div:nth-child(1) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 3:1.",
+        "context": "<span>Watch Demo Video</span>",
+        "selector": "#demo > div > div:nth-child(2) > div:nth-child(1) > div > span",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 3:1.",
+        "context": "<div class=\"step-number\">1</div>",
+        "selector": "#demo > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_1_A.G141",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "The heading structure is not logically nested. This h4 element should be an h3 to be properly nested.",
+        "context": "<h4>Choose Your Template</h4>",
+        "selector": "#demo > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h4",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Start with a pre-built template...</p>",
+        "selector": "#demo > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 3:1.",
+        "context": "<div class=\"step-number\">2</div>",
+        "selector": "#demo > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Apply your colors, fonts, and b...</p>",
+        "selector": "#demo > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 3:1.",
+        "context": "<div class=\"step-number\">3</div>",
+        "selector": "#demo > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change text colour to #6c797a.",
+        "context": "<p>Share your menu with customers ...</p>",
+        "selector": "#demo > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 3:1.",
+        "context": "<h2>Ready to Transform Your Menu?</h2>",
+        "selector": "html > body > section:nth-child(6) > div > div > h2",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 4.5:1.",
+        "context": "<p>Join thousands of restaurants c...</p>",
+        "selector": "html > body > section:nth-child(6) > div > div > p:nth-child(2)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 4.5:1.",
+        "context": "<button class=\"btn btn-primary btn-large\">Start Your Free Trial</button>",
+        "selector": "html > body > section:nth-child(6) > div > div > button",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button class=\"btn btn-primary btn-large\">Start Your Free Trial</button>",
+        "selector": "html > body > section:nth-child(6) > div > div > button",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.BgImage",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 4.5:1.",
+        "context": "<p class=\"cta-note\">No credit card required • 14-da...</p>",
+        "selector": "html > body > section:nth-child(6) > div > div > p:nth-child(4)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_1.1_1_1.G94.Image",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Ensure that the img element's alt text serves the same purpose and presents the same information as the image.",
+        "context": "<img src=\"Logos/logo_side_by_side.png\" alt=\"MyMobileMenu\" style=\"height: 28px;\">",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > img",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_1.1_1_1.G73,G74",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "If this image cannot be fully described in a short text alternative, ensure a long text alternative is also available, such as in the body text or through a link.",
+        "context": "<img src=\"Logos/logo_side_by_side.png\" alt=\"MyMobileMenu\" style=\"height: 28px;\">",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > img",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_1.H48",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "If this element contains a navigation section, it is recommended that it be marked up as a list.",
+        "context": "<div class=\"social-links\">\n                        <a hre...</div>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(3)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.NoContent",
+        "type": "error",
+        "typeCode": 1,
+        "message": "Anchor element found with a valid href attribute, but no link content has been supplied.",
+        "context": "<a href=\"#\"><i class=\"fab fa-twitter\"></i></a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > a:nth-child(1)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#\"><i class=\"fab fa-twitter\"></i></a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > a:nth-child(1)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.NoContent",
+        "type": "error",
+        "typeCode": 1,
+        "message": "Anchor element found with a valid href attribute, but no link content has been supplied.",
+        "context": "<a href=\"#\"><i class=\"fab fa-facebook\"></i></a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > a:nth-child(2)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#\"><i class=\"fab fa-facebook\"></i></a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > a:nth-child(2)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.NoContent",
+        "type": "error",
+        "typeCode": 1,
+        "message": "Anchor element found with a valid href attribute, but no link content has been supplied.",
+        "context": "<a href=\"#\"><i class=\"fab fa-instagram\"></i...</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > a:nth-child(3)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#\"><i class=\"fab fa-instagram\"></i...</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > a:nth-child(3)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.NoContent",
+        "type": "error",
+        "typeCode": 1,
+        "message": "Anchor element found with a valid href attribute, but no link content has been supplied.",
+        "context": "<a href=\"#\"><i class=\"fab fa-linkedin\"></i></a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > a:nth-child(4)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#\"><i class=\"fab fa-linkedin\"></i></a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > a:nth-child(4)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_1_A.G141",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "The heading structure is not logically nested. This h4 element should be an h3 to be properly nested.",
+        "context": "<h4>Product</h4>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(2) > h4",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#features\">Features</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(1) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#pricing\">Pricing</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(2) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#demo\">Demo</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(3) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"templates\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#templates\">Templates</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(4) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#templates\">Templates</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(4) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"integrations\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#integrations\">Integrations</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(5) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#integrations\">Integrations</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(5) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"help\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#help\">Help Center</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(3) > ul > li:nth-child(1) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#help\">Help Center</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(3) > ul > li:nth-child(1) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"contact\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#contact\">Contact Us</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(3) > ul > li:nth-child(2) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#contact\">Contact Us</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(3) > ul > li:nth-child(2) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"tutorials\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#tutorials\">Tutorials</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(3) > ul > li:nth-child(3) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#tutorials\">Tutorials</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(3) > ul > li:nth-child(3) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"community\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#community\">Community</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(3) > ul > li:nth-child(4) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#community\">Community</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(3) > ul > li:nth-child(4) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"status\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#status\">Status</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(3) > ul > li:nth-child(5) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#status\">Status</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(3) > ul > li:nth-child(5) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"about\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#about\">About Us</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(4) > ul > li:nth-child(1) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#about\">About Us</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(4) > ul > li:nth-child(1) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"careers\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#careers\">Careers</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(4) > ul > li:nth-child(2) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#careers\">Careers</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(4) > ul > li:nth-child(2) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"press\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#press\">Press</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(4) > ul > li:nth-child(3) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#press\">Press</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(4) > ul > li:nth-child(3) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"privacy\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#privacy\">Privacy Policy</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(4) > ul > li:nth-child(4) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#privacy\">Privacy Policy</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(4) > ul > li:nth-child(4) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"terms\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#terms\">Terms of Service</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(4) > ul > li:nth-child(5) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#terms\">Terms of Service</a>",
+        "selector": "html > body > footer > div > div:nth-child(1) > div:nth-child(4) > ul > li:nth-child(5) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.16:1. Recommendation:  change background to #122436.",
+        "context": "<p>© 2024 MyMobileMenu. All rights...</p>",
+        "selector": "html > body > footer > div > div:nth-child(2) > p",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_10.C32,C31,C33,C38,SCR34,G206",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element has \"position: fixed\". This may require scrolling in two dimensions, which is considered a failure of this Success Criterion.",
+        "context": "<div id=\"sign-in-modal\" class=\"modal\">\n        <div class=\"modal-cont...</div>",
+        "selector": "#sign-in-modal",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_3.3_3_1.G83,G84,G85",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "If an input error is automatically detected in this form, check that the item(s) in error are identified and the error(s) are described to the user in text.",
+        "context": "<form id=\"sign-in-form\" class=\"auth-form\">\n                    <div class...</form>",
+        "selector": "#sign-in-form",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_3.3_3_2.G131,G89,G184,H90",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that descriptive labels or instructions (including for required fields) are provided for user input in this form.",
+        "context": "<form id=\"sign-in-form\" class=\"auth-form\">\n                    <div class...</form>",
+        "selector": "#sign-in-form",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_3.3_3_3.G177",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that this form provides suggested corrections to errors in user input, unless it would jeopardize the security or purpose of the content.",
+        "context": "<form id=\"sign-in-form\" class=\"auth-form\">\n                    <div class...</form>",
+        "selector": "#sign-in-form",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_3.3_3_4.G98,G99,G155,G164,G168.LegalForms",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "If this form would bind a user to a financial or legal commitment, modify/delete user-controllable data, or submit test responses, ensure that submissions are either reversible, checked for input errors, and/or confirmed by the user.",
+        "context": "<form id=\"sign-in-form\" class=\"auth-form\">\n                    <div class...</form>",
+        "selector": "#sign-in-form",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the input field serves a purpose identified in the Input Purposes for User Interface Components section; and that the content is implemented using technologies with support for identifying the expected meaning for form input data.",
+        "context": "<input type=\"email\" id=\"email\" name=\"email\" required=\"\">",
+        "selector": "#email",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "This element does not have an autocomplete attribute. If this field collects information about the user, consider adding one to comply with this Success Criterion.",
+        "context": "<input type=\"email\" id=\"email\" name=\"email\" required=\"\">",
+        "selector": "#email",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<input type=\"email\" id=\"email\" name=\"email\" required=\"\">",
+        "selector": "#email",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the input field serves a purpose identified in the Input Purposes for User Interface Components section; and that the content is implemented using technologies with support for identifying the expected meaning for form input data.",
+        "context": "<input type=\"password\" id=\"password\" name=\"password\" required=\"\">",
+        "selector": "#password",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "This element does not have an autocomplete attribute. If this field collects information about the user, consider adding one to comply with this Success Criterion.",
+        "context": "<input type=\"password\" id=\"password\" name=\"password\" required=\"\">",
+        "selector": "#password",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<input type=\"password\" id=\"password\" name=\"password\" required=\"\">",
+        "selector": "#password",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the input field serves a purpose identified in the Input Purposes for User Interface Components section; and that the content is implemented using technologies with support for identifying the expected meaning for form input data.",
+        "context": "<input type=\"checkbox\" name=\"remember\">",
+        "selector": "#sign-in-form > div:nth-child(3) > label > input",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<input type=\"checkbox\" name=\"remember\">",
+        "selector": "#sign-in-form > div:nth-child(3) > label > input",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"forgot\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#forgot\" class=\"forgot-link\">Forgot password?</a>",
+        "selector": "#sign-in-form > div:nth-child(3) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#forgot\" class=\"forgot-link\">Forgot password?</a>",
+        "selector": "#sign-in-form > div:nth-child(3) > a",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button type=\"submit\" class=\"btn btn-primary btn-full\">Sign In</button>",
+        "selector": "#sign-in-form > button:nth-child(4)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button type=\"button\" id=\"google-signin-btn\" class=\"btn btn-google btn-full\">\n                        <i cla...</button>",
+        "selector": "#google-signin-btn",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#\" id=\"switch-to-signup\">Sign up for free</a>",
+        "selector": "#switch-to-signup",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_10.C32,C31,C33,C38,SCR34,G206",
+        "type": "warning",
+        "typeCode": 2,
+        "message": "This element has \"position: fixed\". This may require scrolling in two dimensions, which is considered a failure of this Success Criterion.",
+        "context": "<div id=\"sign-up-modal\" class=\"modal\">\n        <div class=\"modal-cont...</div>",
+        "selector": "#sign-up-modal",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_3.3_3_1.G83,G84,G85",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "If an input error is automatically detected in this form, check that the item(s) in error are identified and the error(s) are described to the user in text.",
+        "context": "<form id=\"sign-up-form\" class=\"auth-form\">\n                    <div class...</form>",
+        "selector": "#sign-up-form",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_3.3_3_2.G131,G89,G184,H90",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that descriptive labels or instructions (including for required fields) are provided for user input in this form.",
+        "context": "<form id=\"sign-up-form\" class=\"auth-form\">\n                    <div class...</form>",
+        "selector": "#sign-up-form",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_3.3_3_3.G177",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that this form provides suggested corrections to errors in user input, unless it would jeopardize the security or purpose of the content.",
+        "context": "<form id=\"sign-up-form\" class=\"auth-form\">\n                    <div class...</form>",
+        "selector": "#sign-up-form",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_3.3_3_4.G98,G99,G155,G164,G168.LegalForms",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "If this form would bind a user to a financial or legal commitment, modify/delete user-controllable data, or submit test responses, ensure that submissions are either reversible, checked for input errors, and/or confirmed by the user.",
+        "context": "<form id=\"sign-up-form\" class=\"auth-form\">\n                    <div class...</form>",
+        "selector": "#sign-up-form",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the input field serves a purpose identified in the Input Purposes for User Interface Components section; and that the content is implemented using technologies with support for identifying the expected meaning for form input data.",
+        "context": "<input type=\"text\" id=\"signup-name\" name=\"name\" required=\"\">",
+        "selector": "#signup-name",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "This element does not have an autocomplete attribute. If this field collects information about the user, consider adding one to comply with this Success Criterion.",
+        "context": "<input type=\"text\" id=\"signup-name\" name=\"name\" required=\"\">",
+        "selector": "#signup-name",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<input type=\"text\" id=\"signup-name\" name=\"name\" required=\"\">",
+        "selector": "#signup-name",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the input field serves a purpose identified in the Input Purposes for User Interface Components section; and that the content is implemented using technologies with support for identifying the expected meaning for form input data.",
+        "context": "<input type=\"email\" id=\"signup-email\" name=\"email\" required=\"\">",
+        "selector": "#signup-email",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "This element does not have an autocomplete attribute. If this field collects information about the user, consider adding one to comply with this Success Criterion.",
+        "context": "<input type=\"email\" id=\"signup-email\" name=\"email\" required=\"\">",
+        "selector": "#signup-email",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<input type=\"email\" id=\"signup-email\" name=\"email\" required=\"\">",
+        "selector": "#signup-email",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the input field serves a purpose identified in the Input Purposes for User Interface Components section; and that the content is implemented using technologies with support for identifying the expected meaning for form input data.",
+        "context": "<input type=\"text\" id=\"signup-restaurant\" name=\"restaurant\" required=\"\">",
+        "selector": "#signup-restaurant",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "This element does not have an autocomplete attribute. If this field collects information about the user, consider adding one to comply with this Success Criterion.",
+        "context": "<input type=\"text\" id=\"signup-restaurant\" name=\"restaurant\" required=\"\">",
+        "selector": "#signup-restaurant",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<input type=\"text\" id=\"signup-restaurant\" name=\"restaurant\" required=\"\">",
+        "selector": "#signup-restaurant",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the input field serves a purpose identified in the Input Purposes for User Interface Components section; and that the content is implemented using technologies with support for identifying the expected meaning for form input data.",
+        "context": "<input type=\"password\" id=\"signup-password\" name=\"password\" required=\"\">",
+        "selector": "#signup-password",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "This element does not have an autocomplete attribute. If this field collects information about the user, consider adding one to comply with this Success Criterion.",
+        "context": "<input type=\"password\" id=\"signup-password\" name=\"password\" required=\"\">",
+        "selector": "#signup-password",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<input type=\"password\" id=\"signup-password\" name=\"password\" required=\"\">",
+        "selector": "#signup-password",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_5.H98",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the input field serves a purpose identified in the Input Purposes for User Interface Components section; and that the content is implemented using technologies with support for identifying the expected meaning for form input data.",
+        "context": "<input type=\"checkbox\" name=\"terms\" required=\"\">",
+        "selector": "#sign-up-form > div:nth-child(5) > label > input",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<input type=\"checkbox\" name=\"terms\" required=\"\">",
+        "selector": "#sign-up-form > div:nth-child(5) > label > input",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"terms\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#terms\">Terms of Service</a>",
+        "selector": "#sign-up-form > div:nth-child(5) > label > a:nth-child(3)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#terms\">Terms of Service</a>",
+        "selector": "#sign-up-form > div:nth-child(5) > label > a:nth-child(3)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124.NoSuchID",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This link points to a named anchor \"privacy\" within the document, but no anchor exists with that name.",
+        "context": "<a href=\"#privacy\">Privacy Policy</a>",
+        "selector": "#sign-up-form > div:nth-child(5) > label > a:nth-child(4)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#privacy\">Privacy Policy</a>",
+        "selector": "#sign-up-form > div:nth-child(5) > label > a:nth-child(4)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button type=\"submit\" class=\"btn btn-primary btn-full\">Start Free Trial</button>",
+        "selector": "#sign-up-form > button:nth-child(6)",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_1.G107",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that a change of context does not occur when this input field receives focus.",
+        "context": "<button type=\"button\" id=\"google-signup-btn\" class=\"btn btn-google btn-full\">\n                        <i cla...</button>",
+        "selector": "#google-signup-btn",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_4.H77,H78,H79,H80,H81",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the link text combined with programmatically determined link context identifies the purpose of the link.",
+        "context": "<a href=\"#\" id=\"switch-to-signin\">Sign in</a>",
+        "selector": "#switch-to-signin",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_2.G57",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the content is ordered in a meaningful sequence when linearised, such as when style sheets are disabled.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_3.G96",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Where instructions are provided for understanding the content, do not rely on sensory characteristics alone (such as shape, size or location) to describe objects.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_3.1_3_4.",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that content does not restrict its view and operation to a single display orientation, such as portrait or landscape, unless a specific display orientation is essential.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_1.G14,G182",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that any information conveyed using colour alone is also available in text, or through other visual cues.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_4.G142",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that text can be resized without assistive technology up to 200 percent without loss of content or functionality.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_5.G140,C22,C30.AALevel",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "If the technologies being used can achieve the visual presentation, check that text is used to convey information rather than images of text, except when the image of text is essential to the information being conveyed, or can be visually customised to the user's requirements.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_10.C32,C31,C33,C38,SCR34,G206",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that content can be presented without loss of information or functionality, and without requiring scrolling in two dimensions for:     Vertical scrolling content at a width equivalent to 320 CSS pixels;     Horizontal scrolling content at a height equivalent to 256 CSS pixels;     Except for parts of the content which require two-dimensional layout for usage or meaning.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_11.G195,G207,G18,G145,G174,F78",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that the visual presentation of the following have a contrast ratio of at least 3:1 against adjacent color(s):     User Interface Components: Visual information required to identify user interface components and states, except for inactive components or where the appearance of the component is determined by the user agent and not modified by the author;     Graphical Objects: Parts of graphics required to understand the content, except when a particular presentation of graphics is essential to the information being conveyed.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_12.C36,C35",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that no loss of content or functionality occurs by setting all of the following and by changing no other style property:              Line height (line spacing) to at least 1.5 times the font size;         Spacing following paragraphs to at least 2 times the font size;         Letter spacing (tracking) to at least 0.12 times the font size;         Word spacing to at least 0.16 times the font size.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_13.F95",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that where receiving and then removing pointer hover or keyboard focus triggers additional content to become visible and then hidden, the following are true:              Dismissable: A mechanism is available to dismiss the additional content without moving pointer hover or keyboard focus, unless the additional content communicates an input error or does not obscure or replace other content;         Hoverable: If pointer hover can trigger the additional content, then the pointer can be moved over the additional content without the additional content disappearing;         Persistent: The additional content remains visible until the hover or focus trigger is removed, the user dismisses it, or its information is no longer valid.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_1.2_1_4.",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that if a keyboard shortcut is implemented in content using only letter (including upper- and lower-case letters), punctuation, number, or symbol characters, then at least one of the following is true:              Turn off: A mechanism is available to turn the shortcut off;         Remap: A mechanism is available to remap the shortcut to use one or more non-printable keyboard characters (e.g. Ctrl, Alt, etc);         Active only on focus: The keyboard shortcut for a user interface component is only active when that component has focus.     ",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_2.2_2_2.SCR33,SCR22,G187,G152,G186,G191",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "If any part of the content moves, scrolls or blinks for more than 5 seconds, or auto-updates, check that there is a mechanism available to pause, stop, or hide the content.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_3.2_3_1.G19,G176",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that no component of the content flashes more than three times in any 1-second period, or that the size of any flashing area is sufficiently small.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_1.G1,G123,G124,H69",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Ensure that any common navigation elements can be bypassed; for instance, by use of skip links, header elements, or ARIA landmark roles.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_5.G125,G64,G63,G161,G126,G185",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "If this Web page is not part of a linear process, check that there is more than one way of locating this Web page within a set of Web pages.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_6.G130,G131",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that headings and labels describe topic or purpose.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_4.2_4_7.G149,G165,G195,C15,SCR31",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that there is at least one mode of operation where the keyboard focus indicator can be visually located on user interface controls.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_5.2_5_1.",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that all functionality that uses multipoint or path-based gestures for operation can be operated with a single pointer without a path-based gesture, unless a multipoint or path-based gesture is essential.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_5.2_5_2.",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that for functionality that can be operated using a single pointer, at least one of the following is true:         No Down-Event: The down-event of the pointer is not used to execute any part of the function;         Abort or Undo: Completion of the function is on the up-event, and a mechanism is available to abort the function before completion or to undo the function after completion;         Up Reversal: The up-event reverses any outcome of the preceding down-event;         Essential: Completing the function on the down-event is essential.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_5.2_5_3.F96",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that for user interface components with labels that include text or images of text, the name contains the text that is presented visually.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle2.Guideline2_5.2_5_4.",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that functionality that can be operated by device motion or user motion can also be operated by user interface components and responding to the motion can be disabled to prevent accidental actuation, except when:              Supported Interface: The motion is used to operate functionality through an accessibility supported interface;         Essential: The motion is essential for the function and doing so would invalidate the activity.     ",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_1.3_1_2.H58",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Ensure that any change in language is marked using the lang and/or xml:lang attribute on an element, as appropriate.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_3.G61",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that navigational mechanisms that are repeated on multiple Web pages occur in the same relative order each time they are repeated, unless a change is initiated by the user.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle3.Guideline3_2.3_2_4.G197",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that components that have the same functionality within this Web page are identified consistently in the set of Web pages to which it belongs.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      },
+      {
+        "code": "WCAG2AA.Principle4.Guideline4_1.4_1_3.",
+        "type": "notice",
+        "typeCode": 3,
+        "message": "Check that status messages can be programmatically determined through role or properties such that they can be presented to the user by assistive technologies without receiving focus.",
+        "context": null,
+        "selector": "",
+        "runner": "htmlcs",
+        "runnerExtras": {}
+      }
+    ]
+  },
+  "keyboard": {
+    "tabOrder": [],
+    "keyboardShortcuts": [],
+    "focusTrap": [],
+    "skipLinks": []
+  },
+  "mobile": {
+    "touchTargets": [],
+    "viewport": {},
+    "orientation": []
+  },
+  "colorContrast": []
+}

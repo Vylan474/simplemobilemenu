@@ -8,6 +8,7 @@
     <meta http-equiv="Expires" content="0">
     <title>MyMobileMenu - Restaurant Menu Editor</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="accessibility-fixes.css">
     <style>
         .auth-form { margin-bottom: 20px; }
         .form-group { margin-bottom: 15px; }
@@ -71,18 +72,18 @@
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <div id="sidebar" class="sidebar">
+        <nav id="sidebar" class="sidebar" role="navigation" aria-label="Menu management">
             <div class="sidebar-header">
                 <div class="user-info">
                     <div class="user-avatar">
                         <i class="fas fa-user"></i>
                     </div>
                     <div class="user-details">
-                        <div class="user-name" id="user-name">Demo User</div>
-                        <div class="user-email" id="user-email">demo@example.com</div>
+                        <div class="user-name" id="user-name" aria-label="Current user">Demo User</div>
+                        <div class="user-email" id="user-email" aria-label="User email">demo@example.com</div>
                     </div>
                 </div>
-                <button id="close-sidebar" class="sidebar-close">
+                <button id="close-sidebar" class="sidebar-close" aria-label="Close sidebar menu">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -141,13 +142,13 @@
         
         <!-- Main Content -->
         <div class="main-layout">
-            <header class="header">
+            <header class="header" role="banner">
                 <div class="header-left">
-                    <button id="toggle-sidebar" class="btn btn-secondary sidebar-toggle">
+                    <button id="toggle-sidebar" class="btn btn-secondary sidebar-toggle" aria-label="Toggle sidebar menu" aria-expanded="false">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h1><img src="Logos/logo_side_by_side.png" alt="MyMobileMenu" style="height: 28px; vertical-align: middle;"></h1>
-                    <div class="current-menu-info">
+                    <h1><img src="Logos/logo_side_by_side.png" alt="MyMobileMenu logo - Restaurant menu editor" style="height: 28px; vertical-align: middle;"></h1>
+                    <div class="current-menu-info" role="status" aria-live="polite">
                         <span class="current-menu-name" id="current-menu-name">My Restaurant Menu</span>
                         <div class="menu-status-row">
                             <span class="menu-status" id="menu-status">Draft</span>
@@ -159,29 +160,34 @@
                 </div>
                 <div class="header-controls">
                     <div class="save-controls">
-                        <button id="save-menu" class="btn btn-primary">
+                        <button id="save-menu" class="btn btn-primary" aria-label="Save current menu changes">
                             <i class="fas fa-save"></i> Save Menu
                         </button>
-                        <button id="discard-changes" class="btn btn-warning" style="display: none;" title="Discard unsaved changes">
+                        <button id="discard-changes" class="btn btn-warning" style="display: none;" aria-label="Discard unsaved changes">
                             <i class="fas fa-undo"></i> Discard
                         </button>
                     </div>
-                    <button id="export-menu" class="btn btn-secondary">
+                    <button id="export-menu" class="btn btn-secondary" aria-label="Export menu to file">
                         <i class="fas fa-download"></i> Export
                     </button>
-                    <button id="import-menu" class="btn btn-secondary">
+                    <button id="import-menu" class="btn btn-secondary" aria-label="Import menu from file">
                         <i class="fas fa-upload"></i> Import
                     </button>
                     <input type="file" id="import-file" accept=".json" style="display: none;">
                 </div>
             </header>
 
-            <div class="toolbar">
-                <button id="add-section" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Add Section
-                </button>
+            <div id="toolbar" class="toolbar" role="toolbar" aria-label="Menu editing tools">
+                <div class="primary-actions">
+                    <button id="add-section" class="btn btn-primary" aria-label="Add new menu section">
+                        <i class="fas fa-plus"></i> Add Section
+                    </button>
+                    <button id="show-welcome" class="btn btn-secondary" aria-label="Show welcome tour again">
+                        <i class="fas fa-question-circle"></i> Help
+                    </button>
+                </div>
                 <div class="logo-controls">
-                    <button id="logo-options" class="btn btn-secondary">
+                    <button id="logo-options" class="btn btn-secondary" aria-label="Logo options and upload" aria-expanded="false" aria-haspopup="true">
                         <i class="fas fa-image"></i> Logo
                     </button>
                     <div id="logo-dropdown" class="dropdown logo-dropdown" style="display: none;">
@@ -190,7 +196,7 @@
                             <div class="logo-upload-area">
                                 <div id="logo-preview-thumbnail" class="logo-thumbnail" style="display: none;">
                                     <img src="" alt="Logo preview">
-                                    <button id="remove-logo-thumb" class="remove-thumbnail-btn">
+                                    <button id="remove-logo-thumb" class="remove-thumbnail-btn" aria-label="Remove uploaded logo">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
@@ -227,7 +233,7 @@
                     <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/jpg,image/gif,image/svg+xml,image/webp" style="display: none;">
                 </div>
                 <div class="background-controls">
-                    <button id="background-options" class="btn btn-secondary">
+                    <button id="background-options" class="btn btn-secondary" aria-label="Background customization options" aria-expanded="false" aria-haspopup="true">
                         <i class="fas fa-palette"></i> Background
                     </button>
                     <div id="background-dropdown" class="dropdown background-dropdown" style="display: none;">
@@ -341,7 +347,7 @@
                     </div>
                 </div>
                 <div class="font-controls">
-                    <button id="font-options" class="btn btn-secondary">
+                    <button id="font-options" class="btn btn-secondary" aria-label="Font family options" aria-expanded="false" aria-haspopup="true">
                         <i class="fas fa-font"></i> Font
                     </button>
                     <div id="font-dropdown" class="dropdown font-dropdown" style="display: none;">
@@ -373,7 +379,7 @@
                     </div>
                 </div>
                 <div class="color-controls">
-                    <button id="color-options" class="btn btn-secondary">
+                    <button id="color-options" class="btn btn-secondary" aria-label="Color palette options" aria-expanded="false" aria-haspopup="true">
                         <i class="fas fa-swatchbook"></i> Colors
                     </button>
                     <div id="color-dropdown" class="dropdown color-dropdown" style="display: none;">
@@ -515,7 +521,7 @@
                     </div>
                 </div>
                 <div class="navigation-controls">
-                    <button id="navigation-options" class="btn btn-secondary">
+                    <button id="navigation-options" class="btn btn-secondary" aria-label="Navigation theme options" aria-expanded="false" aria-haspopup="true">
                         <i class="fas fa-compass"></i> Navigation
                     </button>
                     <div id="navigation-dropdown" class="dropdown navigation-dropdown" style="display: none;">
@@ -574,23 +580,61 @@
                         </div>
                     </div>
                 </div>
-                <button id="toggle-live-preview" class="btn btn-secondary">
+                <button id="toggle-live-preview" class="btn btn-secondary" aria-label="Toggle live mobile preview">
                     <i class="fas fa-mobile-alt"></i> Preview
                 </button>
                 <div class="publish-group">
-                    <button id="view-published-menu" class="btn btn-secondary" title="View your published menu">
+                    <button id="view-published-menu" class="btn btn-secondary" aria-label="View your published menu">
                         <i class="fas fa-eye"></i> View Live Menu
                     </button>
-                    <button id="publish-menu" class="btn btn-success">
+                    <button id="publish-menu" class="btn btn-success" aria-label="Publish menu to make it live">
                         <i class="fas fa-share-alt"></i> Publish
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Contextual Tips Overlay -->
+            <div id="contextual-tips" class="contextual-tips" style="display: none;">
+                <div class="tip-content">
+                    <div class="tip-arrow"></div>
+                    <div class="tip-text">
+                        <h4 class="tip-title">Tip</h4>
+                        <p class="tip-description"></p>
+                    </div>
+                    <button class="tip-close" aria-label="Close tip">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>
 
             <div class="main-content">
-            <div id="menu-container" class="menu-container">
+            <main id="menu-container" class="menu-container" role="main" aria-label="Menu editing workspace">
+                <!-- Empty State for New Users -->
+                <div id="empty-state" class="empty-state">
+                    <div class="empty-state-content">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h2>Ready to create your first menu?</h2>
+                        <p>Get started by adding your first section, or use one of our quick-start templates</p>
+                        
+                        <div class="empty-state-actions">
+                            <button id="add-first-section" class="btn btn-primary btn-large" aria-label="Add your first menu section">
+                                <i class="fas fa-plus"></i> Add Your First Section
+                            </button>
+                            <button id="choose-template" class="btn btn-secondary btn-large" aria-label="Choose from pre-built menu templates">
+                                <i class="fas fa-magic"></i> Use a Template
+                            </button>
+                        </div>
+                        
+                        <div class="quick-tips">
+                            <p><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Start with sections like "Appetizers", "Main Courses", or "Drinks"</p>
+                        </div>
+                    </div>
+                </div>
                 <!-- Menu sections will be dynamically added here -->
-            </div>
+                <div aria-live="polite" aria-atomic="true" id="menu-changes-announcer" class="sr-only"></div>
+            </main>
 
             <div id="side-preview-panel" class="side-preview-panel hidden">
                 <div class="side-preview-controls">
@@ -599,7 +643,7 @@
                         <button id="refresh-side-preview" class="btn btn-primary btn-small" title="Refresh Preview">
                             <i class="fas fa-sync"></i>
                         </button>
-                        <button id="close-side-preview" class="btn btn-secondary btn-small">
+                        <button id="close-side-preview" class="btn btn-secondary btn-small" aria-label="Close preview panel">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -628,10 +672,11 @@
         </div>
         </div> <!-- Close main-layout -->
 
-        <div id="preview-modal" class="modal">
+        <div id="preview-modal" class="modal" role="dialog" aria-labelledby="preview-modal-title" aria-modal="true">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="close">&times;</span>
+                    <h2 id="preview-modal-title">Mobile Menu Preview</h2>
+                    <button class="close" aria-label="Close preview modal">&times;</button>
                 </div>
                 <div class="smartphone-frame">
                     <div class="smartphone-screen">
@@ -895,7 +940,255 @@
                 </div>
             </div>
         </div>
+
+        <!-- Welcome Onboarding Modal -->
+        <div id="welcome-modal" class="modal welcome-modal">
+            <div class="modal-content welcome-content">
+                <div class="welcome-header">
+                    <div class="welcome-logo">
+                        <img src="Logos/logo_side_by_side.png" alt="MyMobileMenu" style="height: 40px;">
+                    </div>
+                    <h2>Welcome to MyMobileMenu!</h2>
+                    <p class="welcome-subtitle">Create beautiful, professional menus in minutes</p>
+                </div>
+                
+                <div class="welcome-body">
+                    <div class="welcome-step active" data-step="1">
+                        <div class="step-content">
+                            <div class="step-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <h3>Choose Your Starting Point</h3>
+                            <p>Get started quickly with a pre-built template or create from scratch</p>
+                            
+                            <div class="template-options">
+                                <div class="template-option" data-template="scratch">
+                                    <div class="template-preview">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </div>
+                                    <div class="template-info">
+                                        <h4>Start from Scratch</h4>
+                                        <p>Build your menu from the ground up</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="template-option" data-template="restaurant">
+                                    <div class="template-preview">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                    <div class="template-info">
+                                        <h4>Restaurant Menu</h4>
+                                        <p>Appetizers, mains, desserts & drinks</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="template-option" data-template="cafe">
+                                    <div class="template-preview">
+                                        <i class="fas fa-coffee"></i>
+                                    </div>
+                                    <div class="template-info">
+                                        <h4>Cafe Menu</h4>
+                                        <p>Coffee, pastries, sandwiches</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="template-option" data-template="bar">
+                                    <div class="template-preview">
+                                        <i class="fas fa-wine-glass-alt"></i>
+                                    </div>
+                                    <div class="template-info">
+                                        <h4>Bar Menu</h4>
+                                        <p>Cocktails, beers, wines & bar food</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="template-option" data-template="pizza">
+                                    <div class="template-preview">
+                                        <i class="fas fa-pizza-slice"></i>
+                                    </div>
+                                    <div class="template-info">
+                                        <h4>Pizza Place</h4>
+                                        <p>Pizzas, sides & beverages</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="template-option" data-template="fine_dining">
+                                    <div class="template-preview">
+                                        <i class="fas fa-concierge-bell"></i>
+                                    </div>
+                                    <div class="template-info">
+                                        <h4>Fine Dining</h4>
+                                        <p>Elegant multi-course experience</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="welcome-step" data-step="2">
+                        <div class="step-content">
+                            <div class="step-icon">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <h3>Customize Your Style</h3>
+                            <p>Make your menu reflect your restaurant's personality</p>
+                            
+                            <div class="style-preview">
+                                <div class="preview-phone">
+                                    <div class="phone-screen" id="style-preview-screen">
+                                        <div class="menu-preview">
+                                            <div class="preview-header">
+                                                <h4>Your Restaurant</h4>
+                                            </div>
+                                            <div class="preview-sections">
+                                                <div class="preview-section">
+                                                    <h5>Appetizers</h5>
+                                                    <div class="preview-item">
+                                                        <span>Sample Item</span>
+                                                        <span>$12</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="style-options">
+                                    <div class="style-option-group">
+                                        <h4>Background</h4>
+                                        <div class="background-previews">
+                                            <div class="bg-option" data-bg="none">
+                                                <div class="bg-preview solid-bg"></div>
+                                                <span>Clean</span>
+                                            </div>
+                                            <div class="bg-option" data-bg="warm">
+                                                <div class="bg-preview" style="background: linear-gradient(45deg, #f4e4c1, #e8d5b7);"></div>
+                                                <span>Warm</span>
+                                            </div>
+                                            <div class="bg-option" data-bg="elegant">
+                                                <div class="bg-preview" style="background: linear-gradient(45deg, #2c3e50, #34495e);"></div>
+                                                <span>Elegant</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="style-option-group">
+                                        <h4>Colors</h4>
+                                        <div class="color-previews">
+                                            <div class="color-option" data-palette="classic">
+                                                <div class="color-swatches">
+                                                    <div class="swatch" style="background: #2c3e50;"></div>
+                                                    <div class="swatch" style="background: #27ae60;"></div>
+                                                </div>
+                                                <span>Classic</span>
+                                            </div>
+                                            <div class="color-option" data-palette="warm">
+                                                <div class="color-swatches">
+                                                    <div class="swatch" style="background: #e67e22;"></div>
+                                                    <div class="swatch" style="background: #f39c12;"></div>
+                                                </div>
+                                                <span>Warm</span>
+                                            </div>
+                                            <div class="color-option" data-palette="ocean">
+                                                <div class="color-swatches">
+                                                    <div class="swatch" style="background: #3498db;"></div>
+                                                    <div class="swatch" style="background: #2980b9;"></div>
+                                                </div>
+                                                <span>Ocean</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="welcome-step" data-step="3">
+                        <div class="step-content">
+                            <div class="step-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h3>Quick Tips</h3>
+                            <p>Here are the essentials to get you started:</p>
+                            
+                            <div class="tips-grid">
+                                <div class="tip-item">
+                                    <div class="tip-icon">
+                                        <i class="fas fa-plus"></i>
+                                    </div>
+                                    <div class="tip-content">
+                                        <h4>Adding Sections</h4>
+                                        <p>Use "Add Section" to organize your menu (appetizers, mains, drinks, etc.)</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="tip-item">
+                                    <div class="tip-icon">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <div class="tip-content">
+                                        <h4>Live Preview</h4>
+                                        <p>Click "Preview" to see how your menu looks on mobile devices</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="tip-item">
+                                    <div class="tip-icon">
+                                        <i class="fas fa-save"></i>
+                                    </div>
+                                    <div class="tip-content">
+                                        <h4>Auto-Save</h4>
+                                        <p>Your work is automatically saved as you edit. Look for the save indicator.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="tip-item">
+                                    <div class="tip-icon">
+                                        <i class="fas fa-share-alt"></i>
+                                    </div>
+                                    <div class="tip-content">
+                                        <h4>Publishing</h4>
+                                        <p>When ready, click "Publish" to make your menu live and shareable</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="welcome-footer">
+                    <div class="step-indicators">
+                        <div class="step-indicator active" data-step="1"></div>
+                        <div class="step-indicator" data-step="2"></div>
+                        <div class="step-indicator" data-step="3"></div>
+                    </div>
+                    
+                    <div class="welcome-actions">
+                        <button id="welcome-skip" class="btn btn-secondary">
+                            Skip Tour
+                        </button>
+                        <button id="welcome-back" class="btn btn-secondary" style="display: none;">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button id="welcome-next" class="btn btn-primary">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button id="welcome-start" class="btn btn-primary" style="display: none;">
+                            <i class="fas fa-rocket"></i> Start Creating!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Skip to content link for accessibility -->
+    <a href="#menu-container" class="skip-link">Skip to main content</a>
+    <a href="#toolbar" class="skip-link">Skip to toolbar</a>
+    <a href="#sidebar" class="skip-link">Skip to menu management</a>
 
     <!-- Authentication Modal -->
     <div id="auth-modal" class="modal" style="display: none;">
@@ -975,6 +1268,11 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="performance-utils.js?v=20250903"></script>
+    <script src="ui-feedback.js?v=20250903"></script>
+    <script src="ux-enhancements.js?v=20250903"></script>
+    <script src="bulk-operations.js?v=20250903"></script>
+    <script src="accessibility-enhancements.js?v=20250903"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         // Error handler to catch script loading issues

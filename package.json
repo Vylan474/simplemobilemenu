@@ -30,6 +30,11 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/uuid": "^10.0.0",
-    "nodemon": "^3.0.1"
+    "axe-core": "^4.10.3",
+    "cli-table3": "^0.6.5",
+    "lighthouse": "^12.8.2",
+    "nodemon": "^3.0.1",
+    "pa11y": "^9.0.0",
+    "puppeteer": "^24.19.0"
   }
 }

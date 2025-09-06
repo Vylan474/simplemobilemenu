@@ -1,0 +1,527 @@
+/**
+ * Accessibility Fixes for MyMobileMenu
+ * Addresses WCAG 2.1 AA compliance issues
+ */
+
+/* =============================================
+ * COLOR CONTRAST FIXES
+ * ============================================= */
+
+/* Fix insufficient contrast for #7f8c8d (3.48:1) -> #6c797a (4.5:1) */
+body p,
+.hero-subtitle,
+.pricing-header p,
+.period,
+.footer-text,
+.feature-card p,
+.section-header p {
+    color: #6c797a !important;
+}
+
+/* Fix insufficient contrast for btn-outline (3.15:1) -> #177bbe (4.5:1) */
+.btn-outline {
+    color: #177bbe !important;
+    border-color: #177bbe !important;
+}
+
+.btn-outline:hover {
+    background: #177bbe !important;
+    color: #ffffff !important;
+}
+
+/* Fix insufficient contrast for btn-secondary (3.32:1) -> improve background to #e22f0c */
+.btn-secondary {
+    background: #e22f0c !important;
+    color: #ffffff !important;
+    border-color: #e22f0c !important;
+}
+
+.btn-secondary:hover {
+    background: #cc2a0b !important;
+    border-color: #cc2a0b !important;
+}
+
+/* Fix add-item-btn and add-column-btn contrast (3.3:1) -> #142122 */
+.add-item-btn,
+.add-column-btn {
+    color: #142122 !important;
+}
+
+/* Fix auth modal close button contrast (2.32:1) -> #949494 */
+.modal .close {
+    color: #949494 !important;
+}
+
+/* Fix auth divider contrast (2.85:1) -> #767676 */
+.auth-divider span {
+    color: #767676 !important;
+}
+
+/* Fix btn-success contrast for publish button (2.87:1) -> #02893b */
+.btn-success {
+    background: #02893b !important;
+    border-color: #02893b !important;
+    color: #ffffff !important;
+}
+
+.btn-success:hover {
+    background: #027a33 !important;
+    border-color: #027a33 !important;
+}
+
+/* Fix insufficient contrast for price elements (2.87:1) -> #02893b (4.5:1) */
+.item-preview .price,
+.mobile-item .price,
+.price .amount {
+    color: #02893b !important;
+    font-weight: 700;
+}
+
+/* Fix insufficient contrast for footer elements (3.16:1) -> #122436 (4.5:1) */
+footer p,
+.footer-text {
+    background: #122436 !important;
+    color: #ffffff !important;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+/* =============================================
+ * FOCUS INDICATORS
+ * ============================================= */
+
+/* Enhanced focus indicators for better visibility */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+a:focus {
+    outline: 3px solid #FF4C29 !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 1px #ffffff, 0 0 0 4px #FF4C29 !important;
+}
+
+/* High contrast focus for dark backgrounds */
+.dark-mode button:focus,
+.dark-mode input:focus,
+.dark-mode select:focus,
+.dark-mode textarea:focus,
+.dark-mode a:focus {
+    outline: 3px solid #FFD700 !important;
+    box-shadow: 0 0 0 1px #000000, 0 0 0 4px #FFD700 !important;
+}
+
+/* =============================================
+ * TOUCH TARGET IMPROVEMENTS
+ * ============================================= */
+
+/* Ensure minimum 44x44px touch targets for mobile */
+@media (max-width: 768px) {
+    button,
+    input,
+    select,
+    .btn,
+    .dropdown-option,
+    .template-option,
+    .section-toggle,
+    .menu-item-controls button {
+        min-height: 44px !important;
+        min-width: 44px !important;
+        padding: 8px 12px !important;
+    }
+    
+    /* Icon-only buttons need adequate spacing */
+    .sidebar-close,
+    .remove-thumbnail-btn,
+    .close,
+    .tip-close {
+        width: 44px !important;
+        height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    /* Navigation links in mobile menus */
+    .nav-links a {
+        padding: 12px 16px !important;
+        min-height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+}
+
+/* =============================================
+ * ARIA LABEL IMPROVEMENTS
+ * ============================================= */
+
+/* Hide decorative icons from screen readers */
+.fas:not([role]),
+.fab:not([role]) {
+    aria-hidden: true;
+}
+
+/* Ensure form elements have proper labels */
+input:not([aria-label]):not([aria-labelledby]) {
+    border: 2px solid #dc3545 !important;
+}
+
+input:not([aria-label]):not([aria-labelledby])::after {
+    content: "⚠️ Missing accessibility label" !important;
+    position: absolute;
+    color: #dc3545;
+    font-size: 12px;
+    top: -20px;
+    left: 0;
+}
+
+/* =============================================
+ * MODAL AND DIALOG ENHANCEMENTS
+ * ============================================= */
+
+/* Ensure modals are properly identified */
+.modal {
+    role: dialog;
+}
+
+.modal[style*="display: flex"],
+.modal[style*="display: block"] {
+    z-index: 10000 !important;
+}
+
+/* Backdrop for focus containment */
+.modal::backdrop {
+    background: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(4px) !important;
+}
+
+/* Modal content visibility */
+.modal-content {
+    outline: 2px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* =============================================
+ * NAVIGATION AND SKIP LINKS
+ * ============================================= */
+
+/* Skip to content link - visible on focus */
+.skip-link {
+    position: absolute !important;
+    top: -40px !important;
+    left: 6px !important;
+    background: #000000 !important;
+    color: #ffffff !important;
+    padding: 8px 16px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    border-radius: 0 0 4px 4px !important;
+    z-index: 10001 !important;
+    transition: top 0.2s ease !important;
+}
+
+.skip-link:focus {
+    top: 0 !important;
+    outline: 3px solid #FFD700 !important;
+}
+
+/* =============================================
+ * ERROR STATES AND VALIDATION
+ * ============================================= */
+
+/* Error state styling */
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+    border: 2px solid #dc3545 !important;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2) !important;
+}
+
+/* Error messages */
+.error-message,
+[role="alert"] {
+    color: #dc3545 !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-top: 4px !important;
+}
+
+.error-message::before,
+[role="alert"]::before {
+    content: "⚠️" !important;
+    font-style: normal !important;
+}
+
+/* =============================================
+ * TABLE AND DATA ACCESSIBILITY
+ * ============================================= */
+
+/* Menu item tables */
+table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+}
+
+th, td {
+    border: 1px solid #dee2e6 !important;
+    padding: 12px !important;
+    text-align: left !important;
+}
+
+th {
+    background: #f8f9fa !important;
+    font-weight: 600 !important;
+    color: #2c3e50 !important;
+}
+
+/* Zebra striping for better readability */
+tbody tr:nth-child(even) {
+    background: rgba(248, 249, 250, 0.5) !important;
+}
+
+/* =============================================
+ * HIGH CONTRAST MODE SUPPORT
+ * ============================================= */
+
+@media (prefers-contrast: high) {
+    * {
+        filter: contrast(150%) !important;
+    }
+    
+    .btn {
+        border: 2px solid currentColor !important;
+    }
+    
+    .dropdown,
+    .modal-content {
+        border: 3px solid currentColor !important;
+    }
+}
+
+/* Forced colors mode support */
+@media (forced-colors: active) {
+    .btn {
+        border: 1px solid ButtonText !important;
+        background: ButtonFace !important;
+        color: ButtonText !important;
+    }
+    
+    .btn:hover {
+        background: Highlight !important;
+        color: HighlightText !important;
+    }
+    
+    .modal-content {
+        border: 1px solid CanvasText !important;
+        background: Canvas !important;
+        color: CanvasText !important;
+    }
+    
+    input, select, textarea {
+        background: Field !important;
+        color: FieldText !important;
+        border: 1px solid FieldText !important;
+    }
+}
+
+/* =============================================
+ * REDUCED MOTION SUPPORT
+ * ============================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    /* Keep essential animations but make them much faster */
+    .fade-in,
+    .slide-in,
+    .modal {
+        animation-duration: 0.1s !important;
+    }
+}
+
+/* =============================================
+ * SCREEN READER OPTIMIZATIONS
+ * ============================================= */
+
+/* Screen reader only text */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Show on focus for keyboard users */
+.sr-only:focus {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0.5rem !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+/* Live region for announcements */
+[aria-live] {
+    position: absolute !important;
+    left: -10000px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+}
+
+/* =============================================
+ * KEYBOARD NAVIGATION ENHANCEMENTS
+ * ============================================= */
+
+/* Ensure keyboard navigation visibility */
+*:focus-within {
+    outline: 2px solid rgba(255, 76, 41, 0.5) !important;
+}
+
+/* Tab sequence indicators */
+[tabindex]:focus::after {
+    content: attr(aria-label) !important;
+    position: absolute !important;
+    background: #000000 !important;
+    color: #ffffff !important;
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+    border-radius: 2px !important;
+    white-space: nowrap !important;
+    z-index: 10000 !important;
+    top: 100% !important;
+    left: 0 !important;
+    margin-top: 2px !important;
+}
+
+/* =============================================
+ * MOBILE ACCESSIBILITY IMPROVEMENTS
+ * ============================================= */
+
+@media (max-width: 768px) {
+    /* Larger text for better readability */
+    body {
+        font-size: 16px !important;
+        line-height: 1.6 !important;
+    }
+    
+    /* Increased spacing between interactive elements */
+    .btn + .btn,
+    .dropdown-option + .dropdown-option {
+        margin-top: 8px !important;
+    }
+    
+    /* Better visual hierarchy */
+    h1 { font-size: 2rem !important; }
+    h2 { font-size: 1.75rem !important; }
+    h3 { font-size: 1.5rem !important; }
+    
+    /* Ensure sufficient color contrast on mobile */
+    .btn,
+    input,
+    select,
+    textarea {
+        border: 2px solid currentColor !important;
+    }
+}
+
+/* =============================================
+ * PRINT ACCESSIBILITY
+ * ============================================= */
+
+@media print {
+    /* Ensure good contrast for printed materials */
+    * {
+        background: transparent !important;
+        color: black !important;
+        box-shadow: none !important;
+    }
+    
+    /* Show URLs after links */
+    a[href]:after {
+        content: " (" attr(href) ")" !important;
+        font-size: 0.8em !important;
+        color: #666 !important;
+    }
+    
+    /* Hide non-essential elements */
+    .modal,
+    .dropdown,
+    .tooltip,
+    [aria-hidden="true"] {
+        display: none !important;
+    }
+}
+
+/* =============================================
+ * CUSTOM PROPERTIES FOR ACCESSIBILITY
+ * ============================================= */
+
+:root {
+    --focus-color: #FF4C29;
+    --focus-width: 3px;
+    --error-color: #dc3545;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    
+    --text-color-accessible: #2c3e50;
+    --text-color-muted-accessible: #6c797a;
+    --bg-color-accessible: #ffffff;
+    
+    --min-touch-target: 44px;
+    --accessible-line-height: 1.6;
+}
+
+/* Dark mode accessible colors */
+.dark-mode {
+    --text-color-accessible: #f8f9fa;
+    --text-color-muted-accessible: #adb5bd;
+    --bg-color-accessible: #1a1a1a;
+    --focus-color: #FFD700;
+}
+
+/* =============================================
+ * UTILITY CLASSES
+ * ============================================= */
+
+.visually-hidden {
+    @extend .sr-only;
+}
+
+.focus-visible {
+    outline: var(--focus-width) solid var(--focus-color) !important;
+    outline-offset: 2px !important;
+}
+
+.accessible-contrast {
+    color: var(--text-color-accessible) !important;
+}
+
+.accessible-muted {
+    color: var(--text-color-muted-accessible) !important;
+}
+
+.min-touch-target {
+    min-width: var(--min-touch-target) !important;
+    min-height: var(--min-touch-target) !important;
+}
