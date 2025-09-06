@@ -176,7 +176,7 @@ class AuthManager {
         this.notifyAuthChange(null);
         
         // Redirect to landing page
-        if (window.location.pathname.includes('index.html')) {
+        if (window.location.pathname.includes('editor.html') || window.location.pathname.includes('index.html')) {
             window.location.href = 'landing.html';
         }
     }

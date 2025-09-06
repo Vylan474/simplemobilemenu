@@ -514,8 +514,12 @@ class MenuEditor {
     }
     
     async handleSignOut() {
+        console.log('🚪 Sign out clicked');
         if (window.authManager) {
+            console.log('🔧 AuthManager found, signing out...');
             await window.authManager.signOut();
+        } else {
+            console.error('❌ AuthManager not found');
         }
     }
     
