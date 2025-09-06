@@ -445,9 +445,17 @@ class MenuEditor {
             const authModal = document.getElementById('auth-modal');
             if (authModal) {
                 authModal.style.display = 'none';
+                authModal.classList.remove('show');
             }
-            // Initialize auth integration to listen for auth state changes
-            this.initializeAuth();
+            // Set current user and update interface without re-initializing auth
+            this.currentUser = currentUser;
+            
+            // Just set up the auth state listener without triggering auth flow
+            document.addEventListener('authStateChanged', (event) => {
+                this.handleAuthChange(event.detail.user);
+            });
+            
+            await this.updateUserInterface(currentUser);
             await this.loadUserData();
         } else {
             console.log('❌ User not authenticated, showing auth modal...');
