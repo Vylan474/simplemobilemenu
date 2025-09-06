@@ -281,8 +281,9 @@ class MenuEditor {
             const user = window.authManager.getCurrentUser();
             this.handleAuthChange(user);
         } else {
-            // Show auth modal if no auth manager
-            this.showAuthModal();
+            // No auth manager, redirect to landing page
+            console.log('❌ No auth manager found, redirecting to landing page...');
+            window.location.href = 'index.html';
         }
     }
     
@@ -314,11 +315,12 @@ class MenuEditor {
                 this.initializeEvents();
             }, 100);
         } else {
-            // No user signed in or invalid user data, show auth modal
+            // No user signed in or invalid user data, redirect to landing page
             console.log('No valid user data:', user);
+            console.log('❌ Redirecting to landing page for authentication...');
             this.currentUser = null;
             this.authInitialized = false;
-            this.showAuthModal();
+            window.location.href = 'index.html';
         }
     }
     
@@ -425,8 +427,8 @@ class MenuEditor {
         
         // Wait for auth manager to be ready
         if (!window.authManager) {
-            console.error('❌ Auth manager not found');
-            this.showAuthModal();
+            console.error('❌ Auth manager not found, redirecting to landing page...');
+            window.location.href = 'index.html';
             return;
         }
         
@@ -459,20 +461,19 @@ class MenuEditor {
             await this.updateUserInterface(currentUser);
             await this.loadUserData();
         } else {
-            console.log('❌ User not authenticated, showing auth modal...');
-            // Initialize auth integration to listen for auth state changes
-            this.initializeAuth();
-            // Show authentication modal
-            this.showAuthModal();
+            console.log('❌ User not authenticated, redirecting to landing page...');
+            // Redirect to landing page for authentication
+            window.location.href = 'index.html';
         }
     }
     
-    showAuthModal() {
-        const modal = document.getElementById('auth-modal');
-        modal.style.display = 'block';
-        modal.classList.add('show');
-        showLoginForm();
-    }
+    // Deprecated - now redirecting to landing page instead
+    // showAuthModal() {
+    //     const modal = document.getElementById('auth-modal');
+    //     modal.style.display = 'block';
+    //     modal.classList.add('show');
+    //     showLoginForm();
+    // }
     
     async createNewMenu() {
         if (!window.authManager || !window.authManager.isSignedIn()) return;
