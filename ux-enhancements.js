@@ -173,12 +173,14 @@ class UXEnhancements {
         
         this.skipOnboarding();
         
-        // Show first contextual tip after a delay
+        // Show first contextual tip after a delay, with better timing
         setTimeout(() => {
-            if (!this.hasMenuSections()) {
+            // Double-check that elements exist and user is authenticated
+            const addSectionBtn = document.getElementById('add-section');
+            if (!this.hasMenuSections() && addSectionBtn && addSectionBtn.offsetParent !== null) {
                 this.showContextualTip('add-section', 'Get Started', 'Click here to add your first menu section!');
             }
-        }, 1000);
+        }, 2000);
     }
     
     // =============================================
@@ -486,6 +488,7 @@ class UXEnhancements {
     initContextualTips() {
         this.tipsShown = JSON.parse(localStorage.getItem('mmm_tips_shown') || '[]');
         this.tipElement = document.getElementById('contextual-tips');
+        this.currentTipVisible = false;
         
         // Setup close handler
         const closeBtn = this.tipElement?.querySelector('.tip-close');
@@ -497,6 +500,11 @@ class UXEnhancements {
     showContextualTip(targetElement, title, description, tipId = null) {
         if (!this.tipElement) return;
         
+        // Don't show if a tip is already visible
+        if (this.currentTipVisible) {
+            return;
+        }
+        
         // Check if this tip has already been shown
         if (tipId && this.tipsShown.includes(tipId)) {
             return;
@@ -506,7 +514,16 @@ class UXEnhancements {
             ? document.getElementById(targetElement) 
             : targetElement;
         
-        if (!target) return;
+        if (!target) {
+            console.warn('Contextual tip target element not found:', targetElement);
+            return;
+        }
+        
+        // Don't show tip if title or description is empty
+        if (!title || !description) {
+            console.warn('Contextual tip missing title or description:', { title, description });
+            return;
+        }
         
         // Update tip content
         const tipTitle = this.tipElement.querySelector('.tip-title');
@@ -528,6 +545,7 @@ class UXEnhancements {
         this.tipElement.style.left = `${left}px`;
         this.tipElement.style.top = `${top}px`;
         this.tipElement.style.display = 'block';
+        this.currentTipVisible = true;
         
         // Mark tip as shown if tipId provided
         if (tipId && !this.tipsShown.includes(tipId)) {
@@ -543,6 +561,7 @@ class UXEnhancements {
     
     hideContextualTip() {
         if (this.tipElement) {
+            this.currentTipVisible = false;
             this.tipElement.style.display = 'none';
         }
     }
