@@ -176,6 +176,11 @@ class DatabaseAuthManager {
     isAuthenticated() {
         return this.currentUser !== null;
     }
+    
+    // Alias for compatibility with script.js
+    isSignedIn() {
+        return this.isAuthenticated();
+    }
 
     // Menu operations using database API
     async createMenu(menuData) {
