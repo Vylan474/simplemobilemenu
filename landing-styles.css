@@ -1147,9 +1147,14 @@ input:focus {
     flex: 1 1 0; /* Equal flex basis */
 }
 
-/* Phone field gets more space, ZIP code gets less */
+/* Email and phone fields should have equal space */
+.form-row .form-group:has(input[name="email"]) {
+    flex: 1;
+    min-width: 200px; /* Ensure email field has enough space */
+}
+
 .form-row .form-group:has(input[type="tel"]) {
-    flex: 2;
+    flex: 1;
     min-width: 180px; /* Ensure phone field has enough space */
 }
 
@@ -1297,6 +1302,27 @@ input:focus {
 
 .modal-content {
     overflow: visible !important;
+}
+
+/* Ensure signup modal scrolls properly and password fields are visible */
+#sign-up-modal .modal-content {
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x: visible;
+    padding: 30px;
+}
+
+/* Ensure all form sections have proper spacing and visibility */
+#sign-up-modal .form-section {
+    margin-bottom: 30px;
+}
+
+/* Specifically target password fields to ensure visibility */
+#sign-up-modal .form-group:has(input[name="password"]),
+#sign-up-modal .form-group:has(input[name="confirmPassword"]) {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .modal-body {

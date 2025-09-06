@@ -542,6 +542,58 @@ app.get('/menu/:slug', async (req, res) => {
     }
 });
 
+// Authentication API routes
+app.post('/api/auth/register', async (req, res) => {
+    try {
+        const registerHandler = require('./api/auth/register');
+        await registerHandler(req, res);
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ error: 'Registration failed' });
+    }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const loginHandler = require('./api/auth/login');
+        await loginHandler(req, res);
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ error: 'Login failed' });
+    }
+});
+
+app.get('/api/auth/verify', async (req, res) => {
+    try {
+        const verifyHandler = require('./api/auth/verify');
+        await verifyHandler(req, res);
+    } catch (error) {
+        console.error('Verify error:', error);
+        res.status(500).json({ error: 'Verification failed' });
+    }
+});
+
+app.post('/api/auth/google', async (req, res) => {
+    try {
+        const googleHandler = require('./api/auth/google');
+        await googleHandler(req, res);
+    } catch (error) {
+        console.error('Google auth error:', error);
+        res.status(500).json({ error: 'Google authentication failed' });
+    }
+});
+
+// Database initialization endpoint
+app.post('/api/init-db', async (req, res) => {
+    try {
+        const initDbHandler = require('./api/init-db');
+        await initDbHandler(req, res);
+    } catch (error) {
+        console.error('Database init error:', error);
+        res.status(500).json({ error: 'Database initialization failed' });
+    }
+});
+
 // Error handling
 app.use((err, req, res, next) => {
     console.error('Server error:', err);
