@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
-const { getUserByEmail, updateUserLastActive } = require('../../lib/database');
-const { sql } = require('@vercel/postgres');
+const { getUserByEmail, updateUserLastActive, createSession } = require('../../lib/hybrid-database');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -37,10 +36,7 @@ module.exports = async function handler(req, res) {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
 
-    await sql`
-      INSERT INTO user_sessions (id, user_id, expires_at)
-      VALUES (${sessionId}, ${userResult.user.id}, ${expiresAt})
-    `;
+    await createSession(sessionId, userResult.user.id, expiresAt);
 
     // Update last active
     await updateUserLastActive(userResult.user.id);

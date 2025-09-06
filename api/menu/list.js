@@ -1,16 +1,11 @@
-const { sql } = require('@vercel/postgres');
-const { getUserMenus } = require('../../lib/database');
+const { getUserMenus, getSession } = require('../../lib/hybrid-database');
 
 // Helper function to verify user session
 async function verifySession(sessionId) {
   if (!sessionId) return null;
   
-  const result = await sql`
-    SELECT user_id FROM user_sessions 
-    WHERE id = ${sessionId} AND expires_at > CURRENT_TIMESTAMP
-  `;
-  
-  return result.rows[0]?.user_id || null;
+  const session = await getSession(sessionId);
+  return session?.user_id || null;
 }
 
 module.exports = async function handler(req, res) {

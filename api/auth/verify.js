@@ -1,5 +1,4 @@
-const { sql } = require('@vercel/postgres');
-const { getUserById } = require('../../lib/database');
+const { getUserById, getSession } = require('../../lib/hybrid-database');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET' && req.method !== 'POST') {
@@ -15,17 +14,14 @@ module.exports = async function handler(req, res) {
     }
 
     // Check if session exists and is not expired
-    const sessionResult = await sql`
-      SELECT user_id FROM user_sessions 
-      WHERE id = ${sessionId} AND expires_at > CURRENT_TIMESTAMP
-    `;
+    const session = await getSession(sessionId);
 
-    if (sessionResult.rows.length === 0) {
+    if (!session) {
       return res.status(401).json({ error: 'Invalid or expired session' });
     }
 
     // Get user data
-    const userResult = await getUserById(sessionResult.rows[0].user_id);
+    const userResult = await getUserById(session.user_id);
     if (!userResult.success || !userResult.user) {
       return res.status(401).json({ error: 'User not found' });
     }

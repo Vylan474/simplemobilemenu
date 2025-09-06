@@ -1,4 +1,4 @@
-const { initializeDatabase } = require('../lib/database');
+const { initializeDatabase } = require('../lib/hybrid-database');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {

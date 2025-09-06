@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
-const { sql } = require('@vercel/postgres');
-const { createUser, getUserByEmail } = require('../../lib/database');
+const { createUser, getUserByEmail, createSession } = require('../../lib/hybrid-database');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -87,10 +86,7 @@ module.exports = async function handler(req, res) {
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
     try {
-      await sql`
-        INSERT INTO user_sessions (id, user_id, expires_at)
-        VALUES (${sessionId}, ${userId}, ${expiresAt})
-      `;
+      await createSession(sessionId, userId, expiresAt);
 
       // Set cookie
       res.cookie('session', sessionId, {

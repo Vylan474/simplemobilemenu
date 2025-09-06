@@ -281,9 +281,15 @@ class MenuEditor {
             const user = window.authManager.getCurrentUser();
             this.handleAuthChange(user);
         } else {
-            // No auth manager, redirect to landing page
-            console.log('❌ No auth manager found, redirecting to landing page...');
-            window.location.href = 'index.html';
+            // No auth manager, show auth modal for development
+            console.log('❌ No auth manager found, showing auth modal...');
+            setTimeout(() => {
+                const modal = document.getElementById('auth-modal');
+                if (modal) {
+                    modal.style.display = 'block';
+                    modal.classList.add('show');
+                }
+            }, 500);
         }
     }
     
@@ -315,12 +321,16 @@ class MenuEditor {
                 this.initializeEvents();
             }, 100);
         } else {
-            // No user signed in or invalid user data, redirect to landing page
+            // No user signed in or invalid user data, show auth modal
             console.log('No valid user data:', user);
-            console.log('❌ Redirecting to landing page for authentication...');
+            console.log('❌ Showing auth modal for authentication...');
             this.currentUser = null;
             this.authInitialized = false;
-            window.location.href = 'index.html';
+            const modal = document.getElementById('auth-modal');
+            if (modal) {
+                modal.style.display = 'block';
+                modal.classList.add('show');
+            }
         }
     }
     
@@ -427,8 +437,12 @@ class MenuEditor {
         
         // Wait for auth manager to be ready
         if (!window.authManager) {
-            console.error('❌ Auth manager not found, redirecting to landing page...');
-            window.location.href = 'index.html';
+            console.error('❌ Auth manager not found, showing auth modal...');
+            const modal = document.getElementById('auth-modal');
+            if (modal) {
+                modal.style.display = 'block';
+                modal.classList.add('show');
+            }
             return;
         }
         
@@ -461,9 +475,13 @@ class MenuEditor {
             await this.updateUserInterface(currentUser);
             await this.loadUserData();
         } else {
-            console.log('❌ User not authenticated, redirecting to landing page...');
-            // Redirect to landing page for authentication
-            window.location.href = 'index.html';
+            console.log('❌ User not authenticated, showing auth modal...');
+            // Show auth modal for authentication
+            const modal = document.getElementById('auth-modal');
+            if (modal) {
+                modal.style.display = 'block';
+                modal.classList.add('show');
+            }
         }
     }
     
