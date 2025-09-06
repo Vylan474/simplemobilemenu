@@ -207,27 +207,27 @@ body::before {
 }
 
 .background-image-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 140px);
-    gap: 16px;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-gap: 12px !important;
     margin-top: 12px;
-    justify-content: space-between;
-    width: 100%;
+    width: 100% !important;
+    max-width: 480px !important;
 }
 
-.background-option {
-    /* Clean square card design - Override base dropdown-option styles */
+.dropdown-option.background-option {
+    /* Override all conflicting styles with higher specificity */
+    width: auto !important;
+    height: auto !important;
+    max-width: 150px !important;
     padding: 8px !important;
-    width: 140px !important;
-    height: 120px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
+    box-sizing: border-box !important;
     border-radius: 8px !important;
-    transition: all 0.2s ease;
-    position: relative;
-    box-sizing: border-box;
+    margin: 0 !important;
 }
 
 .background-option img {
