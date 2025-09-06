@@ -14,6 +14,11 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link sr-only">Skip to main content</a>
+    
+    <!-- Live region for accessibility announcements -->
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="accessibility-announcements"></div>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -34,11 +39,12 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <main id="main-content">
+    <section class="hero" role="banner" aria-labelledby="hero-heading">
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>Create Beautiful Restaurant Menus in Minutes</h1>
+                    <h1 id="hero-heading">Create Beautiful Restaurant Menus in Minutes</h1>
                     <p class="hero-subtitle">Professional menu editor with real-time preview, responsive design, and instant publishing. Turn your menu into a powerful marketing tool.</p>
                     <div class="hero-buttons">
                         <button class="btn btn-primary btn-large">Start Free Trial</button>
@@ -99,10 +105,10 @@
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="features">
+    <section id="features" class="features" aria-labelledby="features-heading">
         <div class="container">
             <div class="section-header">
-                <h2>Everything You Need for Professional Menus</h2>
+                <h2 id="features-heading">Everything You Need for Professional Menus</h2>
                 <p>Powerful features designed specifically for restaurants and cafes</p>
             </div>
             <div class="features-grid">
@@ -153,10 +159,10 @@
     </section>
 
     <!-- Pricing Section -->
-    <section id="pricing" class="pricing">
+    <section id="pricing" class="pricing" aria-labelledby="pricing-heading">
         <div class="container">
             <div class="section-header">
-                <h2>Simple, Transparent Pricing</h2>
+                <h2 id="pricing-heading">Simple, Transparent Pricing</h2>
                 <p>Choose the plan that fits your restaurant's needs</p>
             </div>
             <div class="pricing-grid">
@@ -278,10 +284,10 @@
     </section>
 
     <!-- Demo Section -->
-    <section id="demo" class="demo">
+    <section id="demo" class="demo" aria-labelledby="demo-heading">
         <div class="container">
             <div class="section-header">
-                <h2>See It In Action</h2>
+                <h2 id="demo-heading">See It In Action</h2>
                 <p>Watch how easy it is to create professional menus</p>
             </div>
             <div class="demo-content">
@@ -319,16 +325,17 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="cta">
+    <section class="cta" aria-labelledby="cta-heading">
         <div class="container">
             <div class="cta-content">
-                <h2>Ready to Transform Your Menu?</h2>
+                <h2 id="cta-heading">Ready to Transform Your Menu?</h2>
                 <p>Join thousands of restaurants creating beautiful, professional menus</p>
                 <button class="btn btn-primary btn-large">Start Your Free Trial</button>
                 <p class="cta-note">No credit card required • 14-day free trial • Cancel anytime</p>
             </div>
         </div>
     </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
@@ -391,14 +398,15 @@
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="sign-in-form" class="auth-form">
+                <form id="sign-in-form" class="auth-form" novalidate aria-labelledby="sign-in-heading">
+                    <h2 class="sr-only" id="sign-in-heading">Sign In Form</h2>
                     <div class="form-group">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" required aria-describedby="email-error" autocomplete="email">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
+                        <input type="password" id="password" name="password" required aria-describedby="password-error" autocomplete="current-password">
                     </div>
                     <div class="form-options">
                         <label class="checkbox-label">
@@ -435,28 +443,29 @@
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="sign-up-form" class="auth-form enhanced-form">
+                <form id="sign-up-form" class="auth-form enhanced-form" novalidate aria-labelledby="sign-up-heading">
+                    <h2 class="sr-only" id="sign-up-heading">Create Account Form</h2>
                     <!-- Personal Information -->
                     <div class="form-section">
                         <h3>Personal Information</h3>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="signup-first-name">First Name</label>
-                                <input type="text" id="signup-first-name" name="firstName" required>
+                                <input type="text" id="signup-first-name" name="firstName" required aria-describedby="first-name-error" autocomplete="given-name">
                             </div>
                             <div class="form-group">
                                 <label for="signup-last-name">Last Name</label>
-                                <input type="text" id="signup-last-name" name="lastName" required>
+                                <input type="text" id="signup-last-name" name="lastName" required aria-describedby="last-name-error" autocomplete="family-name">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="signup-email">Email Address</label>
-                                <input type="email" id="signup-email" name="email" required>
+                                <input type="email" id="signup-email" name="email" required aria-describedby="signup-email-error" autocomplete="email">
                             </div>
                             <div class="form-group">
                                 <label for="signup-phone">Phone Number</label>
-                                <input type="tel" id="signup-phone" name="phone" placeholder="(555) 123-4567">
+                                <input type="tel" id="signup-phone" name="phone" placeholder="(555) 123-4567" aria-describedby="phone-help" autocomplete="tel">
                             </div>
                         </div>
                     </div>
@@ -467,11 +476,11 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="signup-business-name">Business Name</label>
-                                <input type="text" id="signup-business-name" name="businessName" required>
+                                <input type="text" id="signup-business-name" name="businessName" required aria-describedby="business-name-error" autocomplete="organization">
                             </div>
                             <div class="form-group">
                                 <label for="signup-business-type">Business Type</label>
-                                <select id="signup-business-type" name="businessType" required>
+                                <select id="signup-business-type" name="businessType" required aria-describedby="business-type-error">
                                     <option value="">Select type</option>
                                     <option value="restaurant">Restaurant</option>
                                     <option value="bar">Bar</option>
@@ -484,20 +493,20 @@
                         </div>
                         <div class="form-group">
                             <label for="signup-address">Street Address</label>
-                            <input type="text" id="signup-address" name="address" placeholder="123 Main Street">
+                            <input type="text" id="signup-address" name="address" placeholder="123 Main Street" autocomplete="street-address">
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="signup-city">City</label>
-                                <input type="text" id="signup-city" name="city" placeholder="New York">
+                                <input type="text" id="signup-city" name="city" placeholder="New York" autocomplete="address-level2">
                             </div>
                             <div class="form-group">
                                 <label for="signup-state">State</label>
-                                <input type="text" id="signup-state" name="state" placeholder="NY" maxlength="2">
+                                <input type="text" id="signup-state" name="state" placeholder="NY" maxlength="2" autocomplete="address-level1">
                             </div>
                             <div class="form-group">
                                 <label for="signup-zip">ZIP Code</label>
-                                <input type="text" id="signup-zip" name="zip" placeholder="10001" maxlength="10">
+                                <input type="text" id="signup-zip" name="zip" placeholder="10001" maxlength="10" autocomplete="postal-code">
                             </div>
                         </div>
                     </div>
@@ -508,21 +517,21 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="signup-password">Password</label>
-                                <input type="password" id="signup-password" name="password" required>
-                                <div class="password-requirements">
+                                <input type="password" id="signup-password" name="password" required aria-describedby="password-requirements signup-password-error" autocomplete="new-password">
+                                <div class="password-requirements" id="password-requirements">
                                     <small>Must be at least 8 characters long</small>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="signup-confirm-password">Confirm Password</label>
-                                <input type="password" id="signup-confirm-password" name="confirmPassword" required>
+                                <input type="password" id="signup-confirm-password" name="confirmPassword" required aria-describedby="confirm-password-error" autocomplete="new-password">
                             </div>
                         </div>
                     </div>
 
                     <div class="form-options">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="terms" required>
+                            <input type="checkbox" name="terms" required aria-describedby="terms-error">
                             <span class="checkmark"></span>
                             I agree to the <a href="javascript:void(0)" role="button" aria-label="Terms of Service - Coming soon">Terms of Service</a> and <a href="javascript:void(0)" role="button" aria-label="Privacy Policy - Coming soon">Privacy Policy</a>
                         </label>
@@ -551,6 +560,7 @@
         </div>
     </div>
 
+    <script src="accessibility-demo.js?v=20250906"></script>
     <script src="auth-db.js?v=20250901"></script>
     <script src="landing.js?v=20250901"></script>
 </body>

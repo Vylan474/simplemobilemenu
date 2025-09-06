@@ -7,7 +7,7 @@
  * COLOR CONTRAST FIXES
  * ============================================= */
 
-/* Fix insufficient contrast for #7f8c8d (3.48:1) -> #6c797a (4.5:1) */
+/* Improved contrast with subtle color refinement */
 body p,
 .hero-subtitle,
 .pricing-header p,
@@ -16,29 +16,38 @@ body p,
 .feature-card p,
 .section-header p {
     color: #6c797a !important;
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0.01) !important; /* Subtle clarity enhancement */
 }
 
-/* Fix insufficient contrast for btn-outline (3.15:1) -> #177bbe (4.5:1) */
+/* Enhanced outline button with subtle styling */
 .btn-outline {
     color: #177bbe !important;
     border-color: #177bbe !important;
+    box-shadow: inset 0 0 0 1px rgba(23, 123, 190, 0.1) !important;
+    transition: all 0.2s ease !important;
 }
 
 .btn-outline:hover {
-    background: #177bbe !important;
+    background: linear-gradient(135deg, #177bbe, rgba(23, 123, 190, 0.9)) !important;
     color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(23, 123, 190, 0.3) !important;
+    transform: translateY(-1px) !important;
 }
 
-/* Fix insufficient contrast for btn-secondary (3.32:1) -> improve background to #e22f0c */
+/* Enhanced secondary button styling */
 .btn-secondary {
-    background: #e22f0c !important;
+    background: linear-gradient(135deg, #e22f0c, #d42b0a) !important;
     color: #ffffff !important;
     border-color: #e22f0c !important;
+    box-shadow: 0 2px 8px rgba(226, 47, 12, 0.3) !important;
+    transition: all 0.2s ease !important;
 }
 
 .btn-secondary:hover {
-    background: #cc2a0b !important;
+    background: linear-gradient(135deg, #cc2a0b, #b82409) !important;
     border-color: #cc2a0b !important;
+    box-shadow: 0 4px 12px rgba(204, 42, 11, 0.4) !important;
+    transform: translateY(-1px) !important;
 }
 
 /* Fix add-item-btn and add-column-btn contrast (3.3:1) -> #142122 */
@@ -47,26 +56,44 @@ body p,
     color: #142122 !important;
 }
 
-/* Fix auth modal close button contrast (2.32:1) -> #949494 */
+/* Enhanced modal close button */
 .modal .close {
-    color: #949494 !important;
+    color: rgba(248, 249, 250, 0.8) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.2s ease !important;
 }
 
-/* Fix auth divider contrast (2.85:1) -> #767676 */
+.modal .close:hover {
+    color: rgba(248, 249, 250, 1) !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    transform: scale(1.05) !important;
+}
+
+/* Enhanced auth divider styling */
 .auth-divider span {
-    color: #767676 !important;
+    color: rgba(245, 247, 250, 0.6) !important;
+    font-weight: 500 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: 4px !important;
+    padding: 0 20px !important;
 }
 
-/* Fix btn-success contrast for publish button (2.87:1) -> #02893b */
+/* Enhanced success button styling */
 .btn-success {
-    background: #02893b !important;
+    background: linear-gradient(135deg, #02893b, #027a33) !important;
     border-color: #02893b !important;
     color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(2, 137, 59, 0.3) !important;
+    transition: all 0.2s ease !important;
 }
 
 .btn-success:hover {
-    background: #027a33 !important;
+    background: linear-gradient(135deg, #027a33, #02692b) !important;
     border-color: #027a33 !important;
+    box-shadow: 0 4px 12px rgba(2, 122, 51, 0.4) !important;
+    transform: translateY(-1px) !important;
 }
 
 /* Fix insufficient contrast for price elements (2.87:1) -> #02893b (4.5:1) */
@@ -77,38 +104,40 @@ body p,
     font-weight: 700;
 }
 
-/* Fix insufficient contrast for footer elements (3.16:1) -> #122436 (4.5:1) */
+/* Subtle footer text enhancement */
 footer p,
 .footer-text {
-    background: #122436 !important;
-    color: #ffffff !important;
-    padding: 2px 4px;
-    border-radius: 2px;
+    color: #f8f9fa !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+    /* Remove harsh background styling for more natural look */
 }
 
 /* =============================================
  * FOCUS INDICATORS
  * ============================================= */
 
-/* Enhanced focus indicators for better visibility */
+/* Elegant focus indicators - visible but refined */
 button:focus,
 input:focus,
 select:focus,
 textarea:focus,
 a:focus {
-    outline: 3px solid #FF4C29 !important;
-    outline-offset: 2px !important;
-    box-shadow: 0 0 0 1px #ffffff, 0 0 0 4px #FF4C29 !important;
+    outline: 2px solid rgba(52, 152, 219, 0.4) !important;
+    outline-offset: 1px !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3), 0 2px 8px rgba(52, 152, 219, 0.15) !important;
+    transition: all 0.2s ease !important;
 }
 
-/* High contrast focus for dark backgrounds */
+/* High contrast focus for dark backgrounds - subtle gold */
 .dark-mode button:focus,
 .dark-mode input:focus,
 .dark-mode select:focus,
 .dark-mode textarea:focus,
 .dark-mode a:focus {
-    outline: 3px solid #FFD700 !important;
-    box-shadow: 0 0 0 1px #000000, 0 0 0 4px #FFD700 !important;
+    outline: 2px solid rgba(255, 215, 0, 0.5) !important;
+    outline-offset: 1px !important;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(255, 215, 0, 0.2) !important;
+    transition: all 0.2s ease !important;
 }
 
 /* =============================================
@@ -161,18 +190,20 @@ a:focus {
     aria-hidden: true;
 }
 
-/* Ensure form elements have proper labels */
-input:not([aria-label]):not([aria-labelledby]) {
-    border: 2px solid #dc3545 !important;
+/* Subtle indicator for unlabeled form elements */
+input:not([aria-label]):not([aria-labelledby]):not([id]) {
+    border-left: 2px solid rgba(255, 193, 7, 0.3) !important;
+    background: linear-gradient(90deg, rgba(255, 193, 7, 0.02) 0%, transparent 5%) !important;
 }
 
-input:not([aria-label]):not([aria-labelledby])::after {
-    content: "⚠️ Missing accessibility label" !important;
-    position: absolute;
-    color: #dc3545;
-    font-size: 12px;
-    top: -20px;
-    left: 0;
+/* Hidden warning message for screen readers only */
+input:not([aria-label]):not([aria-labelledby]):not([id])::before {
+    content: "Warning: This field may need an accessibility label" !important;
+    position: absolute !important;
+    left: -10000px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
 }
 
 /* =============================================
@@ -195,10 +226,10 @@ input:not([aria-label]):not([aria-labelledby])::after {
     backdrop-filter: blur(4px) !important;
 }
 
-/* Modal content visibility */
+/* Subtle modal content enhancement */
 .modal-content {
-    outline: 2px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 /* =============================================
@@ -229,29 +260,91 @@ input:not([aria-label]):not([aria-labelledby])::after {
  * ERROR STATES AND VALIDATION
  * ============================================= */
 
-/* Error state styling */
+/* Refined error state - clear but not harsh */
 input[aria-invalid="true"],
 select[aria-invalid="true"],
 textarea[aria-invalid="true"] {
-    border: 2px solid #dc3545 !important;
-    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2) !important;
+    border: 1px solid rgba(220, 53, 69, 0.4) !important;
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.02), rgba(220, 53, 69, 0.01)) !important;
+    box-shadow: 0 1px 4px rgba(220, 53, 69, 0.1), inset 0 1px 0 rgba(220, 53, 69, 0.05) !important;
+    position: relative;
 }
 
-/* Error messages */
-.error-message,
-[role="alert"] {
-    color: #dc3545 !important;
+/* Success state for validated fields */
+input[aria-invalid="false"],
+select[aria-invalid="false"],
+textarea[aria-invalid="false"] {
+    border: 1px solid rgba(40, 167, 69, 0.3) !important;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.01), rgba(40, 167, 69, 0.005)) !important;
+    box-shadow: 0 1px 3px rgba(40, 167, 69, 0.08) !important;
+}
+
+/* Subtle validation indicators */
+.form-group.valid::after {
+    content: "✓" !important;
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: rgba(40, 167, 69, 0.7) !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
+    pointer-events: none !important;
+}
+
+.form-group.error::after {
+    content: "!" !important;
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: rgba(220, 53, 69, 0.7) !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    width: 16px !important;
+    height: 16px !important;
+    background: rgba(220, 53, 69, 0.1) !important;
+    border-radius: 50% !important;
     display: flex !important;
     align-items: center !important;
-    gap: 6px !important;
-    margin-top: 4px !important;
+    justify-content: center !important;
+    pointer-events: none !important;
+}
+
+/* Form group positioning for validation indicators */
+.form-group {
+    position: relative !important;
+}
+
+/* Elegant error messages */
+.error-message,
+[role="alert"] {
+    color: rgba(176, 45, 57, 0.9) !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-top: 6px !important;
+    font-size: 13px !important;
+    padding: 6px 12px !important;
+    background: rgba(220, 53, 69, 0.08) !important;
+    border-radius: 6px !important;
+    border-left: 3px solid rgba(220, 53, 69, 0.3) !important;
 }
 
 .error-message::before,
 [role="alert"]::before {
-    content: "⚠️" !important;
-    font-style: normal !important;
+    content: "!" !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 16px !important;
+    height: 16px !important;
+    background: rgba(220, 53, 69, 0.15) !important;
+    border-radius: 50% !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: rgba(176, 45, 57, 0.8) !important;
 }
 
 /* =============================================
@@ -392,25 +485,93 @@ tbody tr:nth-child(even) {
  * KEYBOARD NAVIGATION ENHANCEMENTS
  * ============================================= */
 
-/* Ensure keyboard navigation visibility */
+/* Subtle focus-within indication */
 *:focus-within {
-    outline: 2px solid rgba(255, 76, 41, 0.5) !important;
+    box-shadow: inset 0 0 0 1px rgba(52, 152, 219, 0.1) !important;
+    border-radius: 2px !important;
+    transition: box-shadow 0.2s ease !important;
 }
 
-/* Tab sequence indicators */
+/* Elegant tab sequence tooltips */
 [tabindex]:focus::after {
     content: attr(aria-label) !important;
     position: absolute !important;
-    background: #000000 !important;
+    background: rgba(44, 62, 80, 0.95) !important;
     color: #ffffff !important;
-    padding: 4px 8px !important;
-    font-size: 12px !important;
-    border-radius: 2px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    border-radius: 4px !important;
     white-space: nowrap !important;
     z-index: 10000 !important;
-    top: 100% !important;
-    left: 0 !important;
-    margin-top: 2px !important;
+    top: calc(100% + 4px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    opacity: 0.9 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    backdrop-filter: blur(4px) !important;
+}
+
+/* =============================================
+ * FORM ACCESSIBILITY ENHANCEMENTS
+ * ============================================= */
+
+/* Enhanced form styling for better accessibility */
+.auth-form .form-group input:hover {
+    border-color: rgba(52, 152, 219, 0.2) !important;
+    box-shadow: 0 2px 6px rgba(10, 26, 47, 0.08) !important;
+    transition: all 0.2s ease !important;
+}
+
+.auth-form .form-group input:focus {
+    border-color: rgba(52, 152, 219, 0.4) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 2px 12px rgba(52, 152, 219, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-1px) !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Enhanced select styling */
+.enhanced-form select:hover {
+    border-color: rgba(52, 152, 219, 0.2) !important;
+    box-shadow: 0 2px 6px rgba(10, 26, 47, 0.08) !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Better checkbox styling */
+.checkbox-label input[type="checkbox"] {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    width: 18px !important;
+    height: 18px !important;
+    border: 2px solid rgba(245, 247, 250, 0.3) !important;
+    border-radius: 4px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    cursor: pointer !important;
+    position: relative !important;
+    transition: all 0.2s ease !important;
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+    background: rgba(52, 152, 219, 0.8) !important;
+    border-color: rgba(52, 152, 219, 0.8) !important;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2) !important;
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+    content: "✓" !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    color: white !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+.checkbox-label input[type="checkbox"]:focus {
+    outline: 2px solid rgba(52, 152, 219, 0.4) !important;
+    outline-offset: 2px !important;
 }
 
 /* =============================================
@@ -430,17 +591,35 @@ tbody tr:nth-child(even) {
         margin-top: 8px !important;
     }
     
+    /* Better form field spacing on mobile */
+    .form-group {
+        margin-bottom: 20px !important;
+    }
+    
+    .form-row {
+        gap: 12px !important;
+    }
+    
     /* Better visual hierarchy */
     h1 { font-size: 2rem !important; }
     h2 { font-size: 1.75rem !important; }
     h3 { font-size: 1.5rem !important; }
     
-    /* Ensure sufficient color contrast on mobile */
+    /* Enhanced mobile form styling */
     .btn,
     input,
     select,
     textarea {
-        border: 2px solid currentColor !important;
+        border: 1px solid rgba(245, 247, 250, 0.4) !important;
+        font-size: 16px !important; /* Prevent zoom on iOS */
+    }
+    
+    /* Mobile-specific focus styles */
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border: 2px solid rgba(52, 152, 219, 0.5) !important;
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2) !important;
     }
 }
 
@@ -477,27 +656,35 @@ tbody tr:nth-child(even) {
  * ============================================= */
 
 :root {
-    --focus-color: #FF4C29;
-    --focus-width: 3px;
-    --error-color: #dc3545;
-    --success-color: #28a745;
-    --warning-color: #ffc107;
-    --info-color: #17a2b8;
+    /* Refined accessibility color palette */
+    --focus-color: rgba(52, 152, 219, 0.4);
+    --focus-color-dark: rgba(255, 215, 0, 0.5);
+    --focus-width: 2px;
+    --error-color: rgba(176, 45, 57, 0.4);
+    --error-color-bg: rgba(220, 53, 69, 0.02);
+    --success-color: rgba(40, 167, 69, 0.6);
+    --warning-color: rgba(255, 193, 7, 0.3);
+    --info-color: rgba(23, 162, 184, 0.5);
     
     --text-color-accessible: #2c3e50;
     --text-color-muted-accessible: #6c797a;
-    --bg-color-accessible: #ffffff;
+    --bg-color-accessible: rgba(255, 255, 255, 0.95);
     
     --min-touch-target: 44px;
     --accessible-line-height: 1.6;
+    
+    /* Subtle visual enhancement */
+    --gentle-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --soft-border: rgba(0, 0, 0, 0.06);
 }
 
 /* Dark mode accessible colors */
 .dark-mode {
     --text-color-accessible: #f8f9fa;
     --text-color-muted-accessible: #adb5bd;
-    --bg-color-accessible: #1a1a1a;
-    --focus-color: #FFD700;
+    --bg-color-accessible: rgba(26, 26, 26, 0.95);
+    --focus-color: var(--focus-color-dark);
+    --soft-border: rgba(255, 255, 255, 0.08);
 }
 
 /* =============================================
