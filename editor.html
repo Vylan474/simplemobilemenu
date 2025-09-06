@@ -163,7 +163,7 @@
                         <button id="save-menu" class="btn btn-primary" aria-label="Save current menu changes">
                             <i class="fas fa-save"></i> Save Menu
                         </button>
-                        <button id="discard-changes" class="btn btn-warning" style="display: none;" aria-label="Discard unsaved changes">
+                        <button id="discard-changes" class="btn btn-warning"  aria-label="Discard unsaved changes">
                             <i class="fas fa-undo"></i> Discard
                         </button>
                     </div>
@@ -173,7 +173,7 @@
                     <button id="import-menu" class="btn btn-secondary" aria-label="Import menu from file">
                         <i class="fas fa-upload"></i> Import
                     </button>
-                    <input type="file" id="import-file" accept=".json" style="display: none;">
+                    <input type="file" id="import-file" accept=".json" >
                 </div>
             </header>
 
@@ -190,11 +190,11 @@
                     <button id="logo-options" class="btn btn-secondary" aria-label="Logo options and upload" aria-expanded="false" aria-haspopup="true">
                         <i class="fas fa-image"></i> Logo
                     </button>
-                    <div id="logo-dropdown" class="dropdown logo-dropdown" style="display: none;">
+                    <div id="logo-dropdown" class="dropdown logo-dropdown" >
                         <div class="logo-section">
                             <label>Upload Logo:</label>
                             <div class="logo-upload-area">
-                                <div id="logo-preview-thumbnail" class="logo-thumbnail" style="display: none;">
+                                <div id="logo-preview-thumbnail" class="logo-thumbnail" >
                                     <img src="" alt="Logo preview">
                                     <button id="remove-logo-thumb" class="remove-thumbnail-btn" aria-label="Remove uploaded logo">
                                         <i class="fas fa-times"></i>
@@ -209,7 +209,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="logo-section" id="logo-size-section" style="display: none;">
+                        <div class="logo-section" id="logo-size-section" >
                             <label>Logo Size:</label>
                             <div class="logo-size-options">
                                 <button class="dropdown-option size-option" data-size="small">
@@ -230,13 +230,13 @@
                             </div>
                         </div>
                     </div>
-                    <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/jpg,image/gif,image/svg+xml,image/webp" style="display: none;">
+                    <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/jpg,image/gif,image/svg+xml,image/webp" >
                 </div>
                 <div class="background-controls">
                     <button id="background-options" class="btn btn-secondary" aria-label="Background customization options" aria-expanded="false" aria-haspopup="true">
                         <i class="fas fa-palette"></i> Background
                     </button>
-                    <div id="background-dropdown" class="dropdown background-dropdown" style="display: none;">
+                    <div id="background-dropdown" class="dropdown background-dropdown" >
                         <div class="background-section">
                             <label>Background Images:</label>
                             <div class="background-image-grid">
@@ -308,7 +308,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="background-section" id="recent-backgrounds-section" style="display: none;">
+                        <div class="background-section" id="recent-backgrounds-section" >
                             <label>Recent Uploads:</label>
                             <div class="recent-backgrounds-grid" id="recent-backgrounds-grid">
                                 <!-- Recent backgrounds will be loaded here -->
@@ -323,13 +323,13 @@
                                     <small>Formats: JPG, PNG, WEBP (max 5MB)</small>
                                 </div>
                                 <div class="upload-controls">
-                                    <input type="file" id="background-upload" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                                    <input type="file" id="background-upload" accept="image/jpeg,image/png,image/webp" >
                                     <button type="button" id="upload-background-btn" class="btn btn-primary btn-small" style="pointer-events: auto; cursor: pointer;" onclick="document.getElementById('background-upload').click();">
                                         <i class="fas fa-upload"></i> Choose Image
                                     </button>
                                     <span id="upload-filename" class="upload-filename"></span>
                                 </div>
-                                <div id="upload-preview" class="upload-preview" style="display: none;">
+                                <div id="upload-preview" class="upload-preview" >
                                     <img id="upload-preview-img" alt="Preview">
                                     <button id="use-uploaded-background" class="btn btn-success btn-small">
                                         <i class="fas fa-check"></i> Use This Image
@@ -350,7 +350,7 @@
                     <button id="font-options" class="btn btn-secondary" aria-label="Font family options" aria-expanded="false" aria-haspopup="true">
                         <i class="fas fa-font"></i> Font
                     </button>
-                    <div id="font-dropdown" class="dropdown font-dropdown" style="display: none;">
+                    <div id="font-dropdown" class="dropdown font-dropdown" >
                         <div class="font-section">
                             <label>Font Family:</label>
                             <div class="font-family-grid">
@@ -382,7 +382,7 @@
                     <button id="color-options" class="btn btn-secondary" aria-label="Color palette options" aria-expanded="false" aria-haspopup="true">
                         <i class="fas fa-swatchbook"></i> Colors
                     </button>
-                    <div id="color-dropdown" class="dropdown color-dropdown" style="display: none;">
+                    <div id="color-dropdown" class="dropdown color-dropdown" >
                         <div class="color-section">
                             <label>Color Palettes:</label>
                             <div class="color-palette-grid">
@@ -524,7 +524,7 @@
                     <button id="navigation-options" class="btn btn-secondary" aria-label="Navigation theme options" aria-expanded="false" aria-haspopup="true">
                         <i class="fas fa-compass"></i> Navigation
                     </button>
-                    <div id="navigation-dropdown" class="dropdown navigation-dropdown" style="display: none;">
+                    <div id="navigation-dropdown" class="dropdown navigation-dropdown" >
                         <div class="navigation-section">
                             <label>Navigation Themes:</label>
                             <div class="navigation-theme-grid">
@@ -594,7 +594,7 @@
             </div>
             
             <!-- Contextual Tips Overlay -->
-            <div id="contextual-tips" class="contextual-tips" style="display: none;">
+            <div id="contextual-tips" class="contextual-tips" >
                 <div class="tip-content">
                     <div class="tip-arrow"></div>
                     <div class="tip-text">
@@ -720,7 +720,7 @@
                         <option value="custom">Custom</option>
                     </select>
                     
-                    <div id="custom-columns" style="display: none;">
+                    <div id="custom-columns" >
                         <label>Custom Columns:</label>
                         <div id="column-builder">
                             <!-- Custom column builder will go here -->
@@ -880,7 +880,7 @@
                 <div class="modal-body success-body">
                     <p id="success-message">Your menu has been updated successfully!</p>
                     
-                    <div id="success-url-section" class="success-url-section" style="display: none;">
+                    <div id="success-url-section" class="success-url-section" >
                         <label>Your menu is now live at:</label>
                         <div class="success-url">
                             <i class="fas fa-link"></i>
@@ -892,7 +892,7 @@
                     </div>
                     
                     <div class="modal-actions">
-                        <button id="view-live-menu-from-success" class="btn btn-primary" style="display: none;">
+                        <button id="view-live-menu-from-success" class="btn btn-primary" >
                             <i class="fas fa-eye"></i> View Live Menu
                         </button>
                         <button id="close-success-modal" class="btn btn-secondary">
@@ -923,7 +923,7 @@
                             </button>
                         </div>
                         
-                        <div class="discard-option" id="revert-published-option" style="display: none;">
+                        <div class="discard-option" id="revert-published-option" >
                             <button id="revert-to-published" class="btn btn-secondary btn-large">
                                 <i class="fas fa-globe"></i>
                                 <div class="button-content">
@@ -1167,13 +1167,13 @@
                         <button id="welcome-skip" class="btn btn-secondary">
                             Skip Tour
                         </button>
-                        <button id="welcome-back" class="btn btn-secondary" style="display: none;">
+                        <button id="welcome-back" class="btn btn-secondary" >
                             <i class="fas fa-arrow-left"></i> Back
                         </button>
                         <button id="welcome-next" class="btn btn-primary">
                             Next <i class="fas fa-arrow-right"></i>
                         </button>
-                        <button id="welcome-start" class="btn btn-primary" style="display: none;">
+                        <button id="welcome-start" class="btn btn-primary" >
                             <i class="fas fa-rocket"></i> Start Creating!
                         </button>
                     </div>
@@ -1191,7 +1191,7 @@
     <a href="#sidebar" class="skip-link">Skip to menu management</a>
 
     <!-- Authentication Modal -->
-    <div id="auth-modal" class="modal" style="display: none;">
+    <div id="auth-modal" class="modal" >
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="auth-modal-title">Sign In</h2>
@@ -1228,7 +1228,7 @@
                     </div>
 
                     <!-- Register Form -->
-                    <div id="register-form" class="auth-form" style="display: none;">
+                    <div id="register-form" class="auth-form" >
                         <div class="form-group">
                             <label for="register-name">Name:</label>
                             <input type="text" id="register-name" placeholder="Your name" required>
