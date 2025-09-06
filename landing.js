@@ -5,6 +5,18 @@ class LandingPage {
         console.log('Window authManager:', window.authManager);
         this.initializeEvents();
         this.initializeScrollEffects();
+        this.setupAuthListener();
+    }
+    
+    setupAuthListener() {
+        // Listen for authentication state changes
+        document.addEventListener('authStateChanged', (event) => {
+            console.log('🔄 Landing page received auth state change:', event.detail);
+            if (event.detail.user) {
+                console.log('✅ User authenticated on landing page, redirecting to editor...');
+                window.location.href = 'editor.html';
+            }
+        });
     }
     
     initializeEvents() {
