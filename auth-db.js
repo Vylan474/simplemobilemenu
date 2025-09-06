@@ -67,10 +67,14 @@ class DatabaseAuthManager {
             if (response.ok) {
                 // Store session data if provided (auto-login after registration)
                 if (data.sessionId) {
-                    console.log('✅ Registration returned sessionId, establishing auto-login...');
+                    console.log('✅ Registration returned sessionId:', data.sessionId.substring(0, 8) + '...');
+                    console.log('💾 Storing sessionId in localStorage...');
                     this.currentUser = data.user;
                     this.sessionId = data.sessionId;
                     localStorage.setItem('sessionId', data.sessionId);
+                    
+                    console.log('🔗 Verification: localStorage now has:', localStorage.getItem('sessionId') ? 'sessionId stored' : 'sessionId NOT stored');
+                    console.log('🍪 Document cookies after registration:', document.cookie);
                     
                     // Broadcast auth state change
                     document.dispatchEvent(new CustomEvent('authStateChanged', {
@@ -129,12 +133,20 @@ class DatabaseAuthManager {
                 this.sessionId = localStorage.getItem('sessionId');
             }
 
-            console.log('🔑 Session ID:', this.sessionId ? 'exists' : 'missing');
+            console.log('🔑 Session ID:', this.sessionId ? `exists (${this.sessionId.substring(0, 8)}...)` : 'missing');
+            console.log('🔑 LocalStorage sessionId:', localStorage.getItem('sessionId') ? `exists (${localStorage.getItem('sessionId').substring(0, 8)}...)` : 'missing');
+            console.log('🍪 Document cookies:', document.cookie);
 
             if (!this.sessionId) {
-                console.log('❌ No session ID found');
+                console.log('❌ No session ID found in localStorage or class property');
                 return { success: false, error: 'No session found' };
             }
+
+            console.log('🌐 Making verification request to:', `${this.baseURL}/api/auth/verify`);
+            console.log('📋 Request headers:', {
+                'Authorization': `Bearer ${this.sessionId.substring(0, 8)}...`,
+                'Content-Type': 'application/json'
+            });
 
             const response = await fetch(`${this.baseURL}/api/auth/verify`, {
                 method: 'GET',
@@ -145,8 +157,11 @@ class DatabaseAuthManager {
                 credentials: 'include'
             });
 
+            console.log('📡 Response status:', response.status);
+            console.log('📡 Response headers:', [...response.headers.entries()]);
+            
             const data = await response.json();
-            console.log('🔍 Verify response:', { status: response.status, data });
+            console.log('🔍 Verify response data:', data);
 
             if (response.ok) {
                 console.log('✅ Verification successful, user data:', data.user);
