@@ -67,6 +67,7 @@ class DatabaseAuthManager {
             if (response.ok) {
                 // Store session data if provided (auto-login after registration)
                 if (data.sessionId) {
+                    console.log('✅ Registration returned sessionId, establishing auto-login...');
                     this.currentUser = data.user;
                     this.sessionId = data.sessionId;
                     localStorage.setItem('sessionId', data.sessionId);
@@ -75,9 +76,12 @@ class DatabaseAuthManager {
                     document.dispatchEvent(new CustomEvent('authStateChanged', {
                         detail: { user: data.user }
                     }));
+                    console.log('✅ Auto-login successful after registration');
+                } else {
+                    console.log('⚠️ Registration successful but no sessionId returned - manual login required');
                 }
                 
-                return { success: true, user: data.user };
+                return { success: true, user: data.user, autoLogin: !!data.sessionId };
             } else {
                 return { success: false, error: data.error };
             }

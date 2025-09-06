@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
+const { sql } = require('@vercel/postgres');
 const { createUser, getUserByEmail } = require('../../lib/database');
 
 module.exports = async function handler(req, res) {
@@ -50,14 +51,43 @@ module.exports = async function handler(req, res) {
       return res.status(500).json({ error: 'Failed to create user' });
     }
 
-    // Don't return password hash
-    const { password_hash, ...userWithoutPassword } = createResult.user;
+    // CREATE SESSION FOR AUTO-LOGIN
+    const sessionId = uuidv4();
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-    res.status(201).json({ 
-      success: true, 
-      user: userWithoutPassword,
-      message: 'User created successfully' 
-    });
+    try {
+      await sql`
+        INSERT INTO user_sessions (id, user_id, expires_at)
+        VALUES (${sessionId}, ${userId}, ${expiresAt})
+      `;
+
+      // Set cookie
+      res.cookie('session', sessionId, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        expires: expiresAt
+      });
+
+      // Don't return password hash
+      const { password_hash, ...userWithoutPassword } = createResult.user;
+
+      res.status(201).json({ 
+        success: true, 
+        user: userWithoutPassword,
+        sessionId: sessionId,
+        message: 'User created successfully' 
+      });
+    } catch (sessionError) {
+      console.error('Session creation error:', sessionError);
+      // Still return success since user was created
+      const { password_hash, ...userWithoutPassword } = createResult.user;
+      res.status(201).json({ 
+        success: true, 
+        user: userWithoutPassword,
+        message: 'User created successfully (manual login required)' 
+      });
+    }
 
   } catch (error) {
     console.error('Registration error:', error);
