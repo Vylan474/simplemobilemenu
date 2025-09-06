@@ -201,8 +201,8 @@ body::before {
 
 .background-dropdown {
     /* Extends .dropdown base class */
-    min-width: 480px;
-    width: 480px;
+    min-width: 520px;
+    width: 520px;
     padding: 20px;
 }
 
