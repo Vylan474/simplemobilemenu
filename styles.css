@@ -6118,3 +6118,9 @@ body .preview-navigation.theme-minimal .nav-tab {
     min-width: 80px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+/* Hide file input elements that should be triggered by buttons */
+#import-file,
+#logo-file-input,
+#background-upload {
+    display: none !important;
+}
