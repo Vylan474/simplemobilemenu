@@ -177,7 +177,7 @@ class AuthManager {
         
         // Redirect to landing page
         if (window.location.pathname.includes('editor.html') || window.location.pathname.includes('index.html')) {
-            window.location.href = 'landing.html';
+            window.location.href = 'index.html';
         }
     }
     
