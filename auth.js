@@ -268,6 +268,35 @@ class AuthManager {
         }
     }
     
+    createMenu(menuData) {
+        if (!this.currentUser) return { success: false, error: 'User not authenticated' };
+        
+        const newMenu = {
+            id: 'menu_' + Date.now(),
+            name: menuData.name || 'New Menu',
+            description: menuData.description || '',
+            sections: menuData.sections || [],
+            sectionCounter: menuData.sectionCounter || 0,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            status: 'draft',
+            fontFamily: menuData.fontFamily || 'Inter',
+            colorPalette: menuData.colorPalette || 'classic',
+            backgroundType: menuData.backgroundType || 'none',
+            backgroundValue: menuData.backgroundValue || null,
+            menuLogo: menuData.menuLogo || null,
+            logoSize: menuData.logoSize || 'medium',
+            navigationTheme: menuData.navigationTheme || 'modern',
+            publishedMenuId: null,
+            publishedSlug: null,
+            publishedTitle: null,
+            publishedSubtitle: null
+        };
+        
+        this.saveUserMenu(newMenu);
+        return { success: true, menu: newMenu };
+    }
+    
     // Create demo data for new users
     createDemoMenu() {
         if (!this.currentUser) return null;

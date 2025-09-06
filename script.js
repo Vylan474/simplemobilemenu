@@ -484,7 +484,7 @@ class MenuEditor {
         };
         
         try {
-            const result = await window.authManager.createMenu(menuData);
+            const result = window.authManager.createMenu(menuData);
             if (result.success && result.menu) {
                 // Load the newly created menu
                 this.currentMenuId = result.menu.id;
