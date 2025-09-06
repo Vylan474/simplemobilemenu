@@ -1195,7 +1195,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="auth-modal-title">Sign In</h2>
-                <span class="close" onclick="document.getElementById('auth-modal').style.display='none'">&times;</span>
+                <span class="close" onclick="const modal = document.getElementById('auth-modal'); modal.style.display='none'; modal.classList.remove('show');">&times;</span>
             </div>
             <div class="modal-body">
                 <div id="auth-form-container">
@@ -1360,7 +1360,9 @@
                         .then(result => {
                             if (result.success) {
                                 console.log('Google sign-in successful');
-                                document.getElementById('auth-modal').style.display = 'none';
+                                const modal = document.getElementById('auth-modal'); 
+                                modal.style.display = 'none'; 
+                                modal.classList.remove('show');
                                 location.reload(); // Refresh to show authenticated state
                             } else {
                                 console.error('Google sign-in failed:', result.error);

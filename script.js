@@ -459,7 +459,9 @@ class MenuEditor {
     }
     
     showAuthModal() {
-        document.getElementById('auth-modal').style.display = 'block';
+        const modal = document.getElementById('auth-modal');
+        modal.style.display = 'block';
+        modal.classList.add('show');
         showLoginForm();
     }
     
