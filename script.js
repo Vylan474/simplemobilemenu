@@ -742,10 +742,12 @@ class MenuEditor {
                     this.closeSectionModal();
                 } else if (modal.id === 'preview-modal') {
                     modal.style.display = 'none';
+                    modal.classList.remove('show');
                     this.cleanupScrollAnimations();
                 } else {
                     // Generic modal close
                     modal.style.display = 'none';
+                    modal.classList.remove('show');
                 }
             });
         });
@@ -799,10 +801,13 @@ class MenuEditor {
         }
         
         modal.style.display = 'block';
+        modal.classList.add('show');
     }
     
     closeSectionModal() {
-        document.getElementById('section-modal').style.display = 'none';
+        const modal = document.getElementById('section-modal');
+        modal.style.display = 'none';
+        modal.classList.remove('show');
         this.clearCustomColumns();
         this.currentSectionId = null; // Reset section ID to prevent editing wrong section
     }
@@ -1132,6 +1137,7 @@ class MenuEditor {
         this.currentAddColumnSectionId = sectionId;
         const modal = document.getElementById('add-column-modal');
         modal.style.display = 'block';
+        modal.classList.add('show');
         
         // Reset form
         document.getElementById('custom-column-name').value = '';
@@ -1143,6 +1149,7 @@ class MenuEditor {
     closeAddColumnModal() {
         const modal = document.getElementById('add-column-modal');
         modal.style.display = 'none';
+        modal.classList.remove('show');
         this.currentAddColumnSectionId = null;
     }
     
@@ -1869,6 +1876,7 @@ class MenuEditor {
         
         content.innerHTML = menuHeader + sectionsHTML;
         modal.style.display = 'block';
+        modal.classList.add('show');
         
         // Generate navigation
         this.generatePreviewNavigation();
@@ -2472,6 +2480,7 @@ class MenuEditor {
         const publishButton = document.getElementById('publish-menu-confirm');
         
         modal.style.display = 'block';
+        modal.classList.add('show');
         
         if (this.publishedSlug) {
             // Previously published - reuse existing path and settings
@@ -2523,6 +2532,7 @@ class MenuEditor {
         const publishButton = document.getElementById('publish-menu-confirm');
         
         modal.style.display = 'none';
+        modal.classList.remove('show');
         
         // Reset form state (but keep published info in memory)
         validation.className = 'validation-message';
@@ -3361,11 +3371,13 @@ class MenuEditor {
         }
         
         modal.style.display = 'block';
+        modal.classList.add('show');
     }
     
     closeDiscardModal() {
         const modal = document.getElementById('discard-modal');
         modal.style.display = 'none';
+        modal.classList.remove('show');
     }
     
     async revertToSaved() {
@@ -4574,11 +4586,13 @@ class MenuEditor {
         }
         
         modal.style.display = 'block';
+        modal.classList.add('show');
     }
     
     closeSuccessModal() {
         const modal = document.getElementById('success-modal');
         modal.style.display = 'none';
+        modal.classList.remove('show');
     }
     
     copySuccessUrl() {
