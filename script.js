@@ -339,7 +339,7 @@ class MenuEditor {
     }
     
     async loadUserData() {
-        if (!window.authManager || !window.authManager.isAuthenticated()) return;
+        if (!window.authManager || !window.authManager.isSignedIn()) return;
         
         // Set current user
         this.currentUser = window.authManager.getCurrentUser();
@@ -361,14 +361,14 @@ class MenuEditor {
     }
     
     async getUserMenus() {
-        if (window.authManager && window.authManager.isAuthenticated()) {
+        if (window.authManager && window.authManager.isSignedIn()) {
             return await window.authManager.getUserMenus();
         }
         return [];
     }
     
     async saveUserMenu(menu) {
-        if (window.authManager && window.authManager.isAuthenticated()) {
+        if (window.authManager && window.authManager.isSignedIn()) {
             return await window.authManager.updateMenu(menu.id, menu);
         }
         return { success: false, error: 'Not authenticated' };
@@ -430,13 +430,12 @@ class MenuEditor {
         }
         
         console.log('✅ Auth manager found, initializing...');
-        await window.authManager.init();
         
         // Give a moment for the auth state change event to be processed
         await new Promise(resolve => setTimeout(resolve, CONFIG.AUTH_RETRY_DELAY));
         
         console.log('🔍 Checking authentication status...');
-        const isAuthenticated = window.authManager.isAuthenticated();
+        const isAuthenticated = window.authManager.isSignedIn();
         const currentUser = window.authManager.getCurrentUser();
         console.log('Authentication status:', isAuthenticated, 'User:', currentUser);
         
@@ -465,7 +464,7 @@ class MenuEditor {
     }
     
     async createNewMenu() {
-        if (!window.authManager || !window.authManager.isAuthenticated()) return;
+        if (!window.authManager || !window.authManager.isSignedIn()) return;
         
         const menuName = `${this.currentUser.restaurant || this.currentUser.name}'s Menu`;
         
@@ -2712,9 +2711,9 @@ class MenuEditor {
         console.log('🔄 saveCurrentMenu called');
         console.log('🔍 currentMenuId:', this.currentMenuId);
         console.log('🔍 authManager exists:', !!window.authManager);
-        console.log('🔍 isAuthenticated:', window.authManager?.isAuthenticated());
+        console.log('🔍 isSignedIn:', window.authManager?.isSignedIn());
         
-        if (!this.currentMenuId || !window.authManager || !window.authManager.isAuthenticated()) {
+        if (!this.currentMenuId || !window.authManager || !window.authManager.isSignedIn()) {
             console.log('❌ Save blocked - missing requirements');
             return;
         }
@@ -2921,7 +2920,7 @@ class MenuEditor {
     }
     
     async deleteMenu(menuId) {
-        if (!window.authManager || !window.authManager.isAuthenticated()) return;
+        if (!window.authManager || !window.authManager.isSignedIn()) return;
         
         const menus = await this.getUserMenus();
         const menu = menus.find(m => m.id === menuId);
