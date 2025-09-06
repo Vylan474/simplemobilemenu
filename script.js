@@ -2933,25 +2933,20 @@ class MenuEditor {
         }
         
         try {
-            const result = await window.authManager.deleteMenu(menuId);
+            await window.authManager.deleteUserMenu(menuId);
             
-            if (result.success) {
-                // If we deleted the current menu, load another or create new
-                if (menuId === this.currentMenuId) {
-                    const remainingMenus = await this.getUserMenus();
-                    const activeMenus = remainingMenus.filter(m => m.status !== 'deleted');
-                    if (activeMenus.length > 0) {
-                        await this.loadMenu(activeMenus[0].id);
-                    } else {
-                        this.createNewMenu();
-                    }
+            // If we deleted the current menu, load another or create new
+            if (menuId === this.currentMenuId) {
+                const remainingMenus = await this.getUserMenus();
+                const activeMenus = remainingMenus.filter(m => m.status !== 'deleted');
+                if (activeMenus.length > 0) {
+                    await this.loadMenu(activeMenus[0].id);
+                } else {
+                    this.createNewMenu();
                 }
-                
-                await this.loadUserMenus();
-            } else {
-                console.error('Failed to delete menu:', result.error);
-                alert('Failed to delete menu. Please try again.');
             }
+            
+            await this.loadUserMenus();
         } catch (error) {
             console.error('Error deleting menu:', error);
             alert('Error deleting menu. Please try again.');
